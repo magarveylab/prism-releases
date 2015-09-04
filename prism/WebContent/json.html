@@ -1,0 +1,32 @@
+<div class="wrapper">
+	<form name="jsonForm" id="jsonForm" class='cf' action="PrismJsonSubmit"
+		enctype="multipart/form-data" method="post" target="uploadFrame"
+		onSubmit="return jsonSubmitCheck()">
+
+		<header class="sub jsonHeader">
+			<h3>Open saved results</h3>
+			<p>Load saved PRISM output for a biosynthetic gene cluster or
+				microbial genome in JSON format.</p>
+		</header>
+
+		<div class='json'>
+			<input type="text" name="sessionID" id="sessionIDjson" value=""
+				style="display: none;" /> <input type="checkbox" name="init"
+				value="init" checked>
+			<article class="field cf">
+				<label>JSON</label>
+				<p class='formHint'>Select a saved PRISM results file in JSON format.</p>
+				<label for="jsonFile" class="filebutton cf">Choose file<span>
+						<input type="file" class="textfw" name="jsonFile" id="jsonFile"
+						onchange="javascript:fileChange('jsonFile');" />
+				</span></label> <span class="inputFileName"></span> <span class='block'></span>
+			</article>
+		</div>
+
+		<div id="jsonButtonHolder">
+			<input type="submit" value="Submit" />
+		</div>
+	</form>
+
+	<div id="jsonResponseDiv"></div>
+</div>

@@ -1,0 +1,2 @@
+<div class='clusterGraph'>
+<span class='clusterGraphOrf negative pks' style='width:128px;'><span class='name'>orf00706</span></span><span class='clusterGraphOrf tailoring' style='width:11px;'><span class='name'>&nbsp;</span></span><span class='clusterGraphOrf modification' style='width:78px;'><span class='name'>&nbsp;</span></span><span class='clusterGraphOrf modification' style='width:64px;'><span class='name'>&nbsp;</span></span></div>

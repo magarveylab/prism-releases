@@ -1,0 +1,2 @@
+<div class='clusterGraph'>
+<span class='clusterGraphOrf negative beta_lactam' style='width:38px;'><span class='name'>&nbsp;</span></span></div>

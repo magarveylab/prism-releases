@@ -1,0 +1,150 @@
+<div class="wrapper">
+	<form name="genomeForm" id="genomeForm" class='cf' action="PrismSubmit"
+		enctype="multipart/form-data" method="post" target="uploadFrame"
+		onSubmit="return submitCheck()">
+
+		<header class="sub">
+
+		<!-- <div class='dev'>
+				<p>
+					You are using a development copy of PRISM, version 1.2.7<br>
+					dev PRISM was last updated Friday, September 4, at 5:00 PM EST<br>
+					<strong>What's new in this version?</strong>
+				</p>
+				<ul>
+					<li>Added a new servlet to load saved results.<br>Either
+						individual clusters or entire genomes can be saved in JSON format,
+						and then re-loaded in the 'Open' page. Warning: the ability to get
+						genomic cluster sequence information is removed in the saved
+						result!
+					</li>
+					<li>Fixed bugs in cluster identification and known natural product scoring</li>
+					<li>Added dereplication to JSON I/O</li>
+				</ul>
+			</div>
+ -->	
+			<span class="main"></span>
+			<h3>PRISM</h3>
+			<p>
+				Prediction informatics for secondary metabolomes:<br> search a
+				genome for genetically encoded natural products
+			</p>
+		</header>
+
+		<input type="text" name="sessionID" id="sessionIDgenome" value=""
+			style="display: none;" /> <input type="checkbox" name="init"
+			value="init" checked>
+		<div class="columnleft">
+			<article class="field cf">
+				<label>Sequence</label>
+				<p class='formHint'>Select a sequence file in FASTA or GenBank format.</p>
+				<label for="genomeFile" class="filebutton cf">Choose file<span>
+						<input type="file" class="textfw" name="genomeFile"
+						id="genomeFile" onchange="javascript:fileChange('genomeFile');" />
+				</span></label> <span class="inputFileName"></span> <span class='block'></span>
+			</article>
+			<div class="advancedLeft">
+				<article class="field cf">
+					<label for="window">Structure limit</label>
+					<p class="formHint">PRISM's combinatorialization process can
+						lead to the generation of a large number of structures for some
+						biosynthetic gene clusters. By default, PRISM will limit the number
+						of putative structures to be generated to 50.</p>
+					<input type="text" size="30" name="scaffoldLimit" value="50"
+						onKeyPress="return integersOnly(this, event)">&nbsp;
+					structures
+				</article>
+				<article class="field cf">
+					<label for="window">Tanimoto cutoff</label>
+					<p class="formHint">Adjust the chemical similarity cutoff PRISM
+						uses to assess known natural products.</p>
+					<input type="text" size="30" name="tanimotoCutoff" value="0.8"
+						onKeyPress="return numbersOnly(this, event)">
+				</article>
+				<article class="field cf">
+					<label for="window">Homology cutoff</label>
+					<p class="formHint">Adjust the genetic homology cutoff PRISM
+						uses to assess known natural products.</p>
+					<input type="text" size="30" name="homologyCutoff" value="1.5"
+						onKeyPress="return numbersOnly(this, event)">
+				</article>
+<!-- 			<article class="field cf">
+					<label for="orfs">Open reading frame prediction</label>
+					<p class="formHint">Select the method used to identify putative
+						open reading frames within your submitted sequence. (Note that
+						Prodigal requires a minimum sequence size of 20,000
+						nucleotides.)</p>
+					<input name="orfs" id="allOrfs" value="allOrfs" type="radio"
+						checked /> <label for="allOrfs">Detect all sequences
+						between start and stop codons</label> <br>
+					<input name="orfs"
+						id="prodigal" value="prodigal" type="radio" /> <label
+						for="prodigal">Use <a href="http://prodigal.ornl.gov/">Prodigal</a>
+						for prokaryotic gene prediction</label> <br>
+					<input name="orfs"
+						id="genemark" value="genemark" type="radio" /> <label
+						for="genemark">Use <a
+						href="http://exon.gatech.edu/GeneMark/">GeneMark-ES</a> for fungal
+						gene prediction</label>
+				</article> -->	
+			</div>
+		</div>
+
+		<div class="columnright">
+			<article class="field cf">
+				<label>Detect knowns</label>
+				<p class="formHint">Optionally use genetic homology and chemical
+					similarity metrics to compute the likelihood that a biosynthetic
+					cluster produces a known natural product. This analysis extends the
+					runtime of a PRISM search.</p>
+				<input name="score" id="score" value="score" type="checkbox" /> <label
+					for="score">Enable known natural product scoring</label><br>
+			</article>
+			<div class="advancedLeft">
+				<article class="field cf">
+					<label for="window">Optional searches</label>
+					<p class="formHint">Enable or disable optional operations which
+						extend the runtime of a PRISM search.</p>
+				 <input name="resistance" id="resistance" value="resistance"
+						type="checkbox" /> <label for="resistance">Resistance
+						genes</label><br> 
+				 <input name="regulation" id="regulation"
+						value="regulation" type="checkbox" /> <label for="regulation">Regulatory
+						genes</label><br> 
+	<!--		 <input name="aminoglycoside" id="aminoglycoside"
+						value="aminoglycoside" type="checkbox" /> <label for="aminoglycoside">Aminoglycoside
+						biosynthesis domains</label><br> 
+				 <input name="nucleoside" id="nucleoside"
+						value="nucleoside" type="checkbox" /> <label for="nucleoside">Nucleoside
+						biosynthesis domains</label><br> 
+				 <input name="ribosomal" id="ribosomal"
+						value="ribosomal" type="checkbox" /> <label for="ribosomal">Ribosomally produced and 
+						post-translationally <br><span style='display:inline-block;width:21px;'></span> modified 
+						peptide (RiPP) domains</label><br>  -->
+				</article>
+				<article class="field cf">
+					<label for="window">Window</label>
+					<p class="formHint">Specify the maximum length between open reading frames, in
+						base pairs, to consider them part of the same biosynthetic
+						cluster.</p>
+					<input type="text" size="30" name="window" value="20000"
+						onKeyPress="return integersOnly(this, event)">&nbsp; bp
+				</article>
+				<article class="field cf">
+					<label for="window">Display</label>
+					<p class="formHint">Adjust the default number of homologous
+						clusters, similar molecules, substrates, and BLAST results PRISM
+						displays for each cluster or biosynthetic domain.</p>
+					<input type="text" size="30" name="maxSubstrates" value="5"
+						onKeyPress="return integersOnly(this, event)">
+				</article>
+			</div>
+		</div>
+		<div id="buttonHolder">
+			<div id="advanced" onClick="showAdvanced(this)">Show advanced
+				settings</div>
+			<input type="submit" value="Submit" />
+		</div>
+	</form>
+	<div id="responseDiv"></div>
+</div>

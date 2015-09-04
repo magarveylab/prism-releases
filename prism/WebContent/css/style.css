@@ -1,0 +1,741 @@
+/*! normalize.css v2.1.2 | MIT License | git.io/normalize */
+
+/* ==========================================================================
+   HTML5 display definitions
+   ========================================================================== */
+
+/**
+ * Correct `block` display not defined in IE 8/9.
+ */
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+nav,
+section,
+summary {
+    display: block;
+}
+
+/**
+ * Correct `inline-block` display not defined in IE 8/9.
+ */
+
+audio,
+canvas,
+video {
+    display: inline-block;
+}
+
+/**
+ * Prevent modern browsers from displaying `audio` without controls.
+ * Remove excess height in iOS 5 devices.
+ */
+
+audio:not([controls]) {
+    display: none;
+    height: 0;
+}
+
+/**
+ * Address styling not present in IE 8/9.
+ */
+
+[hidden] {
+    display: none;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+/**
+ * 1. Set default font family to sans-serif.
+ * 2. Prevent iOS text size adjust after orientation change, without disabling
+ *    user zoom.
+ */
+
+html {
+    font-family: sans-serif; /* 1 */
+    -ms-text-size-adjust: 100%; /* 2 */
+    -webkit-text-size-adjust: 100%; /* 2 */
+}
+
+/**
+ * Remove default margin.
+ */
+
+body {
+    margin: 0;
+}
+
+/* ==========================================================================
+   Links
+   ========================================================================== */
+
+/**
+ * Address `outline` inconsistency between Chrome and other browsers.
+ */
+
+a:focus {
+    outline: thin dotted;
+}
+
+/**
+ * Improve readability when focused and also mouse hovered in all browsers.
+ */
+
+a:active,
+a:hover {
+    outline: 0;
+}
+
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+
+/**
+ * Address variable `h1` font-size and margin within `section` and `article`
+ * contexts in Firefox 4+, Safari 5, and Chrome.
+ */
+
+h1 {
+    font-size: 2em;
+    margin: 0.67em 0;
+}
+
+/**
+ * Address styling not present in IE 8/9, Safari 5, and Chrome.
+ */
+
+abbr[title] {
+    border-bottom: 1px dotted;
+}
+
+/**
+ * Address style set to `bolder` in Firefox 4+, Safari 5, and Chrome.
+ */
+
+b,
+strong {
+    font-weight: bold;
+}
+
+/**
+ * Address styling not present in Safari 5 and Chrome.
+ */
+
+dfn {
+    font-style: italic;
+}
+
+/**
+ * Address differences between Firefox and other browsers.
+ */
+
+hr {
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    height: 0;
+}
+
+/**
+ * Address styling not present in IE 8/9.
+ */
+
+mark {
+    background: #ff0;
+    color: #000;
+}
+
+/**
+ * Correct font family set oddly in Safari 5 and Chrome.
+ */
+
+code,
+kbd,
+pre,
+samp {
+    font-family: monospace, serif;
+    font-size: 1em;
+}
+
+/**
+ * Improve readability of pre-formatted text in all browsers.
+ */
+
+pre {
+    white-space: pre-wrap;
+}
+
+/**
+ * Set consistent quote types.
+ */
+
+q {
+    quotes: "\201C" "\201D" "\2018" "\2019";
+}
+
+/**
+ * Address inconsistent and variable font size in all browsers.
+ */
+
+small {
+    font-size: 80%;
+}
+
+/**
+ * Prevent `sub` and `sup` affecting `line-height` in all browsers.
+ */
+
+sub,
+sup {
+    font-size: 80%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+
+sup {
+    top: -0.5em;
+}
+
+sub {
+    bottom: -0.25em;
+}
+
+/* ==========================================================================
+   Embedded content
+   ========================================================================== */
+
+/**
+ * Remove border when inside `a` element in IE 8/9.
+ */
+
+img {
+    border: 0;
+}
+
+/**
+ * Correct overflow displayed oddly in IE 9.
+ */
+
+svg:not(:root) {
+    overflow: hidden;
+}
+
+/* ==========================================================================
+   Figures
+   ========================================================================== */
+
+/**
+ * Address margin not present in IE 8/9 and Safari 5.
+ */
+
+figure {
+    margin: 0;
+}
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+
+/**
+ * Define consistent border, margin, and padding.
+ */
+
+fieldset {
+    border: 1px solid #c0c0c0;
+    margin: 0 2px;
+    padding: 0.35em 0.625em 0.75em;
+}
+
+/**
+ * 1. Correct `color` not being inherited in IE 8/9.
+ * 2. Remove padding so people aren't caught out if they zero out fieldsets.
+ */
+
+legend {
+    border: 0; /* 1 */
+    padding: 0; /* 2 */
+}
+
+/**
+ * 1. Correct font family not being inherited in all browsers.
+ * 2. Correct font size not being inherited in all browsers.
+ * 3. Address margins set differently in Firefox 4+, Safari 5, and Chrome.
+ */
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit; /* 1 */
+    font-size: 100%; /* 2 */
+    margin: 0; /* 3 */
+}
+
+/**
+ * Address Firefox 4+ setting `line-height` on `input` using `!important` in
+ * the UA stylesheet.
+ */
+
+button,
+input {
+    line-height: normal;
+}
+
+/**
+ * Address inconsistent `text-transform` inheritance for `button` and `select`.
+ * All other form control elements do not inherit `text-transform` values.
+ * Correct `button` style inheritance in Chrome, Safari 5+, and IE 8+.
+ * Correct `select` style inheritance in Firefox 4+ and Opera.
+ */
+
+button,
+select {
+    text-transform: none;
+}
+
+/**
+ * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
+ *    and `video` controls.
+ * 2. Correct inability to style clickable `input` types in iOS.
+ * 3. Improve usability and consistency of cursor style between image-type
+ *    `input` and others.
+ */
+
+button,
+html input[type="button"], /* 1 */
+input[type="reset"],
+input[type="submit"] {
+    -webkit-appearance: button; /* 2 */
+    cursor: pointer; /* 3 */
+}
+
+/**
+ * Re-set default cursor for disabled elements.
+ */
+
+button[disabled],
+html input[disabled] {
+    cursor: default;
+}
+
+/**
+ * 1. Address box sizing set to `content-box` in IE 8/9.
+ * 2. Remove excess padding in IE 8/9.
+ */
+
+input[type="checkbox"],
+input[type="radio"] {
+    box-sizing: border-box; /* 1 */
+    padding: 0; /* 2 */
+}
+
+/**
+ * 1. Address `appearance` set to `searchfield` in Safari 5 and Chrome.
+ * 2. Address `box-sizing` set to `border-box` in Safari 5 and Chrome
+ *    (include `-moz` to future-proof).
+ */
+
+input[type="search"] {
+    -webkit-appearance: textfield; /* 1 */
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box; /* 2 */
+    box-sizing: content-box;
+}
+
+/**
+ * Remove inner padding and search cancel button in Safari 5 and Chrome
+ * on OS X.
+ */
+
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+}
+
+/**
+ * Remove inner padding and border in Firefox 4+.
+ */
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+/**
+ * 1. Remove default vertical scrollbar in IE 8/9.
+ * 2. Improve readability and alignment in all browsers.
+ */
+
+textarea {
+    overflow: auto; /* 1 */
+    vertical-align: top; /* 2 */
+}
+
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+
+/**
+ * Remove most spacing between table cells.
+ */
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+@font-face {
+    font-family: 'helvetica-roman';
+    src: url('/prism/fonts/helveticaneueltstd-roman-webfont.eot');
+    src: url('/prism/fonts/helveticaneueltstd-roman-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/prism/fonts/helveticaneueltstd-roman-webfont.woff') format('woff'),
+         url('/prism/fonts/helveticaneueltstd-roman-webfont.ttf') format('truetype'),
+         url('/prism/fonts/helveticaneueltstd-roman-webfont.svg#helveticaneuelt_std_romanregular') format('svg');
+    font-weight: normal !important;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'helvetica-md';
+    src: url('/prism/fonts/helveticaneueltstd-md-webfont.eot');
+    src: url('/prism/fonts/helveticaneueltstd-md-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/prism/fonts/helveticaneueltstd-md-webfont.woff') format('woff'),
+         url('/prism/fonts/helveticaneueltstd-md-webfont.ttf') format('truetype'),
+         url('/prism/fonts/helveticaneueltstd-md-webfont.svg#helveticaneuelt_std_medRg') format('svg');
+    font-weight: normal !important;
+    font-style: normal;
+}
+
+
+
+/* Body */
+.last { border-width:0 !important; }
+
+
+.splashes { width:660px; margin:0 auto; }
+.splashes a { display:block; width:160px; text-align:center; float:left; margin-left:90px; text-decoration:none; }
+.splashes a:first-child { margin-left:0; }
+.splash:hover, .splash:focus { cursor:pointer; }
+.splash span {
+	display:block;
+	width:160px;
+	height:160px;
+	background:url('/prism/img/splash_img.png') top left no-repeat;
+}
+span.genome { background-position:0 0; }
+.genome:hover .genome { background-position:-160px 0; }
+span.scaffold { background-position:0 -160px; }
+div.scaffold:hover .scaffold { background-position:-160px -160px; }
+span.database { background-position:0 -320px; }
+div.database:hover .database { background-position:-160px -320px; }
+.heading { 
+	font-size:32px;
+	margin:0;
+	text-align:center; 
+	font-family:'helvetica-md', "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.subhead { color:#999; font-size:18px; line-height:24px; text-align:center; margin:18px 0 55px; }
+a .splash h3 { 
+	font-size:24px;
+	margin:32px 0 8px; 
+	font-family:'helvetica-md', "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color:#666;
+}
+.description { color:#999; margin:0; line-height:22px; }
+.instructions { color:#999; font-size:13px; }
+#mainDiv, #aboutDiv, #helpDiv, #scaffoldDiv, #splashDiv, #genomeDiv, #fragmenterDiv, input[name=init], 
+	#screen1, #screen2, #screen3, #belowContent, #prismDiv, #substructureDiv, #jsonDiv { display:none; }
+#sessionIDDiv, #smilesResponseDiv { display:none; }
+#splashDiv { height:480px; }
+.field { border-bottom:1px solid #dedede; padding:22px 0; }
+.field p { margin:18px 0 0; }
+.field .numbers { margin:0 0 8px 16px; }
+.utility { clear:both; }
+
+th,td {
+	padding: 6px;
+	font-size: 13px;
+} 
+/* Sortable tables */
+table.sortable thead {
+	background-color: #eee;
+	color: #666;
+	font-weight: bold;
+	cursor: default;
+}
+.clusterTable tbody td { padding:12px 6px; }
+th {padding:10px 3px; color:#FFF; background:#21252B; }
+td:first-child,th:first-child { padding-left:6px; }
+h3 { padding:0 0 14px; margin:24px 0; border-bottom:1px solid #e3e3e3; }
+.splash h3 { border:none; padding:0; }
+h4 { margin:0 0 6px; font-size:14px; }
+h5 { margin:12px 0 0; clear:both; font-size:14px; line-height:1.4; }
+.static p { color:#999; margin:0 0 12px; line-height:1.6; }
+.static h3 { margin:30px 0 2px; border: none; padding:0px; 
+	font-family: 'helvetica-md', "Helvetica Neue", Helvetica, Arial, sans-serif; }
+.static { width: 600px; margin: 0 auto; }
+.static header.sub, #genomeForm header.sub { margin-top:0px; }
+
+.even {
+	background: #EEE;
+}
+
+#responseDiv fieldset > div.cf { border-bottom:1px solid #dedede; padding:15px 0; }
+#sessionError, #browserError { width:420px; margin:0 auto; padding:0 20px; }
+
+.clearfix:after {
+   content: " "; /* Older browser do not support empty content */
+   visibility: hidden;
+   display: block;
+   height: 0;
+   clear: both;
+}
+
+
+/* ///////////////////// Prism ///////////////////// */
+/* Generic & utility */ 
+body {
+	font-family:'helvetica-roman', "Helvetica Neue", Helvetica, Arial, sans-serif; 
+	font-size:13px;
+	line-height:22px;
+	color:#666;
+	opacity:0.99;
+}
+h1,h2,h3,h4,h5,h6,strong,th { font-weight:normal; }
+h1, h2, h3, th, h4, h5, h6, strong { font-family:'helvetica-md', "Helvetica Neue", Helvetica, Arial, sans-serif; }
+a { color:#21252B; }
+a:hover, a:focus { color: #000; }
+.container { width: 940px; margin:0 auto; }
+.cf:before, .cf:after { content: ""; display:table; }
+.cf:after { clear:both; }
+.small { font-size:11px !important; }
+.center { text-align:center; }
+.block { display:block; clear:both; }
+
+
+/* Header */
+#header { height:70px; width:100%; background:#21252B; line-height:74px; color:#FFF; margin-bottom:90px;
+	font-family:'helvetica-roman', "Helvetica Neue", Helvetica, Arial, sans-serif; }
+#header h1 { margin:0; font-size:13px; float:left; }
+#header ul { list-style:none outside none; width:320px; float:right; margin:0; }
+#header li { float:left; width:60px; text-align:right; margin: 0 0 0 20px; }
+#header a { color:#FFF; text-decoration:none; }
+#header a:hover { opacity:0.8; }
+
+/* Form UI */
+input[type="submit"], input[type="reset"], input[type="button"] { 
+	background:#21252B; width:230px; height: 52px; border-radius:6px; border-width:0; color:#FFF; font-size:13px; }
+input[type="submit"] { margin-right:16px; }
+input[type="submit"]:hover, input[type="submit"]:focus { background: #000; }
+input[type="submit"]:disabled { background:#ccc; }
+input[type="reset"], input.gray { background: #ccc; }
+input[type="reset"]:hover, input[type="reset"]:focus, input.gray:hover, input.gray:focus { background:#bababa; }
+input[type="text"], input[type="number"] { height:24px; line-height:24px; padding:2px 8px; border:1px solid #dedede; 
+	border-radius:3px; width:122px; margin:1px 0 4px; }
+label.filebutton { width:138px; height:30px; line-height:32px; overflow:hidden; position:relative; background-color:#f5f5f5; 
+	border-radius:3px; border:1px solid #dedede; float:left; text-align:center; }
+label.filebutton:hover, label.filebutton:focus { cursor: pointer; }
+label span input { display:none; }
+input[type="text"].textfw { width:362px; }
+div.checker { margin-top:-2px !important; }
+.inputFileName { line-height:33px; margin-left:8px; width:291px; overflow:hidden; height:32px; float:left; }
+#buttonHolder { clear:both; padding:20px 0 80px; width: 480px; margin: 0 230px; }
+#jsonButtonHolder { clear: both; padding:20px 0 80px; }
+#buttonHolder input { margin:0 auto; }
+form label:first-child { border-bottom:1px solid #dedede; padding-bottom:6px; margin-bottom:0; 
+	font-family: 'helvetica-md', "Helvetica Neue", Helvetica, Arial, sans-serif; }
+form .field { border:none; }
+form .title { margin-bottom:30px; }
+form .formHint { margin:12px 0 12px; width:100%; }
+form .formHint label { color:#666; }
+label:first-child { margin-bottom:6px; font-size:15px; display:block; }
+input[type=text] { color:#999; }
+input[type=number] { width:30px; }
+fieldset { border-width:0px; margin:0; padding:0; }
+.thanks { text-align: center; font-size: 16px; margin-bottom: -80px; }
+
+/* Search form */
+header.sub { margin:60px auto 30px; text-align:center; }
+header.sub h3 { font-size:28px; border:none; padding:0; margin:32px 0 0; 
+	font-family:'helvetica-md', "Helvetica Neue", Helvetica, Arial, sans-serif; }
+header.sub p { color:#999; font-size:15px; line-height:22px; }
+header.sub .main { display:block; width:160px; height:160px; background:url('/prism/img/logo.svg');
+	background-size:160px 160px; margin:0 auto; }
+.formHint { float:left; clear:both; font-size:13px; line-height:22px; color:#999; margin-top:5px; }
+.columnleft { float:left; width:440px; }
+.columnright { float:right; width:440px; }
+
+/* Results */
+p.formHint { width:100%; }
+p.formHintItem { float:left; width:50%; margin:0 0 24px; }
+p.formHintItem input { display:block; margin:4px 0 0; }
+article.orf { width:100%; margin:40px 0; clear:both; }
+article.orf img { float:left; margin:20px 0; }
+article.orf h1 { margin: 16px 0 20px; font-size:15px; border-bottom: 1px solid #e3e3e3; padding: 0px 0px 14px; }
+article.orf h2 { font-size: 15px; margin:12px 0 0; }
+article.orf p, .cluster p, .container p { word-wrap: break-word; }
+article.orf p { margin:0; }
+article.orf p, article.orf h1 { float:left; width:440px; clear:left; }
+article.orf table { width:440px; float:right; margin-top:50px; }
+tr.substrate td:first-child { padding-left:26px; }
+.orf td a { font-size:10px; margin-left:5px; border: 1px solid #bbb; border-radius: 20px; height: 12px; width: 12px;
+	display: inline-block; color: #bbb; line-height: 1; text-align: center; text-decoration: none; }
+.orf td a:hover, .orf td a:focus { border: 1px solid #21252B; color: #21252B; }
+.orf td:first-child { max-width: 217px !important; }
+tbody.details { display:none; overflow:hidden; }
+th { text-align: left; }
+.sequence, .hideLink { display:none; }
+span.sequence span { color:#FFF; }
+.stage { width:440px; margin-right:60px; word-wrap:break-word; float:left; font-size:13px; }
+.stageHolder { clear:both; padding:10px 0; border-bottom:1px solid #dedede; }
+.firstStageHolder { border-top:1px solid #dedede; }
+.detail { margin: 0; float:left; font-size:13px; line-height:22px; color:#999; width:440px; word-wrap:break-word; }
+#responseDiv, #jsonResponseDiv { margin:40px 0; }
+.clusterTable { width:940px; table-layout:fixed; margin-bottom: 80px; }
+.clusterTable th, .clusterTable td { word-wrap:break-word; }
+thead { background-color:#21252B; }
+.clusterHomologs { width:100%; float:left; }
+.clusterHomologs .clusterGraph { border: none; }
+.clusterHomologs tbody tr { border-bottom:1px solid #dedede; }
+
+a { text-decoration:none; border-bottom:1px solid; }
+nav a { border-bottom:none; } 
+
+/* Graphs */
+h1.results { margin:80px 0 40px; text-align:center;  }
+.genomeGraph { position:relative; height:18px; width:100%; margin:0 0 40px; background:#ebebeb; }
+.genomeGraph .name, .genomeGraph .name-top { text-align: center; }
+.clusterGraph { line-height: 1; border-bottom: 1px solid #dedede; padding: 10px 0 16px; }
+.clusterHeader .clusterGraph { border-bottom:none; padding-top:0px;}
+.orfGraph { position:relative; height:18px; width:440px; margin:4px 0 10px; background:#ebebeb; float:left; clear:left; }
+span.clusterGraphOrf { background:url('/prism/img/positive-rf.png') #bbb no-repeat right top; height:16px; 
+	display:inline-block; margin-top:6px; }
+span.clusterGraphOrf.negative { background:url('/prism/img/negative-rf.png') #bbb no-repeat left top;
+	border-right: 1px solid #FFF; margin-left:-1px; }
+span.pks { background-color:#1D7CF2 !important; }
+span.nrps { background-color:#FF0000 !important; }
+span.hybrid { background-color:#FF0000; }
+.hybrid span.hybrid { background-color:#1D7CF2; height:8px; display:block; background-image:url('/prism/img/positive-rf.png');
+	background-position: top right; }
+span.clusterGraphOrf.negative span.hybrid { background-position:top left; }
+.genomeGraphCluster.hybrid span.hybrid { background-image:none; }
+.genomeGraphCluster.hybrid, .clusterGraphOrf.hybrid { background-color:#FF0000 !important; }
+.negative span.hybrid { background-image:url('/prism/img/negative-rf.png'); }
+.genomeGraphCluster.null { background-color:#696969; }
+span.clusterGraphOrf.modification { background-color:/*#696969*/ #bbb; }
+span.clusterGraphOrf.inactive { background-color:#bbb; }
+span.orfGraphDomain, span.genomeGraphCluster { height:18px; position:absolute; display:block; }
+span.orfGraphDomain { background-color: #21252B; }  
+span.orfAssemblyGraphDomain { width:34px; height:34px; border-radius:17px; color:#FFF; display:block; line-height:36px;
+	font-family:'helvetica-md', "Helvetica Neue", Helvetica, Arial, sans-serif; text-align:center; position: relative;
+	margin:4px 0; float:left; background-color: #21252B; }
+span.n_methyltransferase, span.c_methyltransferase, span.o_methyltransferase, span.glycosyltransferase, 
+	span.tailoring, span.nitroreductase, span.prerequisite { background-color: #006E16 !important; }	
+span.orfAssemblyGraphDomain.sugar span.inner { display: inline-block; vertical-align: middle; line-height: 1.4; 
+	margin-top:-2px; }
+span.adenylation, span.adenylation_ketoreductase, span.acyl_adenylating { background-color: #FF0000; }
+span.acyltransferase { background-color: #1D7CF2; }
+span.product_template_i, span.product_template_ii, span.product_template_iii, 
+	span.product_template_iv, span.product_template_v, span.sat_c2, span.sat_c6,
+	span.claisen_cyclase { background-color: #1354A5; } 
+span.condensation { background-color: #FF4C4C; }
+span.epimerization { background-color: #CC0000; }
+span.cyclization { background-color: #CC3D3D; }
+span.ketosynthase { background-color: #4439AC; }
+span.enoylreductase { background-color: #73859d; }
+span.ketoreductase { background-color: #42426F; }
+span.dehydratase, span.inferred_dehydratase { background-color: #0099CC; }
+span.inferred_dehydratase sub { font-style: italic; } 
+span.thiolation, span.modification { background-color: #bbb; } 
+span.reductase, span.pptase, span.enediyne_pptase { background-color:#696969; }
+span.thioesterase { background-color: #21252B; }
+span.ribosomal { background-color:#FF6103 !important; }
+span.sugar { background-color:#7B1F5A !important; }
+span.type_ii_pks, span.type_ii_polyketide { background-color: #F2A71D !important; }
+span.resistance { background-color:#AE291A !important; }
+span.regulator { background-color:#8C8249 !important; }
+span.beta_lactam { background-color:#E80074 !important; }
+span.aminoglycoside { background-color:#00B1B2 !important; }
+span.nucleoside { background-color:#652600 !important; }
+
+/* sugar stuff */
+div.sugars { width:100%; clear:both; }
+div.sugars table { width:100%; } 
+div.sugars tbody tr { border-top:1px solid #dedede; }
+div.sugars tbody#sugarTableShow tr { border-top: none; } 
+span.sugarAssemblyGraph { display:inline-block; margin:6px 15px 0 0; }
+span.sugarAssemblyGraph span.orfAssemblyGraphDomain { background-color:#7B1F5A; }
+span.sugarAssemblyGraph span.orfAssemblyGraphDomain.o_methyltransferase, 
+	span.sugarAssemblyGraph span.orfAssemblyGraphDomain.c_methyltransferase { background-color:#7B1F5A !important; }
+span.sugarAssemblyGraph.remaining span.orfAssemblyGraphDomain,
+	span.sugarAssemblyGraph span.orfAssemblyGraphDomain.missing { background-color:#bbb !important; }
+span.sugarAssemblyGraph span.sugarName { display:block; font-size:11px; white-space: nowrap; float: left; clear:both;
+	font-family: 'helvetica-md', "Helvetica Neue", Helvetica, Arial, sans-serif; }
+#sugarTableShow span#hideText, #sugarTableShow span#showText { border: 1px solid #dedede; padding: 14px; border-radius: 6px; 
+	cursor: pointer; color: #999; width: 110px; text-align: center; display: block; margin:10px auto 0; }
+#sugarTableShow span#hideText:hover, #sugarTableShow span#showText:hover { color:#666; border:1px solid #666; }
+#sugarTableHidden, #sugarTableShow span#hideText { display:none; }
+
+span.name { display:block; padding-top:20px; font-size:11px; color:#999;}
+span.name-top { display: block; color:#999; font-size: 11px; margin-top: -22px; }
+.hybrid span.name { padding-top: 12px; } 
+div.orfAssemblyGraph { float:left; margin:0 16px 10px 0; }
+div.clusterAssemblyGraph { width:600px; }
+article.orf div.orfAssemblyGraph { clear:left; max-width: 440px; }
+span.orfAssemblyGraphDomain.thiolation { top:8px; }
+span.orfAssemblyGraphTitle { font-size:11px; display:block; color:#999; }
+.clusterHolder { margin:40px 0; }
+.cluster { padding:20px 0; width:940px; margin-bottom: 60px; }
+.cluster h1 { font-size: 17px; margin-top:0; padding-bottom:8px; border-bottom:1px solid #dedede; margin:16px 0 12px; }
+div.clusterHeader { width:600px; float:left; }
+section.reportHeaderRight { width:300px; float:right; }
+.reportHeaderRight ul { list-style: none outside none; padding: 0; }
+.circularGenomeGraph { width:410px; height:410px; margin:0 265px; }
+.clusterGenomeGraph { width:210px; height:210px; margin:0 365px; }
+.advancedLeft, .advancedRight { display:none; }
+#advanced { margin: -20px 14px 20px 0; border: 1px solid #dedede; padding: 14px; border-radius: 6px; cursor:pointer; 
+	color:#999; width:200px; text-align:center; display:inline-block; }
+#advanced:hover, #advanced:focus { color:#666; border:1px solid #666; }
+
+/* Genome graph legend */
+.legend { width:152px; margin:-308px 406px 190px; }
+.legend p { margin: 0; }
+.legend span { display: inline-block; width: 14px; height: 14px; margin-right: 4px; margin-bottom: -1px; }
+.legend span.current { background-color:#21252B; }
+.legend .hybrid span { background-color:#1D7CF2; overflow:hidden; }
+.legend .hybrid span span { background-color:#FF0000; height:7px; display:block; }
+.clusterHeader .legend { width:100%; margin:0; padding-bottom:26px; }
+.clusterHeader .legend p { width:200px; float:left; }
+.clusterHeader .legend p.full { width:100%; float:none; }
+ 
+/* Homology tables */ 
+table.homology { width: 100%; margin-bottom:26px; }
+table.tanimoto { width:100%; word-wrap:break-word; table-layout:fixed; }
+h3.tanimotoHeader { width:100%; float:left; }
+td.smiles { font-size: 11px; font-family:"Courier New", Courier, monospace; line-height:1.5; }
+
+#aboutDiv, #helpDiv { margin-bottom:100px; }
+
+.dev { border: 1px solid #dedede; border-radius: 20px; padding-bottom: 15px; width: 460px; margin: 0 auto 60px; }
+.dev ul { width: 380px; text-align:left; margin:0 auto; }
+
+/* JSON */
+header.jsonHeader { width:440px; float:left; text-align:left; margin-top:0px; }
+.json { width:440px; float:right; }
+#jsonButtonHolder { width:100%; text-align:center; }
+.versionWarning { width: 370px; margin: 0 auto; text-align: center; color: #F00; border: 3px solid #F00;
+    border-radius: 12px; padding: 20px; background-color:#F99; margin-bottom:40px; }
+.versionWarning p { margin:0;
+	font-family:'helvetica-md', "Helvetica Neue", Helvetica, Arial, sans-serif; }
+

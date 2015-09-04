@@ -1,0 +1,67 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b1 (May 2013); http://hmmer.org/
+# Copyright (C) 2013 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  resistance_hmms/fosfomycin-metallothiotransferase.hmm
+# target sequence database:        allorfs2.fasta
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       fosfomycin-metallothiotransferase  [M=330]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                -----------
+  ------ inclusion threshold ------
+       0.64   13.5   0.1          1   12.9   0.1    1.2  1  pyralomicin.fasta_766    [729 - 1] (REVERSE SENSE) 
+        1.3   12.6   0.6         68    6.9   0.1    2.2  2  griseoviridin.fasta_103  [8736 - 10436] 
+
+
+Domain annotation for each sequence (and alignments):
+>> pyralomicin.fasta_766  [729 - 1] (REVERSE SENSE) 
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   12.9   0.1   4.7e-06         1     128     160 ..      23      55 ..      11      61 .. 0.87
+
+  Alignments for each domain:
+  == domain 1  score: 12.9 bits;  conditional E-value: 4.7e-06
+  fosfomycin-metallothiotransferase 128 hgflhlkaagfelddagatllvgrngagktvfl 160
+                                         g l l+   f ++d++ + lvg+ngagkt +l
+              pyralomicin.fasta_766  23 DGRLLLHEVSFRVGDGAKAGLVGPNGAGKTTLL 55 
+                                        678889999*********************987 PP
+
+>> griseoviridin.fasta_103  [8736 - 10436] 
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?    6.9   0.1   0.00032        68     128     160 ..      43      75 ..      31      81 .. 0.87
+   2 ?    3.7   0.1     0.003   6.4e+02     135     161 ..     390     416 ..     384     437 .. 0.85
+
+  Alignments for each domain:
+  == domain 1  score: 6.9 bits;  conditional E-value: 0.00032
+  fosfomycin-metallothiotransferase 128 hgflhlkaagfelddagatllvgrngagktvfl 160
+                                         g l l a   ++  +  t +vg+ng+gkt +l
+            griseoviridin.fasta_103  43 DGRLVLDAVTCTFAVGERTGIVGENGSGKTTLL 75 
+                                        4779999***********************987 PP
+
+  == domain 2  score: 3.7 bits;  conditional E-value: 0.003
+  fosfomycin-metallothiotransferase 135 aagfelddagatllvgrngagktvfla 161
+                                          g++++ +   l+ g+ng+gk+ +l 
+            griseoviridin.fasta_103 390 PVGLQMPAGERLLVTGPNGGGKSTLLQ 416
+                                        568999999999999*******98874 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (330 nodes)
+Target sequences:                       431939  (35920366 residues searched)
+Passed MSV filter:                      1945  (0.00450295); expected 8638.8 (0.02)
+Passed bias filter:                     1709  (0.00395658); expected 8638.8 (0.02)
+Passed Vit filter:                        86  (0.000199102); expected 431.9 (0.001)
+Passed Fwd filter:                         2  (4.63028e-06); expected 4.3 (1e-05)
+Initial search space (Z):             431939  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 2.08u 0.09s 00:00:02.17 Elapsed: 00:00:00.71
+# Mc/sec: 16695.38
+//
+[ok]

@@ -1,0 +1,47 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b1 (May 2013); http://hmmer.org/
+# Copyright (C) 2013 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  resistance_hmms/fosfomycin-Glutathione_transferase_resistance_protein.hmm
+# target sequence database:        allorfs2.fasta
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       fosfomycin-Glutathione_transferase_resistance_protein  [M=266]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence           Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------           -----------
+  ------ inclusion threshold ------
+        2.3   11.7   0.0        2.3   11.7   0.0    1.0  1  andrimid.fasta_600  [25273 - 25377] 
+
+
+Domain annotation for each sequence (and alignments):
+>> andrimid.fasta_600  [25273 - 25377] 
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   11.7   0.0   5.3e-06       2.3     223     245 ..      13      35 .]       3      35 .] 0.85
+
+  Alignments for each domain:
+  == domain 1  score: 11.7 bits;  conditional E-value: 5.3e-06
+  fosfomycin-Glutathione_transferase_resistance_protein 223 carrgaecfimrgdadsdleflt 245
+                                                             +r g++c+imrg+ +  l fl+
+                                     andrimid.fasta_600  13 VTRSGTQCLIMRGQGHQALPFLF 35 
+                                                            4699************9999986 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (266 nodes)
+Target sequences:                       431939  (35920366 residues searched)
+Passed MSV filter:                      3806  (0.00881143); expected 8638.8 (0.02)
+Passed bias filter:                     2356  (0.00545447); expected 8638.8 (0.02)
+Passed Vit filter:                       103  (0.00023846); expected 431.9 (0.001)
+Passed Fwd filter:                         1  (2.31514e-06); expected 4.3 (1e-05)
+Initial search space (Z):             431939  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 1.88u 0.07s 00:00:01.95 Elapsed: 00:00:00.72
+# Mc/sec: 13270.58
+//
+[ok]

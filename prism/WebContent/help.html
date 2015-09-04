@@ -1,0 +1,49 @@
+	<div class="static">		
+
+		<header class="sub">
+			<h3>Help</h3>
+		</header>
+
+			<div class="cf">
+				<h3>Step 1: upload a sequence file</h3>
+				<p>PRISM accepts DNA sequence input in FASTA or GenBank format. 
+				When input sequences contain over 1,000 contigs, only the 1,000 largest will
+				be considered in order to minimize server load. Only contigs above 500 nt will
+				be considered. Upload a nucleotide sequence by selecting &ldquo;Choose file.&rdquo; </p>
+				
+				<h3>Step 2: enable or disable dereplication</h3>
+				<p>PRISM is capable of determining biosynthetic gene cluster homology to a database
+				of 509 biosynthetic gene clusters, and chemical similarity of predicted metabolites
+				to a database of 49,860 known natural products. However, these operations
+				can significantly extend the runtime of a PRISM search. If you are only interested in
+				secondary metabolite structure predictions, leave the &ldquo;Enable known
+				natural product scoring&rdquo; box unchecked.</p> 
+				
+				<h3>Step 3 (optional): configure advanced options</h3>
+				<p>PRISM makes several advanced options available to users with specific needs. General users 
+				do not need to configure these parameters.</p>
+				<p><strong>Structure limit:</strong> For clusters with a large number of potential open reading
+				frame permutations, or tailoring enzymes, hundreds or even thousands of combinatorial structures
+				may be generated, significantly extending the runtime of a PRISM search. For this reason, we suggest
+				limiting the maximum size of each cluster's combinatorial structure library. A pseudorandom 
+				selection of combinatorial plans will have their corresponding structures generated.</p>
+				<p><strong>Tanimoto cutoff:</strong> Optionally increase or decrease the Tanimoto score to a known
+				small molecule above which a cluster is considered to produce a known natural product.</p>
+				<p><strong>Homology cutoff:</strong> Optionally increase or decrease the genetic homology score 
+				above which a cluster is considered identical to a known biosynthetic gene cluster.</p>
+				<p><strong>Optional searches:</strong> In addition to natural product biosynthesis genes,
+				PRISM can detect resistance and regulatory genes within biosynthetic gene clusters. By default, resistance
+				domain detection is enabled, while regulatory domain detection is disabled. Both operations
+				extend the runtime of a PRISM search, and can therefore be enabled or disabled.</p>
+				<p><strong>Window:</strong> Optionally increase or decrease the clustering window that PRISM's greedy algorithm
+				uses for determining the boundaries of each biosynthetic gene cluster.</p>
+				<p><strong>Display:</strong> Optionally display more or less detailed tabular output for each hidden
+				Markov model or BLAST database search.</p>
+				
+				<h3>Step 4: submit</h3>
+				<p>Once the Submit button is clicked, PRISM will automatically execute its algorithms
+				for the identification of unknown natural products within your input sequence file.
+				The link at which your results will appear is automatically provided. Please keep the web page open until
+				your sequence has finished uploading.</p>
+			</div>
+	</div>
