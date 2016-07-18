@@ -16,7 +16,7 @@ import ca.mcmaster.magarveylab.prism.util.PrismStringBuffer;
 public class ClusterGraph {
 	
 	/**
-	 * Get the HTML graph of this biosynthetic gene cluster.
+	 * Get the HTML graph of this biosynthetic gene cluster.\
 	 * @param cluster	cluster in question
 	 * @return			graph in HTML format
 	 */
@@ -29,6 +29,8 @@ public class ClusterGraph {
 		Iterator<Orf> iterator = orfs.iterator();
 		while (iterator.hasNext()) {
 			Orf orf = iterator.next();
+			if (orf.domains().size() == 0)
+				continue;
 			StringBuffer type = new StringBuffer();
 			boolean scaffold = false;
 			if (orf.type() != null) {

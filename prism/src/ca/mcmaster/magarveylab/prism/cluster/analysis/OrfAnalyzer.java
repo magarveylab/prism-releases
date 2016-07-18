@@ -16,6 +16,7 @@ import ca.mcmaster.magarveylab.prism.util.Strings;
 
 /**
  * Analyzes orfs for combinatorial library generation.
+ * 
  * @author skinnider
  *
  */
@@ -140,19 +141,14 @@ public class OrfAnalyzer {
 				type = OrfTypes.RIBOSOMAL;
 			if (orf.domains(DomainFamilies.TAILORING).size() > 0) 
 				type = OrfTypes.TAILORING;
-			if (orf.domains(DomainFamilies.AMINOGLYCOSIDE).size() > 0) 
-				type = OrfTypes.AMINOGLYCOSIDE;
-			if (orf.domains(DomainFamilies.BETA_LACTAM).size() > 0) 
-				type = OrfTypes.BETA_LACTAM;
 			if (orf.domains(DomainFamilies.TYPE_II_POLYKETIDE).size() > 0) 
 				type = OrfTypes.TYPE_II_PKS;
-			if (orf.domains(DomainFamilies.NUCLEOSIDE).size() > 0) 
-				type = OrfTypes.NUCLEOSIDE;
 		}
-		
-		if (pks == true || orf.domains(ThiotemplatedDomains.ENEDIYNE_PPTASE).size() > 0)
+
+		if (pks == true
+				|| orf.domains(ThiotemplatedDomains.ENEDIYNE_PPTASE).size() > 0)
 			type = OrfTypes.PKS;
-		if (nrps == true) 
+		if (nrps == true)
 			type = OrfTypes.NRPS;
 		if (pks == true && nrps == true) 
 			type = OrfTypes.HYBRID;

@@ -12,11 +12,11 @@ import org.openscience.cdk.interfaces.IAtomContainer;
 import ca.mcmaster.magarveylab.enums.CStarterSubstrates;
 import ca.mcmaster.magarveylab.enums.ModuleTypes;
 import ca.mcmaster.magarveylab.enums.domains.ThiotemplatedDomains;
-import ca.mcmaster.magarveylab.enums.substrates.AdenylationSubstrates;
 import ca.mcmaster.magarveylab.prism.cluster.scaffold.Chemoinformatics.Atoms;
 import ca.mcmaster.magarveylab.prism.data.Domain;
 import ca.mcmaster.magarveylab.prism.data.Module;
 import ca.mcmaster.magarveylab.prism.data.Substrate;
+import ca.mcmaster.magarveylab.prism.enums.hmms.AdenylationHmms;
 import ca.mcmaster.magarveylab.prism.util.SmilesIO;
 
 /**
@@ -42,12 +42,12 @@ public class ModuleAnalyzer {
 		hydroxyls.addAll(cyclizations);
 
 		// get -OH containing amino acids
-		hydroxyls.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates._3_5_DIHYDROXYPHENYLGLYCINE));
-		hydroxyls.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates._4_HYDROXY_PHENYLGLYCINE));
-		hydroxyls.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates.TYROSINE_1));
-		hydroxyls.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates.TYROSINE_2));
-		hydroxyls.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates.BETA_HYDROXYTYROSINE));
-		hydroxyls.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates.HYDROXYVALINE));
+		hydroxyls.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms._3_5_DIHYDROXYPHENYLGLYCINE));
+		hydroxyls.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms._4_HYDROXY_PHENYLGLYCINE));
+		hydroxyls.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms.TYROSINE_1));
+		hydroxyls.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms.TYROSINE_2));
+		hydroxyls.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms.BETA_HYDROXYTYROSINE));
+		hydroxyls.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms.HYDROXYVALINE));
 		
 		return hydroxyls;
 	}
@@ -62,10 +62,10 @@ public class ModuleAnalyzer {
 	public static List<Module> cyclizationHydroxyls(List<Module> permutation) throws IOException, CDKException {
 		List<Module> cyclizations = new ArrayList<Module>();
 		
-		cyclizations.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates.SERINE));
-		cyclizations.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates.THREONINE_1));
-		cyclizations.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates.THREONINE_2));
-		cyclizations.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates.ALLO_THREONINE));
+		cyclizations.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms.SERINE));
+		cyclizations.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms.THREONINE_1));
+		cyclizations.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms.THREONINE_2));
+		cyclizations.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms.ALLO_THREONINE));
 		
 		// Serine/threonine modules cannot be cyclized already 
 		Iterator<Module> itr = cyclizations.iterator();
@@ -140,13 +140,13 @@ public class ModuleAnalyzer {
 	 */
 	public static List<Module> bcaa(List<Module> permutation) {
 		List<Module> bcaa = new ArrayList<Module>();
-		bcaa.addAll(modules(permutation, AdenylationSubstrates.ISOLEUCINE));
-		bcaa.addAll(modules(permutation, AdenylationSubstrates.LEUCINE_1));
-		bcaa.addAll(modules(permutation, AdenylationSubstrates.LEUCINE_2));
-		bcaa.addAll(modules(permutation, AdenylationSubstrates.LEUCINE_3));
-		bcaa.addAll(modules(permutation, AdenylationSubstrates.VALINE_1));
-		bcaa.addAll(modules(permutation, AdenylationSubstrates.VALINE_2));
-		bcaa.addAll(modules(permutation, AdenylationSubstrates.VALINE_3));
+		bcaa.addAll(modules(permutation, AdenylationHmms.ISOLEUCINE));
+		bcaa.addAll(modules(permutation, AdenylationHmms.LEUCINE_1));
+		bcaa.addAll(modules(permutation, AdenylationHmms.LEUCINE_2));
+		bcaa.addAll(modules(permutation, AdenylationHmms.LEUCINE_3));
+		bcaa.addAll(modules(permutation, AdenylationHmms.VALINE_1));
+		bcaa.addAll(modules(permutation, AdenylationHmms.VALINE_2));
+		bcaa.addAll(modules(permutation, AdenylationHmms.VALINE_3));
 		return bcaa;
 	}
 	
@@ -157,14 +157,14 @@ public class ModuleAnalyzer {
 	 */
 	public static List<Module> sixMemberedAromatic(List<Module> permutation) {
 		List<Module> aromatic = new ArrayList<Module>();
-		aromatic.addAll(modules(permutation, AdenylationSubstrates.PHENYLALANINE));
-		aromatic.addAll(modules(permutation, AdenylationSubstrates.BETA_HYDROXY_PHENYLALANINE));
-		aromatic.addAll(modules(permutation, AdenylationSubstrates.BETA_METHYL_PHENYLALANINE));
-		aromatic.addAll(modules(permutation, AdenylationSubstrates._3_5_DIHYDROXYPHENYLGLYCINE));
-		aromatic.addAll(modules(permutation, AdenylationSubstrates._4_HYDROXY_PHENYLGLYCINE));
-		aromatic.addAll(modules(permutation, AdenylationSubstrates.TYROSINE_1));
-		aromatic.addAll(modules(permutation, AdenylationSubstrates.TYROSINE_2));
-		aromatic.addAll(modules(permutation, AdenylationSubstrates.BETA_HYDROXYTYROSINE));
+		aromatic.addAll(modules(permutation, AdenylationHmms.PHENYLALANINE));
+		aromatic.addAll(modules(permutation, AdenylationHmms.BETA_HYDROXY_PHENYLALANINE));
+		aromatic.addAll(modules(permutation, AdenylationHmms.BETA_METHYL_PHENYLALANINE));
+		aromatic.addAll(modules(permutation, AdenylationHmms._3_5_DIHYDROXYPHENYLGLYCINE));
+		aromatic.addAll(modules(permutation, AdenylationHmms._4_HYDROXY_PHENYLGLYCINE));
+		aromatic.addAll(modules(permutation, AdenylationHmms.TYROSINE_1));
+		aromatic.addAll(modules(permutation, AdenylationHmms.TYROSINE_2));
+		aromatic.addAll(modules(permutation, AdenylationHmms.BETA_HYDROXYTYROSINE));
 		return aromatic;
 	}
 
@@ -174,7 +174,7 @@ public class ModuleAnalyzer {
 	 * @param type			substrate type to find
 	 * @return				
 	 */
-	public static List<Module> modules(List<Module> permutation, AdenylationSubstrates type) {
+	public static List<Module> modules(List<Module> permutation, AdenylationHmms type) {
 		List<Module> modules = new ArrayList<Module>();
 		for (Module module : permutation) 
 			if (module.isAdenylationModule()) {

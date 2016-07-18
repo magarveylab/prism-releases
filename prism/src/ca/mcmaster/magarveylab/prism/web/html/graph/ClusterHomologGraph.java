@@ -20,10 +20,15 @@ public class ClusterHomologGraph {
 	 * @return			cluster graph as HTML string 
 	 * @throws IOException
 	 */
-	public static String html(HomologousCluster homolog, Session session) throws IOException {
+	public static String html(HomologousCluster homolog, Session session) {
 		String name = homolog.name();
 		String file = session.subDir("clusterGraphs") + name + ".txt";
-		String contents = Files.readFile(file);
+		String contents;
+		try {
+			contents = Files.readFile(file);
+		} catch (IOException e) {
+			contents = "<div class='clusterGraph'>No representation</div class='clusterGraph'>";
+		}
 		return contents;
 	}
 	

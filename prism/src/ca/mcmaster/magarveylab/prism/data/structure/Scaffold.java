@@ -10,6 +10,7 @@ import org.openscience.cdk.AtomContainer;
 import org.openscience.cdk.interfaces.IAtomContainer;
 
 import ca.mcmaster.magarveylab.prism.data.Module;
+import ca.mcmaster.magarveylab.prism.data.structure.Residue;
 import ca.mcmaster.magarveylab.prism.util.exception.NoResidueException;
 
 /**

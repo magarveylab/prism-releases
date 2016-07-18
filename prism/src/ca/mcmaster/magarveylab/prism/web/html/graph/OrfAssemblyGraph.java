@@ -41,7 +41,14 @@ public class OrfAssemblyGraph {
 			} else if (DomainAnalyzer.isSubstrateDomainType(type)) {
 				typeName.append(type.toString().toLowerCase());
 				Substrate top = domain.topSubstrate();
-				abbreviation.append(top.type().abbreviation());
+				
+				
+				if(top.type() == null){
+					abbreviation.append("null");
+				}
+				else{
+					abbreviation.append(top.type().abbreviation());
+				}
 			} else if (type == ThiotemplatedDomains.KETOSYNTHASE) {
 				if (DomainAnalyzer.isStarterKS(domain)) {
 					abbreviation.append("KS<sub>Q</sub>");

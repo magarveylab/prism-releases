@@ -663,11 +663,15 @@ span.thioesterase { background-color: #21252B; }
 span.ribosomal { background-color:#FF6103 !important; }
 span.sugar { background-color:#7B1F5A !important; }
 span.type_ii_pks, span.type_ii_polyketide { background-color: #F2A71D !important; }
+span.primary_metabolite { background-color:#0ABF5A !important; }
 span.resistance { background-color:#AE291A !important; }
 span.regulator { background-color:#8C8249 !important; }
 span.beta_lactam { background-color:#E80074 !important; }
 span.aminoglycoside { background-color:#00B1B2 !important; }
 span.nucleoside { background-color:#652600 !important; }
+span.propeptide { background-color:#b96346 !important; }
+.orfGraph span.propeptide { border-left: 1px solid #FFF; border-right: 1px solid #FFF; }
+.sequence span.propeptide { border:1px solid #FFF; }
 
 /* sugar stuff */
 div.sugars { width:100%; clear:both; }
@@ -734,8 +738,8 @@ td.smiles { font-size: 11px; font-family:"Courier New", Courier, monospace; line
 header.jsonHeader { width:440px; float:left; text-align:left; margin-top:0px; }
 .json { width:440px; float:right; }
 #jsonButtonHolder { width:100%; text-align:center; }
-.versionWarning { width: 370px; margin: 0 auto; text-align: center; color: #F00; border: 3px solid #F00;
-    border-radius: 12px; padding: 20px; background-color:#F99; margin-bottom:40px; }
+.versionWarning { width: 370px; margin: 0 auto; text-align: center; color: #0b0b0b; border: 3px solid #50503E;
+    border-radius: 12px; padding: 20px; background-color:#fde9bd; margin-bottom:40px; }
 .versionWarning p { margin:0;
 	font-family:'helvetica-md', "Helvetica Neue", Helvetica, Arial, sans-serif; }
 

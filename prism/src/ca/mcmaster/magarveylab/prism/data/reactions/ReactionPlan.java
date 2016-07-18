@@ -16,6 +16,7 @@ public class ReactionPlan {
 	private ReactionPriorities rp;
 	private Domain domain;
 	private SubstrateSet modules;
+	private String smiles;
 
 	/**
 	 * Instantiate a new tailoring domain reaction plan. 
@@ -26,6 +27,17 @@ public class ReactionPlan {
 		this.rp = priority;
 		this.domain = domain;
 		this.modules = modules;
+	}
+	
+	/**
+	 * Deep-copy a reaction plan. 
+	 * @param reactionPlan	the plan to deep copy 
+	 */
+	public ReactionPlan(ReactionPlan reactionPlan) {
+		this.rp = reactionPlan.reaction();
+		this.domain = reactionPlan.domain();
+		this.modules = reactionPlan.modules();
+		this.smiles = reactionPlan.getSmiles();
 	}
 	
 	public ReactionPriorities reaction() {
@@ -48,8 +60,20 @@ public class ReactionPlan {
 		return modules;
 	}
 	
+	public int size() {
+		return modules.size();
+	}
+	
 	public Module get(int n) throws TailoringSubstrateException {
 		return modules.get(n);
+	}
+
+	public String getSmiles() {
+		return smiles;
+	}
+
+	public void setSmiles(String smiles) {
+		this.smiles = smiles;
 	}
 		
 }

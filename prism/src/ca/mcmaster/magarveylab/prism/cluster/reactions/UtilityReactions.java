@@ -281,9 +281,9 @@ public class UtilityReactions {
 			throw new ScaffoldGenerationException("Error encountered building functional group SMILES");
 		}
 		
-		// get reverse-prenylation site
+		// get functionalization site
 		IAtom iodine = Atoms.getIodine(functionalGroup);
-		IAtom carbon = Atoms.getConnectedCarbon(iodine, functionalGroup);
+		IAtom site = Atoms.getConnectedAtom(iodine, functionalGroup);
 		UtilityReactions.removeAtom(iodine, functionalGroup);
 		
 		// get bond order sum
@@ -304,10 +304,10 @@ public class UtilityReactions {
 				&& molecule.getBondOrderSum(atom) < bonds) {
 			// add bond
 			molecule.add(functionalGroup);
-			UtilityReactions.addBond(carbon, atom, molecule);
+			UtilityReactions.addBond(site, atom, molecule);
 		} else {
 			throw new ScaffoldGenerationException("Error: tried to functionalize"
-					+ " atom with too many bonds!");
+							+ " atom with too many bonds!");
 		}
 	}
 	

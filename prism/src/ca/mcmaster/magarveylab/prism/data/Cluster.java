@@ -1,5 +1,6 @@
 package ca.mcmaster.magarveylab.prism.data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import ca.mcmaster.magarveylab.prism.data.sugar.Sugar;
 import ca.mcmaster.magarveylab.prism.homology.data.HomologousCluster;
 import ca.mcmaster.magarveylab.prism.tanimoto.data.TanimotoScore;
 import ca.mcmaster.magarveylab.prism.util.Sorter;
+import ca.mcmaster.magarveylab.prism.web.html.graph.CircularContigGraph;
 import ca.mcmaster.magarveylab.prism.web.html.graph.CircularGenomeGraph;
 
 /**
@@ -23,8 +25,9 @@ import ca.mcmaster.magarveylab.prism.web.html.graph.CircularGenomeGraph;
  * @author skinnider
  *
  */
-public class Cluster {
+public class Cluster implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	protected int index;
 	protected Frames frame;
 	protected List<Orf> orfs = new ArrayList<Orf>();
@@ -38,13 +41,28 @@ public class Cluster {
 	private List<TanimotoScore> scores = new ArrayList<TanimotoScore>();
 	private CircularGenomeGraph graph;
 	private Map<String, String> files = new HashMap<String, String>();
+	private CircularContigGraph contigGraph;
 
+	private boolean truncated;
+	
 	/**
 	 * Instantiate a new, empty cluster.
 	 */
 	public Cluster() {
 	}
 
+	/**
+	 * Returns a value for whether this cluster is potentially truncated within
+	 * its parent contig.
+	 */
+	public void checkTruncated(Contig contig) {
+		if ((this.start() < 5000) || ((contig.length() - this.end()) < 5000)) {
+			this.truncated = true;
+		} else {
+			this.truncated = false;
+		}
+	}
+	
 	/**
 	 * Get all orfs associated with this cluster.
 	 * 
@@ -224,6 +242,25 @@ public class Cluster {
 	public void setGraph(CircularGenomeGraph graph) {
 		this.graph = graph;
 	}
+	
+	/**
+	 * Set the contig graph associated with this cluster (highlights this cluster)
+	 * 
+	 * @param graph
+	 */
+	public void setContigGraph(CircularContigGraph graph){
+		this.contigGraph = graph;
+	}
+	
+	/**
+	 * Returns the contig graph associated with this cluster (shows other clusters too)
+	 * 
+	 * @return
+	 */
+	public CircularContigGraph getContigGraph(){
+		return contigGraph;
+	}
+	
 
 	/**
 	 * Get all known biosynthetic clusters with genetic homology to this
@@ -463,6 +500,15 @@ public class Cluster {
 	}
 	
 	/**
+	 * Set all Tanimoto scores associated with this cluster's scaffold library.
+	 * 
+	 * @return cluster Tanimoto scores
+	 */
+	public void setScores(List<TanimotoScore> s) {
+		this.scores = s;
+	}
+	
+	/**
 	 * Get the combinations of sugars that can be envisioned based on this
 	 * cluster's sugar biosynthesis genes. Returns a list of lists, where each
 	 * list in the list represents a possible combination of sugars.
@@ -494,4 +540,8 @@ public class Cluster {
 		return combinatorialData;
 	}
 
+
+	public boolean isTruncated() {
+		return truncated;
+	}
 }

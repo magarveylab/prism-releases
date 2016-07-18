@@ -1,5 +1,7 @@
 package ca.mcmaster.magarveylab.prism.data;
 
+import java.io.Serializable;
+
 /**
  * The package of combinatorial data evaluated for a combinatorial scaffold
  * library.
@@ -7,9 +9,11 @@ package ca.mcmaster.magarveylab.prism.data;
  * @author skinnider
  *
  */
-public class CombinatorialData {
+public class CombinatorialData implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private int numOrfPermutations = 0;  
+	private int numPropeptides = 0; 
 	private int numSugars = 0;  
 	private int numCyclizations = 0;   
 	private int numReactions = 0; 
@@ -17,7 +21,7 @@ public class CombinatorialData {
 
 	/**
 	 * Get the number of open reading frame permutations evaluated in
-	 * combinatorial scaffold library generation.
+	 * thiotemplated combinatorial scaffold library generation.
 	 * 
 	 * @return the number of open reading frame permutations
 	 */
@@ -27,7 +31,7 @@ public class CombinatorialData {
 
 	/**
 	 * Set the number of open reading frame permutations evaluated in
-	 * combinatorial scaffold library generation.
+	 * thiotemplated combinatorial scaffold library generation.
 	 * 
 	 * @param numOrfPermutations
 	 *            the number of open reading frame permutations
@@ -118,6 +122,27 @@ public class CombinatorialData {
 	 */
 	public void setNumCombinatorialPlans(int numCombinatorialPlans) {
 		this.numCombinatorialPlans = numCombinatorialPlans;
+	}
+
+	/**
+	 * Get the total number of propeptides evaluated in ribosomal combinatorial
+	 * scaffold library generation.
+	 * 
+	 * @return the total number of propeptides
+	 */
+	public int getNumPropeptides() {
+		return numPropeptides;
+	}
+
+	/**
+	 * Set the total number of propeptides evaluated in ribosomal combinatorial
+	 * scaffold library generation.
+	 * 
+	 * @param numPropeptides
+	 *            the total number of propeptides
+	 */
+	public void setNumPropeptides(int numPropeptides) {
+		this.numPropeptides = numPropeptides;
 	}
 
 }

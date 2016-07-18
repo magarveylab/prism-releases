@@ -6,11 +6,11 @@ import java.util.List;
 import ca.mcmaster.magarveylab.enums.CStarterSubstrates;
 import ca.mcmaster.magarveylab.enums.ModuleTypes;
 import ca.mcmaster.magarveylab.enums.domains.ThiotemplatedDomains;
-import ca.mcmaster.magarveylab.enums.substrates.AdenylationSubstrates;
 import ca.mcmaster.magarveylab.prism.cluster.analysis.DomainAnalyzer;
 import ca.mcmaster.magarveylab.prism.data.Domain;
 import ca.mcmaster.magarveylab.prism.data.Module;
 import ca.mcmaster.magarveylab.prism.data.Orf;
+import ca.mcmaster.magarveylab.prism.enums.hmms.AdenylationHmms;
 
 /**
  * Finds modules which add starter units or acyl adenylates. 
@@ -46,7 +46,8 @@ public class FattyAcidModuleFinder {
 		if (orf.domains().size() == orf.domains(ThiotemplatedDomains.ADENYLATION).size()) {
 			Module module = new Module(ModuleTypes.ACYL_ADENYLATE);
 			for (Domain domain : orf.domains(ThiotemplatedDomains.ADENYLATION))
-				if (domain.topSubstrate().type() == AdenylationSubstrates.PROLINE_3)
+				if (domain.topSubstrate() != null
+						&& domain.topSubstrate().type() == AdenylationHmms.PROLINE_3)
 					module.add(domain);
 			if (module.domains().size() == 0)
 				return modules;

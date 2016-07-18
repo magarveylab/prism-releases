@@ -4,15 +4,20 @@ import ca.mcmaster.magarveylab.enums.DomainFamilies;
 import ca.mcmaster.magarveylab.prism.cluster.analysis.DomainAnalyzer;
 import ca.mcmaster.magarveylab.prism.data.Domain;
 import ca.mcmaster.magarveylab.prism.data.Orf;
+import ca.mcmaster.magarveylab.prism.data.Propeptide;
 import ca.mcmaster.magarveylab.prism.util.PrismStringBuffer;
+import ca.mcmaster.magarveylab.prism.util.Sorter;
 
 public class OrfGraph {
 	
 	/**
 	 * Get the HTML graph of a single orf.
-	 * @param orf		the orf to graph
-	 * @param config	current Prism configuration
-	 * @return			graph in HTML format
+	 * 
+	 * @param orf
+	 *            the orf to graph
+	 * @param config
+	 *            current Prism configuration
+	 * @return graph in HTML format
 	 */
 	public static String html(Orf orf) {
 		StringBuffer sb = new StringBuffer();
@@ -38,13 +43,26 @@ public class OrfGraph {
 				type = domain.type().toString().toLowerCase() + " " + domain.family().toString().toLowerCase();	
 			}
 			
-			if (type != null) {
-				double left = domain.start() * unit;
-				double width = (domain.end() - domain.start()) * unit;
-				width = (width > 0) ? width : 1.0;
-				psb.appendLine("<span class='orfGraphDomain " + type + "' style='" +
-						"width: " + (int) width + "px; " + "left: " + (int) left + "px; " +
+			double left = domain.start() * unit;
+			double width = (domain.end() - domain.start() - 1) * unit;
+			width = (width > 0) ? width : 1.0;
+			width = (left + width > divWidth) ? divWidth - left : width;
+			psb.appendLine("<span class='orfGraphDomain " + type + "' style='" +
+					"width: " + (int) width + "px; " + "left: " + (int) left + "px; " +
+					"top: " + 0 + "px; " + "'></span>");
+
+			// sort propeptides
+			Sorter.sortPropeptides(orf.propeptides());
+			
+			// create propeptides 
+			for (Propeptide propeptide : orf.propeptides()) {
+				String propeptideType = "propeptide";
+				double propeptideLeft = propeptide.getStart() * unit;
+				double propeptideWidth = propeptide.getLength() * unit; 
+				psb.appendLine("<span class='orfGraphDomain " + propeptideType + "' style='" +
+						"width: " + (int) propeptideWidth + "px; " + "left: " + (int) propeptideLeft + "px; " +
 						"top: " + 0 + "px; " + "'></span>");
+
 			}
 		}
 

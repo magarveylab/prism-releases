@@ -6,7 +6,6 @@ import java.util.List;
 import ca.mcmaster.magarveylab.enums.ModuleTypes;
 import ca.mcmaster.magarveylab.enums.domains.DomainType;
 import ca.mcmaster.magarveylab.enums.domains.TailoringDomains;
-import ca.mcmaster.magarveylab.enums.substrates.AdenylationSubstrates;
 import ca.mcmaster.magarveylab.prism.blast.BlastSearchResult;
 import ca.mcmaster.magarveylab.prism.cluster.analysis.ModuleAnalyzer;
 import ca.mcmaster.magarveylab.prism.cluster.annotation.Annotator;
@@ -15,6 +14,7 @@ import ca.mcmaster.magarveylab.prism.data.Cluster;
 import ca.mcmaster.magarveylab.prism.data.Domain;
 import ca.mcmaster.magarveylab.prism.data.Module;
 import ca.mcmaster.magarveylab.prism.data.reactions.SubstrateSet;
+import ca.mcmaster.magarveylab.prism.enums.hmms.AdenylationHmms;
 
 public class ChlorinaseAnnotator implements Annotator {
 
@@ -39,16 +39,16 @@ public class ChlorinaseAnnotator implements Annotator {
 			if (name.contains("tyrosine") || name.contains("phenylglycine")) {
 				modules = ModuleAnalyzer.sixMemberedAromatic(permutation);
 			} else if (name.contains("tryptophan")) {
-				modules = ModuleAnalyzer.modules(permutation, AdenylationSubstrates.TRYPTOPHAN);
+				modules = ModuleAnalyzer.modules(permutation, AdenylationHmms.TRYPTOPHAN);
 			} else if (name.contains("leucine")) {
 				modules = ModuleAnalyzer.bcaa(permutation);
 			} else if (name.contains("threonine")) {
-				modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates.THREONINE_1));
-				modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates.THREONINE_2));
-				modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates.ALLO_THREONINE));
+				modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms.THREONINE_1));
+				modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms.THREONINE_2));
+				modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms.ALLO_THREONINE));
 			} else if (name.contains("histidine")) {
-				modules = ModuleAnalyzer.modules(permutation, AdenylationSubstrates.HISTIDINE_1);
-				modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates.HISTIDINE_2));
+				modules = ModuleAnalyzer.modules(permutation, AdenylationHmms.HISTIDINE_1);
+				modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms.HISTIDINE_2));
 			} else if (name.contains("c12") || name.contains("c14")) {
 				for (Module module : permutation)
 					if (module.type() == ModuleTypes.ACYLTRANSFERASE 
@@ -61,10 +61,10 @@ public class ChlorinaseAnnotator implements Annotator {
 				}
 			} else if (name.contains("proline")) { 
 				if (permutation.size() > 0) {
-					modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates.PROLINE_1));
-					modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates.PROLINE_2));
-					modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates.PROLINE_3));
-					modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates.METHYL_PROLINE));
+					modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms.PROLINE_1));
+					modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms.PROLINE_2));
+					modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms.PROLINE_3));
+					modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms.METHYL_PROLINE));
 					Module substrate = permutation.get(0);
 					modules.add(substrate);
 				}

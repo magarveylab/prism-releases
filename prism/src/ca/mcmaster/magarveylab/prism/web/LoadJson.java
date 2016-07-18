@@ -41,7 +41,9 @@ import ca.mcmaster.magarveylab.wasp.util.TimeUtil;
 public class LoadJson extends WebApplicationSubmit {
 
 	private static final long serialVersionUID = -1846321311064350374L;
-
+	private static final String authToken = "db_prod S76RRcN6QzFUaSBdoXPs"; //"dev nyCNmeLPpyyGgcepmxc6";
+	private static final String host = "http://magarveylab-ws.mcmaster.ca/v1";
+	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
@@ -93,9 +95,8 @@ public class LoadJson extends WebApplicationSubmit {
 	public void executeHttpRequest(String id, Session session) 
 			throws ClientProtocolException, IOException {
         DefaultHttpClient httpclient = new DefaultHttpClient();
-        HttpGet httpget = new HttpGet("http://magarveylab.ca:6080/v1/model/prism_result/id/" 
-        		+ id + "/document/raw_data");
-        httpget.addHeader("Authorization", "dev nyCNmeLPpyyGgcepmxc6");
+        HttpGet httpget = new HttpGet(host + "/model/prism_result/id/" + id + "/document/raw_data");
+        httpget.addHeader("Authorization", authToken);
         httpget.addHeader("accept", "application/json");
         HttpResponse response = httpclient.execute(httpget);
         response.setHeader("Content-Type", "application/json");

@@ -1,8 +1,10 @@
 #!/bin/bash
 
-INPUT=$1
-PROTEIN=$2
-NUCLEOTIDE=$3
+MODE=$1
+OUTPUT=$2
+INPUT=$3
+PROTEIN=$4
+NUCLEOTIDE=$5
 
 # run prodigal
-prodigal -i $INPUT -a $PROTEIN -d $NUCLEOTIDE
+prodigal -p $MODE -o $OUTPUT -i $INPUT -a $PROTEIN -d $NUCLEOTIDE

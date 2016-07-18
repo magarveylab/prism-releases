@@ -8,7 +8,6 @@ import ca.mcmaster.magarveylab.enums.DomainFamilies;
 import ca.mcmaster.magarveylab.enums.Frames;
 import ca.mcmaster.magarveylab.enums.ModuleTypes;
 import ca.mcmaster.magarveylab.enums.domains.ThiotemplatedDomains;
-import ca.mcmaster.magarveylab.enums.substrates.AcyltransferaseSubstrates;
 import ca.mcmaster.magarveylab.prism.combinatorialization.OrfPermuter;
 import ca.mcmaster.magarveylab.prism.data.Cluster;
 import ca.mcmaster.magarveylab.prism.data.CombinatorialData;
@@ -16,9 +15,25 @@ import ca.mcmaster.magarveylab.prism.data.Domain;
 import ca.mcmaster.magarveylab.prism.data.Module;
 import ca.mcmaster.magarveylab.prism.data.Orf;
 import ca.mcmaster.magarveylab.prism.data.Substrate;
+import ca.mcmaster.magarveylab.prism.enums.hmms.AcyltransferaseHmms;
 
+/**
+ * Analyze type I polyketide biosynthetic gene clusters with trans-acting
+ * acyltransferase domains.
+ * 
+ * @author skinnider
+ *
+ */
 public class TransATAnalyzer {
 
+	/**
+	 * Construct copies of all modular open reading frames in a biosynthetic
+	 * gene cluster.
+	 * 
+	 * @param cluster
+	 *            cluster in question
+	 * @return copies of all orfs
+	 */
 	public static List<Orf> getNonTransATOrfs(Cluster cluster) {
 		List<Orf> copy = new ArrayList<Orf>();
 		for (Orf orf : cluster.moduleOrfs())
@@ -28,6 +43,14 @@ public class TransATAnalyzer {
 		return copy;
 	}
 
+	/**
+	 * Construct artificial orfs to find modules that span multiple open reading
+	 * frames in trans-AT clusters.
+	 * 
+	 * @param orfs
+	 *            list of open reading frames to construct artificial orfs from
+	 * @return concatenated open reading frames
+	 */
 	public static List<Orf> constructArtificialOrfs(List<Orf> orfs) {
 		ArtificialOrfCreator aoc = new ArtificialOrfCreator(orfs);
 		aoc.initiate();
@@ -43,6 +66,15 @@ public class TransATAnalyzer {
 		return orfs;
 	}
 
+	/**
+	 * Insert trans-acting acyltransferase domains into all trans-AT insertion
+	 * modules within a trans-AT polyketide gene cluster.
+	 * 
+	 * @param modules
+	 *            module permutation to insert trans-AT domains into
+	 * @param cluster
+	 *            parent trans-AT cluster
+	 */
 	public static void insertTransAT(List<Module> modules, Cluster cluster) {
 		List<Module> transAT = cluster.modules(ModuleTypes.TRANS_AT);
 		Domain domain = new Domain(transAT.get(0).first());
@@ -51,9 +83,9 @@ public class TransATAnalyzer {
 		if (transAT.size() > 1) {
 			System.out.println("[TransATAnalyzer] Found more than one trans-AT module; inserting malonyl-CoA instead");
 			Substrate s = domain.topSubstrate();
-			if (s.type() != AcyltransferaseSubstrates.MALONYL_COA_1 && 
-					s.type() != AcyltransferaseSubstrates.MALONYL_COA_2) 
-				s.setType(AcyltransferaseSubstrates.MALONYL_COA_1);
+			if (s.type() != AcyltransferaseHmms.MALONYL_COA_1 && 
+					s.type() != AcyltransferaseHmms.MALONYL_COA_2) 
+				s.setType(AcyltransferaseHmms.MALONYL_COA_1);
 		}
 	
 		for (Module module : modules)
@@ -61,6 +93,15 @@ public class TransATAnalyzer {
 				insertTransAT(domain, module);
 	}
 
+	/**
+	 * Insert a trans-acting acyltransferase domain into an insertion module
+	 * (KS-[KR]-[DH]-[ER]-T with no AT).
+	 * 
+	 * @param transAT
+	 *            the trans-acyltransferase domain to insert
+	 * @param insertion
+	 *            the insertion module
+	 */
 	public static void insertTransAT(Domain transAT, Module insertion) {
 		if (insertion.contains(ThiotemplatedDomains.KETOSYNTHASE)) {
 			// if KS, insert after KS
@@ -71,7 +112,7 @@ public class TransATAnalyzer {
 			insertion.domains().add(0, transAT);
 		}
 		System.out.println("[TransATAnalyzer] Inserted trans-AT module with substrate "
-						+ transAT.topSubstrate().type().toString());
+				+ transAT.topSubstrate().type().toString());
 		insertion.setType(ModuleTypes.ACYLTRANSFERASE);
 	}
 

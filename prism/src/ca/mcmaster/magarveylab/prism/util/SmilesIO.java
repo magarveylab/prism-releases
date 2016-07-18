@@ -3,7 +3,6 @@ package ca.mcmaster.magarveylab.prism.util;
 import java.io.IOException;
 
 import org.openscience.cdk.DefaultChemObjectBuilder;
-import org.openscience.cdk.config.IsotopeFactory;
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IChemObjectBuilder;
@@ -11,6 +10,11 @@ import org.openscience.cdk.smiles.SmilesGenerator;
 import org.openscience.cdk.smiles.SmilesParser;
 
 public class SmilesIO {
+	
+	private static SmilesGenerator sg = new SmilesGenerator();
+	static { 
+		sg.setUseAromaticityFlag(true);
+	}
 
 	/**
 	 * Generate a CDK molecule from a SMILES string.
@@ -31,8 +35,8 @@ public class SmilesIO {
 			parser.setPreservingAromaticity(true);
 			mol = parser.parseSmiles(smiles);
 		}
-		IsotopeFactory fact = IsotopeFactory.getInstance(mol.getBuilder());
-		fact.configureAtoms(mol);
+//		IsotopeFactory fact = IsotopeFactory.getInstance(mol.getBuilder());
+//		fact.configureAtoms(mol);
 		return mol;
 	}
 
@@ -45,9 +49,9 @@ public class SmilesIO {
 	 * @throws CDKException
 	 */
 	public static String smiles(IAtomContainer mol) throws CDKException {
-		SmilesGenerator sg = new SmilesGenerator();
-		sg.setUseAromaticityFlag(true);
 		String smiles = sg.createSMILES(mol);
+		if (smiles == null)
+			System.out.println("Could not generate SMILES");
 		return smiles;
 	}
 

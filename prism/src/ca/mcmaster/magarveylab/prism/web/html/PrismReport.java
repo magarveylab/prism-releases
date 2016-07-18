@@ -39,11 +39,13 @@ public class PrismReport extends BasicReport implements Report {
 				&& !session.webapp().isTerminated()) {
 			Prism prism = (Prism) session.webapp();
 			Genome genome = prism.genome();
+			if (genome == null)
+				return;
 			for (Contig contig : genome.contigs()) {
 				for (Cluster cluster : contig.clusters()) {
 					session.listener().updateLastDetail("Writing report for cluster " 
 							+ cluster.index() + " report...");
-					ClusterReport cr = new ClusterReport(cluster, prism);
+					ClusterReport cr = new ClusterReport(cluster, contig, prism);
 					cr.write();
 				}
 			}
@@ -73,9 +75,9 @@ public class PrismReport extends BasicReport implements Report {
 				if (genome.filename() != null) 
 					psb.appendLine("Sequence: " + genome.filename() + "<br>");
 				String configLink = session.webDir() + "config.txt";
-				psb.appendLine("Search configuration: <a href='" + configLink + "'>download</a><br>");
+				psb.appendLine("Search configuration: <a href='" + configLink + "' download>download</a><br>");
 				String jsonLink = session.webDir() + genome.filename() + ".json";
-				psb.appendLine("JSON Results: <a href='" + jsonLink + "'>download</a><br>");
+				psb.appendLine("JSON Results: <a href='" + jsonLink + "' download>download</a><br>");
 				psb.appendLine("These results will be available at <a href='" 
 						+ session.webDir() + "'>" + session.webDir() + "</a> for 60 days.");
 				psb.appendLine("</p>");
@@ -84,7 +86,7 @@ public class PrismReport extends BasicReport implements Report {
 				// embed circular genome graph
 				CircularGenomeGraph genomeGraph = genome.graph();
 				if (genomeGraph != null) {
-					String genomeGraphHtml = genomeGraph.html();
+					String genomeGraphHtml = genomeGraph.html(config);
 					psb.append(genomeGraphHtml);
 				}
 
@@ -122,12 +124,14 @@ public class PrismReport extends BasicReport implements Report {
 				psb.appendLine("</table>");
 			} else {
 				psb.appendLine("<div class='cf stageHolder firstStageHolder'>");
-				psb.appendLine("<div class='stage'>Error</div>");
-				psb.appendLine("<p class='detail'>No clusters found in your sequence file!</p>");
+				psb.appendLine("<div class='stage'>Results</div>");
+				psb.appendLine(
+						"<p class='detail'>No clusters found in your sequence file!</p>");
 				psb.appendLine("</div>");
 			}
 		} else {
-			System.out.println("Error: could not write report: genome is null!");
+			System.out
+					.println("Error: could not write report: genome is null!");
 		}
 
 		return psb.toString();
@@ -153,9 +157,9 @@ public class PrismReport extends BasicReport implements Report {
 			if (config != null 
 					&& !config.version.equals(new PrismConfig().version)) {
 				psb.appendLine("<div class='versionWarning'>");
-				psb.appendLine("<p>Error: these results were generated with PRISM version " 
+				psb.appendLine("<p>Warning: these results were generated with PRISM version " 
 						+ config.version + ". The current version is " + new PrismConfig().version 
-						+ ". Some errors may appear in your saved output due to compatibility issues!");
+						+ ". Some inconsistencies may appear in your saved output due to compatibility issues!");
 				psb.appendLine("</div>");
 			}
 		}

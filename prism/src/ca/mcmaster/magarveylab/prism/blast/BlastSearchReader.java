@@ -8,7 +8,8 @@ import java.util.List;
 import ca.mcmaster.magarveylab.prism.util.Numbers;
 
 /**
- * Reads output of a BLAST search. 
+ * Reads output of a BLAST search.
+ * 
  * @author skinnider
  *
  */
@@ -17,17 +18,24 @@ public class BlastSearchReader {
 	private BufferedReader br;
 
 	/**
-	 * Instantiate a new BLAST search reader. 
-	 * @param input		location of the input file to read, i.e. the output file from the BLAST search
+	 * Instantiate a new BLAST search reader.
+	 * 
+	 * @param input
+	 *            location of the input file to read, i.e. the output file from
+	 *            the BLAST search
 	 */
 	public BlastSearchReader(BufferedReader br) {
 		this.br = br;
 	}
 
 	/**
-	 * Parse the output from a BLAST search into Java data packages. 
-	 * @param readLength	maximum number of subject hits per query to read. Set to -1 to read all subject hits.
-	 * @return				a list of BLAST search results, each representing the intersection of a query and subject
+	 * Parse the output from a BLAST search into Java data packages.
+	 * 
+	 * @param readLength
+	 *            maximum number of subject hits per query to read. Set to -1 to
+	 *            read all subject hits.
+	 * @return a list of BLAST search results, each representing the
+	 *         intersection of a query and subject
 	 * @throws IOException
 	 */
 	public List<BlastSearchResult> read(int readLength) throws IOException {

@@ -15,6 +15,7 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import ca.mcmaster.magarveylab.prism.orfs.GenePredictionModes;
 import ca.mcmaster.magarveylab.prism.web.PrismConfig;
 import ca.mcmaster.magarveylab.prism.web.html.PrismReport;
 import ca.mcmaster.magarveylab.wasp.exception.ExceptionHandler;
@@ -59,9 +60,11 @@ public class PrismDesktop {
 	}
 	
 	/**
-	 * Execute a Prism search from a jar file.
-	 * Usage: java -jar prism.jar -file sequence.fa [options]
-	 * @param args	command line arguments
+	 * Execute a Prism search from a jar file. Usage: java -jar prism.jar -file
+	 * sequence.fa [options]
+	 * 
+	 * @param args
+	 *            command line arguments
 	 */
 	public static void main(String[] args) {
 		try {
@@ -72,17 +75,18 @@ public class PrismDesktop {
 			CommandLineParser parser = new GnuParser();
 			
 			// parse help first
+			CommandLine fullLine = parser.parse(options, args);
 			CommandLine line = parser.parse(help, args, true);
-			if (line.hasOption("help")) {
+			if (fullLine.getOptions().length == 0 || line.hasOption("h")) {
 				HelpFormatter formatter = new HelpFormatter();
 				 String header = "PRISM: PRediction Informatics for Secondary Metabolomes \n" +
-						 "Search a genome for novel nonribosomal peptide and polyketide molecules.\n" +
-						 "Requires blastp, hmmsearch, and BioPerl as dependencies.\n\n";
+						 "Search a genome for novel natural products.\n" +
+						 "Requires blastp, hmmsearch, fimo, Prodigal, and BioPerl as dependencies.\n\n";
 				 String footer = "\nGUI available at http://magarveylab.com/prism";
 				 formatter.printHelp("prism", header, options, footer, true);
 			} else { 
 				line = parser.parse(version, args, true);
-				if (line.hasOption("version")) {
+				if (line.hasOption("v")) {
 					System.out.println("PRISM: version " + new PrismConfig().version);
 				} else {
 					line = parser.parse(options, args);
@@ -109,30 +113,33 @@ public class PrismDesktop {
 
 	/**
 	 * Create the help option.
-	 * @return	newly created help option 
+	 * 
+	 * @return newly created help option
 	 */
 	public static Options createHelp() {
 		Options options = new Options();
-		Option help = new Option("help", "help", false, "Print this message");
+		Option help = new Option("h", "help", false, "Print this message");
 		options.addOption(help);
 		return options;
 	}
 
-
 	/**
 	 * Create the version option.
-	 * @return	newly created version option 
+	 * 
+	 * @return newly created version option
 	 */
 	public static Options createVersion() {
 		Options options = new Options();
-		Option version = new Option("version", "version", false, "Print the current version and exit");
+		Option version = new Option("v", "version", false,
+				"Print the current version and exit");
 		options.addOption(version);
 		return options;
 	}
 
 	/**
-	 * Create all other command line options. 
-	 * @return	newly created options
+	 * Create all other command line options.
+	 * 
+	 * @return newly created options
 	 */
 	@SuppressWarnings("static-access")
 	public static Options createOptions() {
@@ -146,50 +153,85 @@ public class PrismDesktop {
 		Option structureLimit = OptionBuilder.withLongOpt("limit").withArgName("LIMIT")
 				.hasArg().withDescription("Scaffold library limit").create("l");
 		Option tanimotoCutoff = OptionBuilder.withLongOpt("tanimoto").withArgName("TANIMOTO").hasArg().
-				withDescription("Tanimoto cutoff").create("c");
+				withDescription("Tanimoto cutoff").create("tc");
 		Option homologyCutoff = OptionBuilder.withLongOpt("homology").withArgName("HOMOLOGY").hasArg().
-				withDescription("Homology score cutoff").create("h");
+				withDescription("Homology score cutoff").create("hc");
 		Option root = OptionBuilder.withLongOpt("root").withArgName("ROOT").hasArg().
 				withDescription("Root directory for prism").create("r");
-		Option setOutput = OptionBuilder.withLongOpt("outputfolder").withArgName("OUTPUT FOLDER").hasArg().
-				withDescription("Set an output folder to output various files to. Ex. JSON").create("out");
-		Option geneSearchMode = OptionBuilder.withLongOpt("genesearch").withArgName("GENE PREDICTION MODE")
-				.hasArg().withDescription("Method to use for gene prediction (prodigal, genemark, or allorfs)").create("g");
+		Option setOutput = OptionBuilder.withLongOpt("output").withArgName("OUTPUT FOLDER").hasArg().
+				withDescription("Set an output folder to output various files to. Ex. JSON").create("o");
+		Option display = OptionBuilder.withLongOpt("display").withArgName("NUMBER")
+				.hasArg().withDescription("Maximum number of homologous clusters, "
+						+ "similar molecules, substrates, and BLAST returned for each "
+						+ "cluster or biosynthetic domain.").create("d");
+		Option grid = OptionBuilder.withArgName("SESSION-ID").hasArg().withDescription("Grid mode allows for specification of"
+				+ " session ID.").create("grid");
+		
+		// options for reading in the genus/species/strain as well as prism lite
+		// TODO: Just the options have been added. The implementation for the
+		// inner workings still needs to be handled. PRISM lite needs to require
+		// that multiple inputs are present: the genome file, the JSON file, and
+		// potentially a file indicating the new annotators
+		Option speciesInformation = OptionBuilder.withLongOpt("species").withArgName("SPECIES").hasArg().
+				withDescription("JSON configuration file with the genus, species, and strain information "
+						+ "of the submitted sequences").create("sp");
+		Option prismlite = OptionBuilder.withLongOpt("lite").withArgName("PRISM LITE").hasArg().
+				withDescription("Reload a previous PRISM run and further annotate the clusters previously "
+						+ "identified").create("lt");
 		
 		// construct boolean options
-		Option organism = new Option("o", "Organism", false, "Parse organism information from GenBank header");
-		Option score = new Option("s", "Score", false, "Enable known natural product scoring");
-		Option resistance = new Option("resistance", "Resistance", false, "Enable resistance domain search");
-		Option regulator = new Option("regulator", "Regulator", false, "Enable regulator domain search");
-		Option aminoglycoside = new Option("aminoglycoside", "Aminoglycoside", false, "Enable aminoglycoside domain search");
-		Option ribosomal = new Option("ribosomal", "Ribosomal", false, "Enable RiPP domain search");
-		Option find16s = new Option("16S", "16S", false, "Detect 16S sequences");
-		Option web = new Option("web", "web", false, "Turn on HTML output and graphical output generation");
-		Option saveSequences = new Option("saveseq", "saveSequences", false, 
+		Option organism = new Option("org", "organism", false, "Parse organism information from GenBank header");
+		Option score = new Option("s", "score", false, "Enable known natural product scoring");
+		Option thiotemplated = new Option("tt", "thiotemplated", false, "Enable thiotemplated domain search");
+		Option sugar = new Option("sug", "sugar", false, "Enable deoxysugar domain search");
+		Option resistance = new Option("res", "resistance", false, "Enable resistance domain search");
+		Option regulator = new Option("reg", "regulator", false, "Enable regulator domain search");
+		Option ribosomal = new Option("rib", "ribosomal", false, "Enable RiPP domain search");
+		Option primaryBiosynthesisGenes = new Option("pbs", "primary_biosynthesis", false, "Enable primary metabolite domain search");
+		Option find16s = new Option("16s", "16s", false, "Detect 16S sequences");
+		Option web = new Option("web", "web_output", false, "Turn on HTML output and graphical output generation");
+		Option saveSequences = new Option("ss", "savesequence", false, 
 				"Write open reading frame sequences in JSON output");
-		Option help = new Option("help", "help", false, "Print this message");
-		Option version = new Option("version", "version", false, "Print the current version and exit");
+		Option allOrfs = new Option("a", "allorfs", false, "Find all potential coding sequences");
+		Option prodigal = new Option("p", "prodigal", false, "Use Prodigal to predict open reading frames");
+		Option help = new Option("h", "help", false, "Print this message");
+		Option version = new Option("v", "version", false, "Print the current version and exit");
 		
+		
+		Option terpene = new Option("terp", "terpene", false, "Find all terpene encoding genes and clusters");
+		Option nis_synthase = new Option("nis", "siderophore", false, "Find all NRPS-independent siderophore");
+		
+		
+		
+		options.addOption(terpene);
+		options.addOption(nis_synthase);
 		options.addOption(file);
 		options.addOption(window);
 		options.addOption(structureLimit);
 		options.addOption(tanimotoCutoff);
 		options.addOption(homologyCutoff);
+		options.addOption(display);
 		options.addOption(score);
 		options.addOption(root);
-		options.addOption(geneSearchMode);
 		options.addOption(organism);
+		options.addOption(thiotemplated);
+		options.addOption(sugar);
 		options.addOption(resistance);
 		options.addOption(regulator);
-		options.addOption(aminoglycoside);
+		options.addOption(primaryBiosynthesisGenes);
 		options.addOption(ribosomal);
 		options.addOption(find16s);
 		options.addOption(setOutput);
 		options.addOption(web);
 		options.addOption(saveSequences);
+		options.addOption(allOrfs);
+		options.addOption(prodigal);
 		options.addOption(help);
 		options.addOption(version);
-
+		options.addOption(speciesInformation);
+		options.addOption(prismlite);
+		options.addOption(grid);
+		
 		return options;
 	}
 	
@@ -203,7 +245,7 @@ public class PrismDesktop {
 	 */
 	public static PrismConfig parseCommandLine(CommandLine line) throws ParseException {
 		PrismConfig config = new PrismConfig();
-
+		
 		// set HMM cutoffs 
 		if (line.hasOption("f")) {
 			String file = line.getOptionValue("f");
@@ -214,6 +256,11 @@ public class PrismDesktop {
 		// set other options
 		if (line.hasOption("s")) 
 			config.score = true;
+		if (line.hasOption("d")) {
+			String value = line.getOptionValue("d");
+			config.display = Integer.parseInt(value);
+			System.out.println("[Prism] Set display to " + config.display);
+		}
 		if (line.hasOption("w")) {
 			String value = line.getOptionValue("w");
 			config.window = Integer.parseInt(value);
@@ -224,26 +271,27 @@ public class PrismDesktop {
 			config.scaffoldLimit = Integer.parseInt(value);
 			System.out.println("[Prism] Set scaffold limit to " + config.scaffoldLimit);
 		}
-		if (line.hasOption("c")) {
+		if (line.hasOption("tc")) {
 			String value = line.getOptionValue("c");
 			config.tanimotoCutoff = Double.parseDouble(value);
 			System.out.println("[Prism] Set tanimoto cutoff to " + config.tanimotoCutoff);
 		}
-		if (line.hasOption("h")) {
+		if (line.hasOption("hc")) {
 			String value = line.getOptionValue("h");
 			config.homologyCutoff = Double.parseDouble(value);
 			System.out.println("[Prism] Set homology cutoff to " + config.homologyCutoff);
 		}
 		if (line.hasOption("r")) {
 			String value = line.getOptionValue("r");
-			config.root = value;
+			File root = new File(value);
+			config.root = root.getAbsolutePath() + File.separator;
 			System.out.println("[Prism] Set the root folder to " + config.root);
 		}
-		if (line.hasOption("o")) {
+		if (line.hasOption("org")) {
 			config.parseorganism = true;
 			System.out.println("[Prism] Parsing organism data from GenBank-style header");
 		}
-		if (line.hasOption("16S")) {
+		if (line.hasOption("16s")) {
 			config.find16s = true;
 			System.out.println("[Prism] Finding 16S sequences");
 		}
@@ -251,54 +299,104 @@ public class PrismDesktop {
 			config.web = true;
 			System.out.println("[Prism] Set to output html results.");
 		}
-		if (line.hasOption("saveseq")) {
+		if (line.hasOption("ss")) {
 			config.saveSequences = true;
 			System.out.println("[Prism] Set to write open reading frame sequences to JSON results.");
 		}
-		if (line.hasOption("out")) {
-			String value = line.getOptionValue("out");
+		if (line.hasOption("o")) {
+			String value = line.getOptionValue("o");
 			config.output = value;
 			System.out.println("[Prism] Set output folder to " + value);
+			
 		}
-		if (line.hasOption("ribosomal")) {
+		if (line.hasOption("tt")) {
+			config.thiotemplated = true;
+			System.out.println("[Prism] Executing thiotemplated domain search");
+		}
+		if (line.hasOption("sug")) {
+			config.sugar = true;
+			System.out.println("[Prism] Executing deoxysugar domain search");
+		}
+		if (line.hasOption("rib")) {
 			config.ribosomal = true;
 			System.out.println("[Prism] Executing ribosomal domain search");
 		}
-		if (line.hasOption("resistance")) {
+		if (line.hasOption("res")) {
 			config.resistance = true;
 			System.out.println("[Prism] Executing resistance domain search");
 		}
-		if (line.hasOption("regulator")) {
+		if (line.hasOption("reg")) {
 			config.regulation = true;
 			System.out.println("[Prism] Executing regulator domain search");
 		}
-		if (line.hasOption("aminoglycoside")) {
-			config.regulation = true;
-			System.out.println("[Prism] Executing aminoglycoside domain search");
+		if (line.hasOption("a")) {
+			config.genePredictionModes.add(GenePredictionModes.ALL_ORFS);
+			System.out.println("[Prism] Finding all potential coding sequences");
+		}
+		if (line.hasOption("p")) {
+			config.genePredictionModes.add(GenePredictionModes.PRODIGAL);
+			System.out.println("[Prism] Using Prodigal to predict open reading frames");
+		}
+		if (!line.hasOption("a") && !line.hasOption("p")) {
+			config.genePredictionModes.add(GenePredictionModes.ALL_ORFS);
+			System.out.println("[Prism] Finding all potential coding sequences");
+		}
+		// Requires a specified output folder
+		if(line.hasOption("grid")){
+			config.grid = line.getOptionValue("grid");
+			System.out.println("[Prism] outputting results for grid at: " + config.grid);
+		}
+			
+		
+		if (line.hasOption("terp")){
+			config.terpene = true;
+			System.out.println("[Prism] Finding all terpene genes");
+		}
+		if(line.hasOption("nis")){
+			config.nis_synthase = true;
+			System.out.println("[Prism] Finding all nis genes");
+		}
+		
+		
+		
+		//TODO:  Finish off the options for prismlite and the species parsing
+		if (line.hasOption("sp")){
+		}
+		if (line.hasOption("lite")){
 		}
 		return config;
 	}
 	
 	/**
-	 * Create a new session to use in a command line PRISM search. 
-	 * @param config	current PRISM configuration
-	 * @return			new session 
+	 * Create a new session to use in a command line PRISM search.
+	 * 
+	 * @param config
+	 *            current PRISM configuration
+	 * @return new session
 	 * @throws UnsupportedEncodingException
 	 */
 	public static Session createSession(PrismConfig config) throws UnsupportedEncodingException {
 		SessionManager sessionManager = SessionManager.getSessionManager();
 
-		// create a new session with random ID
-		Date date = config.date;
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-kkmm");
-		String prefix = dateFormat.format(date);
-		
-		String sessionID = prefix + "-" + (int) Math.floor(Math.random() * 1000000000);
+		String sessionID = null;
+		if (config.grid == null) {
+			// create a new session with random ID
+			Date date = config.date;
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-kkmm");
+			String prefix = dateFormat.format(date);
+
+			sessionID = prefix + "-"
+					+ (int) Math.floor(Math.random() * 1000000000);
+		} else {
+			sessionID = config.grid;
+		}
+
 		Session old = sessionManager.getSession(sessionID); 
 		if (old != null)
 			sessionManager.removeSession(sessionID);
 		Session session = new BasicSession();
 		session.setID(sessionID);
+		
 		
 		if (config.root == null) {
 			// get jar location to set root, dir
@@ -312,6 +410,7 @@ public class PrismDesktop {
 		session.setRoot(config.root);
 		String dir = config.root + "prism" + File.separator + sessionID + File.separator;
 		session.setDir(dir);
+		
 		
 		// make sure session directory exists
 		File sessionDir = new File(dir);

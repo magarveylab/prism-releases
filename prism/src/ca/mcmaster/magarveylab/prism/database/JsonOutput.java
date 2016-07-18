@@ -72,18 +72,27 @@ public class JsonOutput {
 		}
 
 		List<Object> clusters = new ArrayList<Object>();
-		List<Object> allGlobalDomains = new ArrayList<Object>();
+		List<Object> allGlobalRegDomains = new ArrayList<Object>();
+		List<Object> allGlobalResDomains = new ArrayList<Object>();
+		
+		
 		for (Contig contig : prism.genome().contigs()) {
-			List<Object> globalDomains = JsonUtils.generateRegulatoryJson(contig);
-			allGlobalDomains.add(globalDomains);
+			List<Object> globalRegulatoryDomains = JsonUtils.generateRegulatoryJson(contig);
+			List<Object> globalResistanceDomains = JsonUtils.generateResistanceJson(contig);
+			allGlobalRegDomains.addAll(globalRegulatoryDomains);
+			allGlobalResDomains.addAll(globalResistanceDomains);
 
 			for (Cluster cluster : contig.clusters()) {
-				Map<String, Object> clusterData = JsonUtils.generateClusterJson(prism, cluster);
+				Map<String, Object> clusterData = JsonUtils.generateClusterJson(prism, cluster, contig.index());
 				clusters.add(clusterData);
 			}
 		}
 		
-		prismRun.put("regulatory_genes", allGlobalDomains);
+		List<Object> contigInfo = JsonUtils.generateContigJson(prism.genome().contigs());
+		
+		prismRun.put("contigs", contigInfo);
+		prismRun.put("regulatory_genes", allGlobalRegDomains);
+		prismRun.put("resistance_genes", allGlobalResDomains);
 		prismRun.put("clusters", clusters);
 		prismResult.put("prism_results", prismRun);
 

@@ -68,8 +68,7 @@ public class ThiotemplatedClusterTypeAnalyzer {
 		List<ClusterType> pks = getPolyketideTypes(cluster);
 		List<ClusterType> nrps = getNonribosomalPeptideTypes(cluster);
 		List<ClusterType> types = new ArrayList<ClusterType>();
-		if (nrps.size() == 0 && pks.size() == 0
-				&& isThiotemplatedCluster(cluster))
+		if (nrps.size() == 0 && pks.size() == 0 && isThiotemplatedCluster(cluster))
 			types.add(ThiotemplatedClusterTypes.NULL);
 		return types;
 	}

@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.List;
 
 import org.apache.batik.dom.GenericDOMImplementation;
@@ -23,6 +24,7 @@ import ca.mcmaster.magarveylab.enums.Colors;
 import ca.mcmaster.magarveylab.prism.data.Cluster;
 import ca.mcmaster.magarveylab.prism.data.Contig;
 import ca.mcmaster.magarveylab.prism.data.Genome;
+import ca.mcmaster.magarveylab.prism.web.PrismConfig;
 
 /**
  * A circular graph of the biosynthetic clusters within an organism's genome or
@@ -32,7 +34,9 @@ import ca.mcmaster.magarveylab.prism.data.Genome;
  * @author skinnider
  * 
  */
-public class CircularGenomeGraph {
+public class CircularGenomeGraph implements Serializable {
+	
+	private static final long serialVersionUID = 4239398439206827099L;
 	
 	private static final Color darkGrey = Color.decode(Colors.DARK_GREY.hex());
 	private static final Color lightGrey = Color.decode(Colors.LIGHT_GREY.hex());
@@ -78,17 +82,20 @@ public class CircularGenomeGraph {
 	/**
 	 * Get the HTML code to embed this genome graph on a PRISM web page.
 	 */
-	public String html() {
+	public String html(PrismConfig config) {
 		StringBuffer sb = new StringBuffer();
-		String graphClass = (cluster == null) ? "circularGenomeGraph" : "clusterGenomeGraph";
-		
-		sb.append("<object type='image/svg+xml' data='" + link + "' class='" + graphClass + "'>");
+		String graphClass = (cluster == null) ? "circularGenomeGraph"
+				: "clusterGenomeGraph";
+
+		sb.append("<object type='image/svg+xml' data='" + link + "' class='"
+				+ graphClass + "'>");
 		sb.append("Your browser does not support SVG"); // fallback text
 		sb.append("</object>");
-	 
-		String legend = (cluster == null) ? Legend.getGenomeGraphLegend() : "";
+
+		String legend = (cluster == null) ? Legend.getGenomeGraphLegend(config)
+				: "";
 		sb.append(legend);
-		
+
 		return sb.toString();
 	}
 	

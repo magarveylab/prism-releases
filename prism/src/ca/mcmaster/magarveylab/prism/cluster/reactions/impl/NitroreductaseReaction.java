@@ -32,7 +32,8 @@ public class NitroreductaseReaction extends GenericReaction implements Reaction 
 		this.domains = new DomainType[] { ThiotemplatedDomains.NITROREDUCTASE };
 	}
 
-	public void execute() throws NoResidueException, TailoringSubstrateException, ScaffoldGenerationException {
+	public void execute() throws NoResidueException,
+			TailoringSubstrateException, ScaffoldGenerationException {
 		IAtomContainer molecule = scaffold.molecule();
 
 		Module module = plan.get(0);
@@ -42,7 +43,7 @@ public class NitroreductaseReaction extends GenericReaction implements Reaction 
 
 		IAtom betaCarbon = null;
 		for (IAtom atom : molecule.getConnectedAtomsList(alphaCarbon))
-			if (atom != ketone)
+			if (atom.getSymbol().equals("C") && atom != ketone)
 				betaCarbon = atom;
 
 		if (betaCarbon == null)

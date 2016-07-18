@@ -123,12 +123,18 @@ public class DomainSearch implements Runnable {
 	 * @param type	the type of domain
 	 * @param domainResult	the HmmSearchResult to parse
 	 */
-	protected void parseResultForDomains(Orf orf, HmmSearchResult domainResult) {
-		for (HmmSearchResultAnnotation annotation : domainResult.annotations()) {
+	protected void parseResultForDomains(Orf orf,
+			HmmSearchResult domainResult) {
+		for (HmmSearchResultAnnotation annotation : domainResult
+				.annotations()) {
 			Domain domain = new Domain(annotation, type);
+			
 			if (domain.score() > type.cutoff()) {
-				domain.setSequenceFromOrf(orf.sequence());
-				orf.domains().add(domain);				
+				String orfSequence = orf.sequence();
+				String domainSequence = orfSequence
+						.substring(domain.start() - 1, domain.end() - 1);
+				domain.setSequence(domainSequence);
+				orf.domains().add(domain);
 			}
 		}
 	}

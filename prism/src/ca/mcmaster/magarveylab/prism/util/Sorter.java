@@ -10,6 +10,7 @@ import ca.mcmaster.magarveylab.prism.data.Domain;
 import ca.mcmaster.magarveylab.prism.data.Contig;
 import ca.mcmaster.magarveylab.prism.data.Module;
 import ca.mcmaster.magarveylab.prism.data.Orf;
+import ca.mcmaster.magarveylab.prism.data.Propeptide;
 import ca.mcmaster.magarveylab.prism.data.Substrate;
 import ca.mcmaster.magarveylab.prism.data.reactions.ReactionPlan;
 import ca.mcmaster.magarveylab.prism.data.sugar.Sugar;
@@ -35,7 +36,8 @@ public class Sorter {
 	}
 
 	/**
-	 * Sort a list of contigs by the size of their nucleotide sequences.
+	 * Sort a list of contigs by the size of their nucleotide sequences, highest
+	 * first.
 	 * 
 	 * @param contigs
 	 *            contigs to sort
@@ -45,6 +47,21 @@ public class Sorter {
 			@Override
 			public int compare(Contig c1, Contig c2) {
 				return Integer.compare(c1.length(), c2.length()) * -1;
+			}
+		});
+	}
+	
+	/**
+	 * Sort a list of propeptides by their start points.
+	 * 
+	 * @param propeptides
+	 *            propeptides to sort
+	 */
+	public static void sortPropeptides(List<Propeptide> propeptides) {
+		Collections.sort(propeptides, new Comparator<Propeptide>() {
+			@Override
+			public int compare(Propeptide p1, Propeptide p2) {
+				return Integer.compare(p1.getStart(), p2.getStart()) * -1;
 			}
 		});
 	}
@@ -120,7 +137,9 @@ public class Sorter {
 		Collections.sort(orfs, new Comparator<Orf>() {
 			@Override
 			public int compare(Orf o1, Orf o2) {
-				return Integer.compare(o1.start(), o2.start());
+				int s1 = (o1.start() < o1.end()) ? o1.start() : o1.end();
+				int s2 = (o2.start() < o2.end()) ? o2.start() : o2.end();
+				return Integer.compare(s1, s2);
 			}
 		});
 	}

@@ -28,7 +28,7 @@ public interface Annotator {
 	/**
 	 * Find all potential reaction substrates for a particular domain within a given module permutation. 
 	 * @param domain		the domain to analyze
-	 * @param permutation	the module permutation for which substrates should be found
+	 * @param permutation	the residue permutation for which substrates should be found
 	 * @param cluster		the cluster in which this domain and module permutation is found 
 	 * @return				all potential substrate sets 
 	 * @throws InvalidSmilesException

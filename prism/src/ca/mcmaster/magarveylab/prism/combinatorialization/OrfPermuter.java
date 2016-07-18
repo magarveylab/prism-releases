@@ -130,11 +130,10 @@ public class OrfPermuter {
 		
 		for (List<Module> transAPermutation : transAPermutations) {
 			// get combinations of two lists 
-			List<List<Module>> results = new ArrayList<List<Module>>();
 			List<List<Module>> toPermute = new ArrayList<List<Module>>();
 			toPermute.add(transAInsertion);
 			toPermute.add(transAPermutation);
-			Combinations.combinations(toPermute, results, 0, new ArrayList<Module>());
+			List<List<Module>> results = Combinations.getCombinations(toPermute);
 			System.out.println("[OrfPermuter] Generated " + results.size() + " combinations of two lists");
 		
 			// create orfs copy
@@ -245,7 +244,8 @@ public class OrfPermuter {
 	 * 
 	 * @param orfs
 	 *            orfs to permute
-	 * @return all permutations
+	 * @return all permutations, or 500 random permutations if there are too
+	 *         many to search the entire space 
 	 */
 	public static List<List<Orf>> permuteOrfs(List<Orf> orfs) {
 		List<List<Orf>> permutedOrfs = new ArrayList<List<Orf>>();
@@ -253,7 +253,7 @@ public class OrfPermuter {
 		int size = orfs.size();
 		System.out.println("[OrfPermuter] After start/end analysis, permuting " + size + " orfs");
 		
-		List<int[]> permutations = Permutations.permutations(size, size);
+		List<int[]> permutations = Permutations.permutations(size, size, 500);
 		for (int[] permutation : permutations) {
 			List<Orf> orfPermutation = new ArrayList<Orf>();
 			for (int i = 0; i < permutation.length; i++)

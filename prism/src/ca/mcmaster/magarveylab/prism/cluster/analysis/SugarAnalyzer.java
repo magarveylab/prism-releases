@@ -153,11 +153,12 @@ public class SugarAnalyzer {
 				combinations.add(combination);
 			}
 		} else {
-			List<int[]> sample = Combinations.sampleCombinations(k, 1_000);
+			int n = DeoxySugars.values().length;
+			List<int[]> sample = Combinations.sampleCombinations(n, k, 1_000);
 			for (int[] combinatoric : sample) {
 				List<DeoxySugars> combination = new ArrayList<DeoxySugars>();
 				for (int index : combinatoric)
-					combination.add(DeoxySugars.values()[index - 1]);
+					combination.add(DeoxySugars.values()[index]);
 				combinations.add(combination);
 			}
 		}

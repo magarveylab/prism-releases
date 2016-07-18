@@ -8,6 +8,7 @@ import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 
+import ca.mcmaster.magarveylab.enums.ModuleTypes;
 import ca.mcmaster.magarveylab.prism.cluster.scaffold.ResidueGenerator;
 import ca.mcmaster.magarveylab.prism.data.Module;
 import ca.mcmaster.magarveylab.prism.data.structure.Residue;
@@ -80,8 +81,10 @@ public class ScaffoldReactions {
 		}
 
 		molecule.add(extender.structure());
-		
-		IAtom extenderAtom = extender.module().isAdenylationModule() ? extender.nitrogen() : extender.alphaCarbon();
+
+		Module extenderModule = extender.module();
+		IAtom extenderAtom = (extenderModule.isAdenylationModule() || extenderModule
+				.type() == ModuleTypes.RIBOSOMAL) ? extender.nitrogen() : extender.alphaCarbon();
 		UtilityReactions.addBond(starter.ketone(), extenderAtom, molecule);
 		
 		scaffold.addResidue(module, extender);
@@ -111,8 +114,6 @@ public class ScaffoldReactions {
 		last.structure().add(hydroxyl);
 		UtilityReactions.addBond(oxygen, ketone, molecule);
 		scaffold.setMolecule(molecule);
-		
-		System.out.println("Oxygen implicit hydrogen count = " + oxygen.getImplicitHydrogenCount());
 		
 		System.out.println("[ScaffoldReactions] Finished scaffold with SMILES " + 
 				SmilesIO.smiles(scaffold.molecule()));				

@@ -9,7 +9,6 @@ import java.util.List;
 
 import ca.mcmaster.magarveylab.enums.domains.ThiotemplatedDomains;
 import ca.mcmaster.magarveylab.prism.cluster.analysis.DomainAnalyzer;
-import ca.mcmaster.magarveylab.prism.data.Cluster;
 import ca.mcmaster.magarveylab.prism.data.Domain;
 import ca.mcmaster.magarveylab.prism.data.Contig;
 import ca.mcmaster.magarveylab.prism.data.Orf;
@@ -65,19 +64,6 @@ public class FastaWriter {
 			bw.append(orfFasta);
 		}
 		bw.close(); 
-	}
-
-	/**
-	 * Print the amino acid sequence of a cluster's (scaffold) orfs to a multi-FASTA file.
-	 * @param cluster	the cluster to print
-	 * @param fasta		the location of the FASTA file
-	 * @throws IOException
-	 */
-	public static void printClusterToFasta(Cluster cluster, String fasta) throws IOException {
-		File fastaFile = new File(fasta);
-		if (!fastaFile.exists())
-			fastaFile.createNewFile();
-		printOrfsToFasta(cluster.orfs(), fasta);
 	}
 
 	/**

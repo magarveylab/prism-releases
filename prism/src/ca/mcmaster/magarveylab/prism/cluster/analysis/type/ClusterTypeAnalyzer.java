@@ -12,12 +12,9 @@ public class ClusterTypeAnalyzer {
 
 	public static List<ClusterType> getAllClusterTypes() {
 		List<ClusterType> all = new ArrayList<ClusterType>();
-		all.addAll(Arrays.asList(AminoglycosideClusterTypes.values()));
 		all.addAll(Arrays.asList(ThiotemplatedClusterTypes.values()));
 		all.addAll(Arrays.asList(TypeIIPolyketideClusterTypes.values()));
-		all.addAll(Arrays.asList(NucleosideClusterTypes.values()));
 		all.addAll(Arrays.asList(RibosomalClusterTypes.values()));
-		all.addAll(Arrays.asList(BetaLactamClusterTypes.values()));
 		return all;
 	}
 	
@@ -29,9 +26,10 @@ public class ClusterTypeAnalyzer {
 			return "Could not determine type";
 			
 		ClusterType first = types.get(0);
+		if(first.fullName() != ""){
 		String capitalized = Strings.capitalizeFirstLetter(first.fullName());
 		sb.append(capitalized);
-		
+		}
 		if (types.size() > 1)
 			sb.append("/");
 		

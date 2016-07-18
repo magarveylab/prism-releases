@@ -5,7 +5,6 @@ import org.openscience.cdk.interfaces.IAtomContainer;
 
 import ca.mcmaster.magarveylab.enums.domains.DomainType;
 import ca.mcmaster.magarveylab.enums.domains.TailoringDomains;
-import ca.mcmaster.magarveylab.enums.substrates.AdenylationSubstrates;
 import ca.mcmaster.magarveylab.prism.cluster.reactions.GenericReaction;
 import ca.mcmaster.magarveylab.prism.cluster.reactions.Reaction;
 import ca.mcmaster.magarveylab.prism.cluster.reactions.UtilityReactions;
@@ -14,6 +13,7 @@ import ca.mcmaster.magarveylab.prism.data.Module;
 import ca.mcmaster.magarveylab.prism.data.reactions.ReactionPlan;
 import ca.mcmaster.magarveylab.prism.data.structure.Residue;
 import ca.mcmaster.magarveylab.prism.data.structure.Scaffold;
+import ca.mcmaster.magarveylab.prism.enums.hmms.AdenylationHmms;
 import ca.mcmaster.magarveylab.prism.util.exception.NoResidueException;
 import ca.mcmaster.magarveylab.prism.util.exception.ScaffoldGenerationException;
 import ca.mcmaster.magarveylab.prism.util.exception.TailoringSubstrateException;
@@ -43,8 +43,8 @@ public class FormylationReaction extends GenericReaction implements Reaction {
 		if (module.scaffold() != null 
 				&& module.scaffold().topSubstrate() != null 
 				&& module.scaffold().topSubstrate().type() != null)
-			if (module.scaffold().topSubstrate().type() == AdenylationSubstrates.ORNITHINE 
-					|| module.scaffold().topSubstrate().type() == AdenylationSubstrates.N5_HYDROXYORNITHINE) {
+			if (module.scaffold().topSubstrate().type() == AdenylationHmms.ORNITHINE 
+					|| module.scaffold().topSubstrate().type() == AdenylationHmms.N5_HYDROXYORNITHINE) {
 				IAtom nitrogen = residue.nitrogen();
 				for (IAtom atom : structure.atoms())
 					if (atom.getSymbol().equals("N") && atom != nitrogen)

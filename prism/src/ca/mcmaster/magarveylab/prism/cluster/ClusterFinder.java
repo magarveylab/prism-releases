@@ -7,6 +7,7 @@ import java.util.List;
 
 import ca.mcmaster.magarveylab.prism.cluster.analysis.ClusterAnalyzer;
 import ca.mcmaster.magarveylab.prism.cluster.analysis.OrfAnalyzer;
+import ca.mcmaster.magarveylab.prism.cluster.analysis.RibosomalPrecursorAnalyzer;
 import ca.mcmaster.magarveylab.prism.cluster.analysis.SugarAnalyzer;
 import ca.mcmaster.magarveylab.prism.cluster.analysis.TypeIIPolyketideAnalyzer;
 import ca.mcmaster.magarveylab.prism.cluster.module.ModuleFinder;
@@ -86,18 +87,28 @@ public class ClusterFinder {
 				TypeIIPolyketideAnalyzer.checkC6Methyltransferase(cluster);
 				TypeIIPolyketideAnalyzer.checkCyclaseClade6B(cluster);
 				
+				// detect putative ribosomal domains
+				RibosomalPrecursorAnalyzer.detectPutativePrecursors(cluster, contig);
+
 				// detect each orf type, cluster type, and cluster frame
-				for (Orf o : cluster.orfs())
+				for (Orf o : cluster.orfs()){					
 					OrfAnalyzer.detectType(o);
+				}	
 				ClusterAnalyzer.detectFrame(cluster);
 				
 				// detect sugar types
 				session.listener().updateLastDetail("Detecting possible sugar combinations...");
 				cluster.setSugars(SugarAnalyzer.getSugars(cluster));
-
+				
 				// try to assign type
 				ClusterAnalyzer.setClusterType(cluster);
+				
+				// remove ribosomal precursors that aren't in ribosomal clusters 
+				RibosomalPrecursorAnalyzer.removePrecursors(cluster);
+				
+				// add cluster
 				if (cluster.types().size() > 0) {
+					
 					clusters.add(cluster);
 					counter++;
 				} else {
@@ -105,8 +116,8 @@ public class ClusterFinder {
 				}
 			}
 		}
-
+		
 		contig.clusters().addAll(clusters);
 	}
-
+	
 }

@@ -9,13 +9,13 @@ import org.openscience.cdk.exception.InvalidSmilesException;
 import ca.mcmaster.magarveylab.enums.ModuleTypes;
 import ca.mcmaster.magarveylab.enums.domains.DomainType;
 import ca.mcmaster.magarveylab.enums.domains.ThiotemplatedDomains;
-import ca.mcmaster.magarveylab.enums.substrates.AcylAdenylatingSubstrates;
-import ca.mcmaster.magarveylab.enums.substrates.AcyltransferaseSubstrates;
 import ca.mcmaster.magarveylab.prism.cluster.annotation.Annotator;
 import ca.mcmaster.magarveylab.prism.data.Cluster;
 import ca.mcmaster.magarveylab.prism.data.Domain;
 import ca.mcmaster.magarveylab.prism.data.Module;
 import ca.mcmaster.magarveylab.prism.data.reactions.SubstrateSet;
+import ca.mcmaster.magarveylab.prism.enums.hmms.AcylAdenylatingHmms;
+import ca.mcmaster.magarveylab.prism.enums.hmms.AcyltransferaseHmms;
 
 /**
  * Find sites at which enzyme domains of the polyketide reductive loop (KS, DH,
@@ -69,8 +69,8 @@ public class ReductiveLoopAnnotator implements Annotator {
 				// cannot have C-MT and no ER if DH on non-malonyl (so ignore)
 				if (last.scaffold() != null 
 						&& last.isAcyltransferaseModule()
-						&& !(last.scaffold().topSubstrate().type() == AcyltransferaseSubstrates.MALONYL_COA_1
-						|| last.scaffold().topSubstrate().type() == AcyltransferaseSubstrates.MALONYL_COA_2)
+						&& !(last.scaffold().topSubstrate().type() == AcyltransferaseHmms.MALONYL_COA_1
+						|| last.scaffold().topSubstrate().type() == AcyltransferaseHmms.MALONYL_COA_2)
 						&& module.contains(ThiotemplatedDomains.C_METHYLTRANSFERASE) 
 						&& !module.contains(ThiotemplatedDomains.ENOYLREDUCTASE))
 					return substrates;
@@ -83,11 +83,11 @@ public class ReductiveLoopAnnotator implements Annotator {
 					Domain scaffold = module.scaffold();
 					if (scaffold == null || scaffold.topSubstrate().type() == null)
 						return substrates;
-					if (scaffold.topSubstrate().type() == AcylAdenylatingSubstrates.ALPHA_KETOISOCAPROATE
-							|| scaffold.topSubstrate().type() == AcylAdenylatingSubstrates.ALPHA_KETOISOVALERATE
-							|| scaffold.topSubstrate().type() == AcylAdenylatingSubstrates.PYRUVATE
-							|| scaffold.topSubstrate().type() == AcylAdenylatingSubstrates.PHENYLPYRUVATE
-							|| scaffold.topSubstrate().type() == AcylAdenylatingSubstrates._3_METHYL_2_OXOPENTANOIC_ACID)
+					if (scaffold.topSubstrate().type() == AcylAdenylatingHmms.ALPHA_KETOISOCAPROATE
+							|| scaffold.topSubstrate().type() == AcylAdenylatingHmms.ALPHA_KETOISOVALERATE
+							|| scaffold.topSubstrate().type() == AcylAdenylatingHmms.PYRUVATE
+							|| scaffold.topSubstrate().type() == AcylAdenylatingHmms.PHENYLPYRUVATE
+							|| scaffold.topSubstrate().type() == AcylAdenylatingHmms._3_METHYL_2_OXOPENTANOIC_ACID)
 						return substrates;
 				}
 				SubstrateSet substrate = new SubstrateSet(module);

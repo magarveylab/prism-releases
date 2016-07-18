@@ -15,5 +15,9 @@ public class ScaffoldGenerationException extends Exception {
 	public ScaffoldGenerationException(String m, Exception e) {
 		super(m,e);
 	}
+	
+	public ScaffoldGenerationException(Exception e) {
+		super(e);
+	}
 
 }

@@ -1,13 +1,16 @@
 package ca.mcmaster.magarveylab.prism.blast;
 
+import java.io.Serializable;
+
 /**
  * Data package for a single row in a BLAST search result.
  * 
  * @author skinnider
  *
  */
-public class BlastSearchResult {
+public class BlastSearchResult implements Serializable {
 
+	private static final long serialVersionUID = 7913519614233976975L;
 	private double score;
 	private double eValue;
 	private double identity;

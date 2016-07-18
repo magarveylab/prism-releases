@@ -8,13 +8,13 @@ import org.openscience.cdk.exception.InvalidSmilesException;
 
 import ca.mcmaster.magarveylab.enums.domains.DomainType;
 import ca.mcmaster.magarveylab.enums.domains.TailoringDomains;
-import ca.mcmaster.magarveylab.enums.substrates.AdenylationSubstrates;
 import ca.mcmaster.magarveylab.prism.cluster.analysis.ModuleAnalyzer;
 import ca.mcmaster.magarveylab.prism.cluster.annotation.Annotator;
 import ca.mcmaster.magarveylab.prism.data.Cluster;
 import ca.mcmaster.magarveylab.prism.data.Domain;
 import ca.mcmaster.magarveylab.prism.data.Module;
 import ca.mcmaster.magarveylab.prism.data.reactions.SubstrateSet;
+import ca.mcmaster.magarveylab.prism.enums.hmms.AdenylationHmms;
 
 /**
  * Get potential sites of N-formylation.<br>
@@ -45,8 +45,8 @@ public class FormyltransferaseAnnotator implements Annotator {
 		}
 		
 		List<Module> orn = new ArrayList<Module>();
-		orn.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates.ORNITHINE));
-		orn.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates.N5_HYDROXYORNITHINE));
+		orn.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms.ORNITHINE));
+		orn.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms.N5_HYDROXYORNITHINE));
 		
 		for (Module module : orn)
 			if (permutation.indexOf(module) > 0) {

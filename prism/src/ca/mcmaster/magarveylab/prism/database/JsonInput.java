@@ -21,8 +21,6 @@ import ca.mcmaster.magarveylab.enums.Frames;
 import ca.mcmaster.magarveylab.enums.HexoseSugars;
 import ca.mcmaster.magarveylab.enums.OrfTypes;
 import ca.mcmaster.magarveylab.enums.clusters.ClusterType;
-import ca.mcmaster.magarveylab.enums.domains.AminoglycosideDomains;
-import ca.mcmaster.magarveylab.enums.domains.BetaLactamDomains;
 import ca.mcmaster.magarveylab.enums.domains.DeoxySugarDomains;
 import ca.mcmaster.magarveylab.enums.domains.DomainType;
 import ca.mcmaster.magarveylab.enums.domains.PrerequisiteDomains;
@@ -32,10 +30,7 @@ import ca.mcmaster.magarveylab.enums.domains.RibosomalDomains;
 import ca.mcmaster.magarveylab.enums.domains.TailoringDomains;
 import ca.mcmaster.magarveylab.enums.domains.ThiotemplatedDomains;
 import ca.mcmaster.magarveylab.enums.domains.TypeIIPolyketideDomains;
-import ca.mcmaster.magarveylab.enums.substrates.AcylAdenylatingSubstrates;
-import ca.mcmaster.magarveylab.enums.substrates.AcyltransferaseSubstrates;
-import ca.mcmaster.magarveylab.enums.substrates.AdenylationSubstrates;
-import ca.mcmaster.magarveylab.enums.substrates.SubstrateType;
+import ca.mcmaster.magarveylab.enums.interfaces.SubstrateType;
 import ca.mcmaster.magarveylab.prism.Prism;
 import ca.mcmaster.magarveylab.prism.blast.BlastSearchResult;
 import ca.mcmaster.magarveylab.prism.cluster.analysis.type.ClusterTypeAnalyzer;
@@ -51,6 +46,12 @@ import ca.mcmaster.magarveylab.prism.data.Substrate;
 import ca.mcmaster.magarveylab.prism.data.sugar.DeoxySugar;
 import ca.mcmaster.magarveylab.prism.data.sugar.HexoseSugar;
 import ca.mcmaster.magarveylab.prism.data.sugar.Sugar;
+import ca.mcmaster.magarveylab.prism.database.data.SmallMolecule;
+import ca.mcmaster.magarveylab.prism.enums.hmms.AcylAdenylatingHmms;
+import ca.mcmaster.magarveylab.prism.enums.hmms.AcyltransferaseHmms;
+import ca.mcmaster.magarveylab.prism.enums.hmms.AdenylationHmms;
+import ca.mcmaster.magarveylab.prism.homology.data.HomologousCluster;
+import ca.mcmaster.magarveylab.prism.tanimoto.data.TanimotoScore;
 import ca.mcmaster.magarveylab.prism.util.JsonUtils;
 import ca.mcmaster.magarveylab.prism.web.PrismConfig;
 import ca.mcmaster.magarveylab.wasp.session.Session;
@@ -100,17 +101,17 @@ public class JsonInput {
 
 		List<Cluster> contigClusters = genome.contigs().get(0).clusters();
 		if (json.get("clusters") != null) {
-			System.out.println("[JsonInput] Reading clusters from genomic JSON input");
-			List<Cluster> clusters = parseAllClusters(json, config);
-			contigClusters.addAll(clusters);
+			getAllContigCluster(genome, json, config);
+			/*
+			 * List<Cluster> clusters = parseAllClusters(json, config);
+			 * contigClusters.addAll(clusters);
+			 */
 		} else {
-			System.out.println("[JsonInput] No clusters found");
 		}
 		
 		for (Cluster cluster : genome.clusters())
 			LibraryGenerator.write(cluster.library(), cluster, session);
 	
-		System.out.println("[JsonInput] Read " + genome.clusters().size() + " clusters from JSON input");
 		return prism;
 	}
 
@@ -172,9 +173,12 @@ public class JsonInput {
 			Date d = new Date();
 			config.date = d;
 		}
-		Boolean aminoglycoside = (Boolean) json.get("aminoglycoside");
-		if (aminoglycoside != null)
-			config.aminoglycoside = aminoglycoside; 
+		Boolean thiotemplated = (Boolean) json.get("thiotemplated");
+		if (thiotemplated != null)
+			config.thiotemplated = thiotemplated; 
+		Boolean sugar = (Boolean) json.get("sugar");
+		if (sugar != null)
+			config.sugar = sugar; 
 		Boolean ribosomal = (Boolean) json.get("ribosomal");
 		if (ribosomal != null)
 			config.ribosomal = ribosomal; 
@@ -253,8 +257,14 @@ public class JsonInput {
 			File file = new File(filepath);
 			genome = new Genome(file);
 		}
-		Contig artificial = new Contig("Artificial contig", "");
-		genome.contigs().add(artificial);
+		
+		List<Integer> contigs = (List<Integer>) json.get("contigs");
+		for( int i = 0; i<contigs.size(); i++){
+			Contig art = new Contig("Artificial contig","");
+			art.setLength(contigs.get(i));
+			genome.contigs().add(art);
+		}
+
 		return genome;
 	}
 	
@@ -285,12 +295,34 @@ public class JsonInput {
 		}
 		return clusters;
 	}
+
+	public static void getAllContigCluster(Genome genome, Map<String, Object> clusterJson, PrismConfig config) throws ParseException{
+		if(clusterJson.get("clusters") != null) {
+			List<Map<String,Object>> maps = (List<Map<String, Object>>) clusterJson.get("clusters");
+			int i = 1;
+			for(Map<String, Object> map : maps) {
+				Cluster cluster = parseCluster(map, config);
+				cluster.setIndex(i);
+				Integer clusterIndex = getClusterIndex(map);
+				genome.contigs().get(clusterIndex).clusters().add(cluster);
+				i++;
+			}
+		}
+	}
+	
+	public static Integer getClusterIndex(Map<String,Object> json) throws ParseException{
+		return (Integer) json.get("contig");
+	}
+	
+	
 	
 	/**
 	 * Parse a single cluster, either from a map within a genome-wide saved JSON
 	 * result, or from a JSON file representing only a single cluster.
 	 * 
-	 * Currently set to parse family value as a string for version 1.2.4 and parses it as a list of family values for new versions.
+	 * Parses biosynthetic family as a single string (for version 1.2.4) and
+	 * as a list of family values for newer versions.
+	 * 
 	 * @param json
 	 *            map read in from the saved JSON file
 	 * @return a single cluster
@@ -302,20 +334,35 @@ public class JsonInput {
 		Cluster cluster = new Cluster();
 		
 		// parse family
+		// parse type
 		List<String> families = new ArrayList<String>();
+		List<String> types = new ArrayList<String>();
 		if (config.version.startsWith("1.2.4")) {
 			families.add((String) json.get("family"));
+			types.add((String) json.get("type"));
 		}else {
-			families = (List<String>) json.get("family");
+			
+			try{
+				families = (List<String>) json.get("family");
+				types = (List<String>) json.get("type");
+			}
+			catch(ClassCastException e){
+				String family = (String) json.get("family");
+				families.add(family);
+				
+				String type = (String) json.get("type");
+				types.add(type);
+			}
+			
+			
 		}
+		
 		if (families != null)
 			for (String s : families)
 				for (ClusterFamilies family : ClusterFamilies.values())
 					if (family.toString().equals(s))
 						cluster.addFamily(family);
 		
-		// parse type
-		List<String> types = (List<String>) json.get("type");
 		if (types != null)
 			for (String t : types)
 				for (ClusterType type : ClusterTypeAnalyzer.getAllClusterTypes())
@@ -341,6 +388,12 @@ public class JsonInput {
 		List<List<Sugar>> sugars = parseSugars(json);
 		cluster.setSugars(sugars);
 		
+		//parse homologous clusters
+		cluster.setHomologs(parseHomologousClusters(json));
+		
+		//parse homologous molecules
+		cluster.setScores(parseHomologousMolecules(json));
+
 		// parse orfs
 		List<Orf> orfs = parseOrfs(json);
 		cluster.orfs().addAll(orfs);
@@ -388,10 +441,68 @@ public class JsonInput {
 				combinations.add(sugars);
 			}
 		}
-		System.out.println("[JsonInput] Read " + combinations.size() + " sugar combinations from JSON input");
 		return combinations;
 	}
 
+	/**
+	 * Parse the homologous cluster data for a cluster
+	 * 
+	 * @param json
+	 *            map read in from the saved JSON file
+	 * @return the list of homologous cluster data
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<HomologousCluster> parseHomologousClusters(Map<String, Object> json) {
+		List<HomologousCluster> homologsReturn = new ArrayList<HomologousCluster>();
+		if (json.get("homolog_clusters") != null) {
+			List<Map<String,Object>> homologs = (List<Map<String, Object>>) json.get("homolog_clusters");
+			for (Map<String,Object> homolog : homologs) {
+				HomologousCluster h = new HomologousCluster((String) homolog.get("name"));
+				h.setCoverage((double) homolog.get("coverage"));
+				h.setDomainScore((double) homolog.get("domain_score"));
+				h.setIdentityScore((double) homolog.get("identity_score"));
+				//TODO need to add weighted domain score to object
+				//homolog.get("weighted_domain_score");
+
+				homologsReturn.add(h);
+			}
+		}
+		return homologsReturn;
+	}
+
+	/**
+	 * Parse the homologous molecule data for a cluster
+	 * 
+	 * @param json
+	 *            map read in from the saved JSON file
+	 * @return the list of homologous molecules for the cluster
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<TanimotoScore> parseHomologousMolecules(Map<String,Object> json) {
+		List<TanimotoScore> scores = new ArrayList<TanimotoScore>();
+
+		if (json.get("homolog_molecules") != null) {
+			List<Map<String,Object>> molecules = (List<Map<String, Object>>) json.get("homolog_molecules");
+			
+			for (Map<String,Object> mol : molecules) {				
+				SmallMolecule query = new SmallMolecule();
+				SmallMolecule target = new SmallMolecule();
+
+				query.setName((String) mol.get("query_name"));
+				target.setSmiles((String) mol.get("smiles"));
+				target.setName((String) mol.get("name"));
+
+				TanimotoScore ts = new TanimotoScore(query, target);
+				ts.addScore("ecfp6", ((Number)mol.get("ecfp6")).floatValue());
+				ts.addScore("fcfp6", ((Number)mol.get("fcfp6")).floatValue());
+				
+				scores.add(ts);
+			}
+						
+		}
+		return scores;
+	}
+	
 	/**
 	 * Parse the open reading frames in a cluster from a saved JSON file.
 	 * 
@@ -434,7 +545,6 @@ public class JsonInput {
 			}
 			orfs.add(orf);
 		}
-		System.out.println("[JsonInput] Read " + orfs.size() + " orfs from JSON input");
 		return orfs;
 	}
 
@@ -450,8 +560,19 @@ public class JsonInput {
 		String domainName = (String) json.get("name");
 		Integer domainStart = (Integer) json.get("start");
 		Integer domainStop = (Integer) json.get("stop");
-		Double domainScore = (Double) json.get("score");
-
+		
+		
+		Double domainScore = null;
+		try{
+			domainScore = Double.valueOf(json.get("score").toString());
+		}
+		catch(Exception e){
+			System.out.println(json.get("score").toString());
+			System.out.println(json.getClass().getName());
+			e.printStackTrace();
+			System.exit(0);
+		}
+			
 		Domain domain = new Domain(domainStart, domainStop, domainScore, domainName);
 		
 		// get family
@@ -496,7 +617,6 @@ public class JsonInput {
 				f = family;
 		if (f == null)
 			f = DomainFamilies.NULL;
-		System.out.println("Parsed domain from family " + f);
 		return f;
 	}
 
@@ -510,11 +630,7 @@ public class JsonInput {
 	 */
 	public static DomainType parseDomainType(String domainType, DomainFamilies family) {
 		List<DomainType> types = new ArrayList<DomainType>();
-		if (family == DomainFamilies.AMINOGLYCOSIDE) {
-			types.addAll(Arrays.asList(AminoglycosideDomains.values()));
-		} else if (family == DomainFamilies.BETA_LACTAM) {
-			types.addAll(Arrays.asList(BetaLactamDomains.values()));
-		} else if (family == DomainFamilies.PREREQUISITE) {
+		if (family == DomainFamilies.PREREQUISITE) {
 			types.addAll(Arrays.asList(PrerequisiteDomains.values()));
 		} else if (family == DomainFamilies.REGULATOR) {
 			types.addAll(Arrays.asList(RegulatorDomains.values()));
@@ -538,7 +654,6 @@ public class JsonInput {
 				t = type;
 		if (t == null)
 			t = ThiotemplatedDomains.NULL;
-		System.out.println("Read " + t + " domain from JSON input");
 		return t;
 	}
 
@@ -554,7 +669,7 @@ public class JsonInput {
 		List<Substrate> substrates = new ArrayList<Substrate>();
 		for (Map<String,Object> map : json) {
 			String name = (String) map.get("name");
-			Double score = (Double) map.get("score");
+			Double score = Double.valueOf(map.get("score").toString());
 			Integer start = (Integer) map.get("start");
 			Integer end = (Integer) map.get("stop");
 			
@@ -562,7 +677,6 @@ public class JsonInput {
 			Substrate substrate = new Substrate(start, end, score, type);
 			substrates.add(substrate);
 		}
-		System.out.println("[JsonInput] Read " + substrates.size() + " substrates from JSON input");
 		return substrates;
 	}
 
@@ -576,14 +690,13 @@ public class JsonInput {
 	 */
 	public static SubstrateType parseSubstrateType(String name) {
 		List<SubstrateType> types = new ArrayList<SubstrateType>();
-		types.addAll(Arrays.asList(AdenylationSubstrates.values()));
-		types.addAll(Arrays.asList(AcylAdenylatingSubstrates.values()));
-		types.addAll(Arrays.asList(AcyltransferaseSubstrates.values()));
+		types.addAll(Arrays.asList(AdenylationHmms.values()));
+		types.addAll(Arrays.asList(AcylAdenylatingHmms.values()));
+		types.addAll(Arrays.asList(AcyltransferaseHmms.values()));
 		SubstrateType t = null;
 		for (SubstrateType type : types)
 			if (name.equals(type.abbreviation()))
 				t = type;
-		System.out.println("[JsonInput] Read " + t.toString() + " substrate from JSON input");
 		return t;
 	}
 	
@@ -603,7 +716,7 @@ public class JsonInput {
 		List<BlastSearchResult> results = new ArrayList<BlastSearchResult>();
 		for (Map<String,Object> map : json) {
 			String name = (String) map.get("name");
-			Double score = (Double) map.get("score");
+			Double score = Double.valueOf((map.get("score").toString()));
 			BlastSearchResult result = new BlastSearchResult("", name, 0, score, 0, 0, 0, 0);
 			results.add(result);
 		}

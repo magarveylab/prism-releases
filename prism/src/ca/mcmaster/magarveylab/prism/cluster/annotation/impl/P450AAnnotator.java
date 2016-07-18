@@ -6,13 +6,13 @@ import java.util.List;
 import ca.mcmaster.magarveylab.enums.ModuleTypes;
 import ca.mcmaster.magarveylab.enums.domains.DomainType;
 import ca.mcmaster.magarveylab.enums.domains.TailoringDomains;
-import ca.mcmaster.magarveylab.enums.substrates.AdenylationSubstrates;
 import ca.mcmaster.magarveylab.prism.cluster.annotation.Annotator;
 import ca.mcmaster.magarveylab.prism.data.Cluster;
 import ca.mcmaster.magarveylab.prism.data.Domain;
 import ca.mcmaster.magarveylab.prism.data.Module;
 import ca.mcmaster.magarveylab.prism.data.Substrate;
 import ca.mcmaster.magarveylab.prism.data.reactions.SubstrateSet;
+import ca.mcmaster.magarveylab.prism.enums.hmms.AdenylationHmms;
 
 /**
  * Find sites at which the glycopeptide P450 responsible for cyclizing the D-O-E ring can act.
@@ -49,16 +49,16 @@ public class P450AAnnotator implements Annotator {
 			return substrates;
 
 		Substrate firstSubstrate = firstScaffold.topSubstrate();
-		if (firstSubstrate == null || !(firstSubstrate.type() == AdenylationSubstrates.TYROSINE_1 
-				|| firstSubstrate.type() == AdenylationSubstrates.TYROSINE_2 
-				|| firstSubstrate.type() == AdenylationSubstrates.BETA_HYDROXYTYROSINE
-				|| firstSubstrate.type() == AdenylationSubstrates._4_HYDROXY_PHENYLGLYCINE))
+		if (firstSubstrate == null || !(firstSubstrate.type() == AdenylationHmms.TYROSINE_1 
+				|| firstSubstrate.type() == AdenylationHmms.TYROSINE_2 
+				|| firstSubstrate.type() == AdenylationHmms.BETA_HYDROXYTYROSINE
+				|| firstSubstrate.type() == AdenylationHmms._4_HYDROXY_PHENYLGLYCINE))
 			return substrates;
 		Substrate secondSubstrate = secondScaffold.topSubstrate();
-		if (secondSubstrate == null || !(secondSubstrate.type() == AdenylationSubstrates.TYROSINE_1 
-				|| secondSubstrate.type() == AdenylationSubstrates.TYROSINE_2 
-				|| secondSubstrate.type() == AdenylationSubstrates.BETA_HYDROXYTYROSINE
-				|| secondSubstrate.type() == AdenylationSubstrates._4_HYDROXY_PHENYLGLYCINE))
+		if (secondSubstrate == null || !(secondSubstrate.type() == AdenylationHmms.TYROSINE_1 
+				|| secondSubstrate.type() == AdenylationHmms.TYROSINE_2 
+				|| secondSubstrate.type() == AdenylationHmms.BETA_HYDROXYTYROSINE
+				|| secondSubstrate.type() == AdenylationHmms._4_HYDROXY_PHENYLGLYCINE))
 			return substrates;
 
 		SubstrateSet substrate = new SubstrateSet(first, second);

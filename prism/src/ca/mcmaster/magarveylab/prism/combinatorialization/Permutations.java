@@ -13,15 +13,20 @@ import java.util.Random;
 public class Permutations {
 
 	/**
-	 * Generate all permutations of k elements of a set of n elements (nPk). Works by first generating all combinations nCk,
-	 * then permuting each combination. 
-	 * @param n		size of the set of elements
-	 * @param k		number of elements per permutation
-	 * @return		list of all permutations nPk
+	 * Generate all permutations of k elements of a set of n elements (nPk).
+	 * Works by first generating all combinations nCk, then permuting each
+	 * combination.
+	 * 
+	 * @param n
+	 *            size of the set of elements
+	 * @param k
+	 *            number of elements per permutation
+	 * @return list of all permutations nPk
 	 */
-	public static List<int[]> permutations(int n, int k) {
-		System.out.println("[Permutations] Generating all permutations " + n + "P" + k);
-		
+	public static List<int[]> permutations(int n, int k, int limit) {
+		System.out.println("[Permutations] Generating all permutations " + n
+				+ "P" + k);
+
 		if (k > n)
 			System.out.println("[Permutations] Error: "
 					+ "cannot permute when k is greater than n!");
@@ -29,46 +34,46 @@ public class Permutations {
 		List<int[]> permutations = new ArrayList<int[]>();
 		//if there are less than 6 elements it will permute all combos to get all permutations
 		if (n < 6) {
-			List<int[]> combinations = Combinations.combinations(n,k);
-			for (int[] combination : combinations) {
+			List<int[]> combinations = Combinations.combinations(n, k);
+			for (int[] combination : combinations) 
 				permutations.addAll(permutations(combination));
-			}
-		} else { //if there are 6 or more elements it will sample the combinations to get a sample of permutations
-			permutations.addAll(samplePermutations(n, 500)); //returns 500 randomly generated permutations
-		}	
+		} else { // if there are 6 or more elements it will sample the
+					// combinations to get a sample of permutations
+			permutations.addAll(samplePermutations(n, k, limit));
+		}
+
+		System.out.println("[Permutations] Generated " + permutations.size()
+				+ " permutations " + n + "P" + k);
 		return permutations;
 	}
-
-	/**
-	 * Generate a pseudorandom sample of permutations of an array of integers.
-	 * 
-	 * @param n
-	 *            number of elements to put in the array
-	 * @param limit
-	 *            number of arrays to generate
-	 * @return all permutations
-	 */
-	public static List<int[]> samplePermutations(int n, int limit) {
+	
+	public static List<int[]> samplePermutations(int n, int k, int limit) {
+		if (k > n)
+			throw new ArrayIndexOutOfBoundsException("Couldn't sample "
+					+ "combinations: k (" + k + ") > n (" + n
+							+ ")");
 		List<int[]> permutations = new ArrayList<int[]>();
-		int[] newpermute = new int[n];
-		for (int y = 0; y < n; y++) {
-			newpermute[y] = y;
-		}
-		Random rand = new Random(0);
-		for (int v = 0; v < limit; v++) {
-			boolean[] used = new boolean[n];
-			int z = 0;
-			int[] permuted = new int[n];
-			while (z<n) {
-				int rnd = rand.nextInt(n) +1;
-				if (!used[rnd-1]) {
-					permuted[z] = rnd;
-					z++;
-					used[rnd-1] = true;
-				}
-				
+		Random random = new Random(0);
+		int i = 0, used = 0;
+		while (i < limit) {
+			// if 1,000 used permutations have been generated, stop trying 
+			if (used > 10_000)
+				break; 
+			int[] permutation = new int[k];
+			Arrays.fill(permutation, -1);
+			for (int j = 0; j < k; j++) {
+				int r = -1;
+				while (r == -1 || Combinations.contains(permutation, r))
+					r = random.nextInt(n) + 1;
+				permutation[j] = r;
 			}
-			permutations.add(permuted);
+			if (!Combinations.usedPermutation(permutation, permutations)
+					|| permutations.size() == 0) {
+				permutations.add(permutation);
+				i++;
+			} else {
+				used++;
+			}
 		}
 		return permutations;
 	}

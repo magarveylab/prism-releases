@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import ca.mcmaster.magarveylab.prism.orfs.GenePredictionModes;
 import ca.mcmaster.magarveylab.prism.util.Sorter;
 
 /**
@@ -19,6 +20,9 @@ public class Contig {
 	private List<Orf> orfs = new ArrayList<Orf>();
 	private List<Cluster> clusters = new ArrayList<Cluster>();
 	private HashMap<String,String> files = new HashMap<String,String>();
+	
+	
+	private Integer length;
 	
 	/**
 	 * Instantiate a new contig.
@@ -63,11 +67,11 @@ public class Contig {
 	}
 	
 	/**
-	 * Set the open reading frames on this contig.
+	 * Add a list of open reading frames to this contig.
 	 * @param orfs	contig orfs 
 	 */
-	public void setOrfs(List<Orf> orfs) {
-		this.orfs = orfs;
+	public void addOrfs(List<Orf> orfs) {
+		this.orfs.addAll(orfs);
 	}
 	
 	/**
@@ -83,7 +87,16 @@ public class Contig {
 	 * @return	nucleotide sequence length 
 	 */
 	public int length() {
-		return sequence.length();
+		if(length == null){
+			return sequence.length();
+		}
+		else{
+			return length;
+		}
+	}
+	
+	public void setLength(Integer length) {
+		this.length = length;
 	}
 	
 	/**
@@ -119,27 +132,62 @@ public class Contig {
 	public String getFile(String key) {
 		return files.get(key);
 	}
-
+	
 	/**
 	 * Get all the orfs on this contig within the boundaries of a given
 	 * cluster, regardless of whether they contain biosynthetic domains.
 	 * 
 	 * @param cluster 	the cluster in question
+	 * @param window	the window on either end of the cluster to look for open reading frames 
 	 * @return 			all open reading frames within the boundaries of this cluster
 	 */
-	public List<Orf> getAllOrfs(Cluster cluster) {
+	public List<Orf> getAllOrfs(Cluster cluster, int window) {
 		List<Orf> orfs = new ArrayList<Orf>();
 	
 		// get cluster start & end
-		int start = cluster.start();
-		int end = cluster.end();
+		int start = cluster.start() - window;
+		int end = cluster.end() + window;
 	
 		// if orf is within the cluster, add to return list
 		for (Orf orf : this.orfs) {
-			if (orf.start() > start && orf.end() < end)
+			if (orf.start() >= start && orf.end() <= end)
 				orfs.add(orf);
 		}
+		
+		Sorter.sortOrfs(orfs);
+		return orfs;
+	}
 	
+	/**
+	 * Get all the orfs on this contig predicted with a given mode within the
+	 * boundaries of a given cluster, regardless of whether they contain
+	 * biosynthetic domains.
+	 * 
+	 * @param cluster
+	 *            the cluster in question
+	 * @param mode
+	 *            the method used to identify or predict the open reading frames
+	 *            to return
+	 * @param window
+	 *            the window on either end of the cluster to look for open
+	 *            reading frames
+	 * @return all open reading frames within the boundaries of this cluster
+	 */
+	public List<Orf> getAllOrfs(Cluster cluster, GenePredictionModes mode,
+			int window) {
+		List<Orf> orfs = new ArrayList<Orf>();
+
+		// get cluster start & end
+		int start = cluster.start() - window;
+		int end = cluster.end() + window;
+	
+		// if orf is within the cluster, add to return list
+		for (Orf orf : this.orfs) {
+			if (orf.start() >= start && orf.end() <= end
+					&& orf.getMode() == mode)
+				orfs.add(orf);
+		}
+
 		Sorter.sortOrfs(orfs);
 		return orfs;
 	}

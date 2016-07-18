@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 
+import ca.mcmaster.magarveylab.enums.FileType;
+
 /**
  * Utilities class for file operations.
  * 
@@ -118,6 +120,17 @@ public class Files {
 			}
 		});
 		return directories;
+	}
+	
+	public static FileType getFileType(String filename) {
+		FileType type = null;
+		
+		if (filename.matches(".+\\.gbk$") || filename.matches(".+\\.gb$") || filename.matches(".+\\.genbank$")) {
+			type = FileType.GENBANK;
+		}else {
+			type = FileType.FASTA;
+		}
+		return type;
 	}
 
 }

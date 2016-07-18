@@ -1,5 +1,7 @@
 package ca.mcmaster.magarveylab.prism.data;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import ca.mcmaster.magarveylab.enums.OrfTypes;
 import ca.mcmaster.magarveylab.enums.domains.DomainType;
 import ca.mcmaster.magarveylab.enums.domains.ThiotemplatedDomains;
 import ca.mcmaster.magarveylab.prism.cluster.analysis.DomainAnalyzer;
+import ca.mcmaster.magarveylab.prism.orfs.GenePredictionModes;
 
 /**
  * A putative biosynthetic open reading frame.
@@ -16,8 +19,10 @@ import ca.mcmaster.magarveylab.prism.cluster.analysis.DomainAnalyzer;
  * @author skinnider
  *
  */
-public class Orf {
+public class Orf implements Serializable {
 
+	private static final long serialVersionUID = -5713920469341661161L;
+	
 	private int start;
 	private int end;
 	private String name;
@@ -26,7 +31,10 @@ public class Orf {
 	private String aaSequence;
 	private List<Domain> domains = new LinkedList<Domain>();
 	private List<Module> modules = new LinkedList<Module>();
+	private List<Propeptide> propeptides = new ArrayList<Propeptide>(); 
 	private OrfTypes type = null;
+	private GenePredictionModes mode = null;
+	private String partial;
 		
 	/**
 	 * Instantiate a new biosynthetic orf from a protein sequence.
@@ -123,7 +131,7 @@ public class Orf {
 	 * @return the orf's length, equivalent to (start - end) + 1
 	 */
 	public int length() {
-		return Math.abs((start - end) + 1);
+		return Math.abs(start - end) + 1;
 	}
 
 	/**
@@ -133,6 +141,14 @@ public class Orf {
 	 */
 	public String dnaSequence() {
 		return dnaSequence;
+	}
+	
+	public void setDnaSequence(String seq) {
+		this.dnaSequence = seq;
+	}
+	
+	public void setAASequence(String seq) {
+		this.aaSequence = seq;
 	}
 
 	/**
@@ -395,6 +411,102 @@ public class Orf {
 		substrateDomains.addAll(domains(ThiotemplatedDomains.ACYLTRANSFERASE));
 		substrateDomains.addAll(domains(ThiotemplatedDomains.ACYL_ADENYLATING));
 		return substrateDomains;
+	}
+	
+	/**
+	 * Get all cleaved ribosomal propeptides associated with this orf. 
+	 * @return	all cleaved ribosomal propeptides associated with this orf
+	 */
+	public List<Propeptide> propeptides() {
+		return propeptides;
+	}
+	
+	/**
+	 * Check whether this orf has cleaved ribosomal propeptides associated with it.
+	 * @return true if this orf has cleaved ribosomal propeptides associated with it
+	 */
+	public boolean hasPropeptides() {
+		return propeptides.size() > 0;
+	}
+	
+	/**
+	 * Associate a new cleaved, ribosomal propeptide with this orf. 
+	 * @param propeptide	a cleaved ribosomal propeptide from this orf 
+	 */
+	public void addPropeptide(Propeptide propeptide) {
+		propeptides.add(propeptide);
+	}
+	
+	/**
+	 * Associate a list of cleaved, ribosomal propeptides with this orf. 
+	 * @param propeptide	a list of cleaved ribosomal propeptides from this orf 
+	 */
+	public void addPropeptides(List<Propeptide> propeptides) {
+		this.propeptides.addAll(propeptides);
+	}
+
+	/**
+	 * Get the mode by which this orf was identified or predicted (for example,
+	 * was this orf identified by scanning the input sequence for all possible
+	 * coding sequences, or with an orf prediction software such as Prodigal or
+	 * GeneMark?)
+	 * 
+	 * @return	the mode by which this orf was identified or predicted 
+	 */
+	public GenePredictionModes getMode() {
+		return mode;
+	}
+
+	/**
+	 * Set the mode by which this orf was identified or predicted (for example,
+	 * by scanning the input sequence for all possible coding sequences, or with
+	 * an orf prediction software such as Prodigal or GeneMark)
+	 * 
+	 * @param mode
+	 *            the mode by which this orf was identified or predicted
+	 */
+	public void setMode(GenePredictionModes mode) {
+		this.mode = mode;
+	}
+	
+	/**
+	 * Check whether another orf overlaps with this one.
+	 * 
+	 * @param o2
+	 *            the second orf
+	 * @return true if their start-end ranges overlap
+	 */
+	public boolean overlaps(final Orf orf2) {
+		final int x1 = start;
+		final int x2 = end;
+		final int y1 = orf2.start();
+		final int y2 = orf2.end();
+		return (x1 <= y2 && y1 <= x2);
+	}
+
+	/**
+	 * For open reading frames predicted by Prodigal, get the partial indicator.
+	 * This is a string of length 2 where a value of 1 means the orf is partial
+	 * at that boundary: e.g. the string "01" indicates the orf is partial at
+	 * the right boundary.
+	 * 
+	 * @return the partial indicator set by Prodigal
+	 */
+	public String getPartial() {
+		return partial;
+	}
+
+	/**
+	 * For open reading frames predicted by Prodigal, set the partial indicator.
+	 * This is a string of length 2 where a value of 1 means the orf is partial
+	 * at that boundary: e.g. the string "01" indicates the orf is partial at
+	 * the right boundary.
+	 * 
+	 * @param partial
+	 *            the partial indicator set by Prodigal
+	 */
+	public void setPartial(String partial) {
+		this.partial = partial;
 	}
 	
 }

@@ -37,7 +37,8 @@ public class FastaUtil {
 		String sequence = null;
 		for (Orf orf : cluster.orfs())
 			if (orf.contains(domain))
-				sequence = orf.sequence().substring(domain.start(), domain.end());
+				sequence = orf.sequence().substring(domain.start(),
+						domain.end() - 1);
 		return sequence;
 	}
 	
@@ -59,7 +60,9 @@ public class FastaUtil {
 		Organism o = new Organism(header);
 
 		String[] data = new String[5];
-		//String[] split = header.split("\\|");
+		
+		if (!header.contains(" ") || !header.contains("\\|"))
+			return o;
 		
 		String split2 = header.substring(0, header.indexOf(" "));
 		String other = header.substring(header.indexOf(" ") + 1);

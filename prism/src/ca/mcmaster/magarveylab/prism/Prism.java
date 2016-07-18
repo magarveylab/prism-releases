@@ -5,9 +5,10 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.openscience.cdk.exception.CDKException; 
+import org.openscience.cdk.exception.CDKException;
 
 import ca.mcmaster.magarveylab.prism.cluster.ClusterFinder;
+import ca.mcmaster.magarveylab.prism.cluster.analysis.RibosomalPrecursorCleaver;
 import ca.mcmaster.magarveylab.prism.cluster.scaffold.LibraryGenerator;
 import ca.mcmaster.magarveylab.prism.data.Cluster;
 import ca.mcmaster.magarveylab.prism.data.Contig;
@@ -22,8 +23,12 @@ import ca.mcmaster.magarveylab.prism.util.PrismFileWriter;
 import ca.mcmaster.magarveylab.prism.util.exception.BadSequenceException;
 import ca.mcmaster.magarveylab.prism.util.exception.BadSmilesToFingerprinterException;
 import ca.mcmaster.magarveylab.prism.util.exception.DatabaseConnectException;
+import ca.mcmaster.magarveylab.prism.util.exception.DependencyException;
+import ca.mcmaster.magarveylab.prism.util.exception.FimoSearchException;
 import ca.mcmaster.magarveylab.prism.util.exception.NoSequenceException;
+import ca.mcmaster.magarveylab.prism.util.exception.ProdigalSearchException;
 import ca.mcmaster.magarveylab.prism.util.exception.SugarGeneException;
+import ca.mcmaster.magarveylab.prism.util.fragment.LibraryFragmenter;
 import ca.mcmaster.magarveylab.prism.web.PrismConfig;
 import ca.mcmaster.magarveylab.prism.web.html.PrismReport;
 import ca.mcmaster.magarveylab.wasp.WebApplication;
@@ -31,6 +36,7 @@ import ca.mcmaster.magarveylab.wasp.session.Session;
 
 /**
  * PRISM: PRediction Informatics for Secondary Metabolomes. <br>
+ * <br>
  * Search a genome for novel genetically encoded secondary metabolites.
  * 
  * @author skinnider
@@ -60,19 +66,57 @@ public class Prism implements Runnable, WebApplication {
 	 * Execute this PRISM search.
 	 */
 	public void run() {
+		//TODO: ADD IN THE PRISM LITE STEPS 
 		try {
+			checkDependencies();
 			findOrfs();
 			analyzeOrfs();
 			findClusters();
+			cleaveRibosomalPrecursors();
 			generateScaffolds();
+		//	generateFragments();
 			writeFiles();
 			if (config.score)
 				score();
+			writeJson();
 		} catch (Exception e) {
 			session.exceptionHandler().throwException(e);
 		} finally {
 			terminate();
 		}
+	}
+
+	
+	public void generateFragments(){
+		session.listener().addStage("Fragmenting molecules", 
+				"Generating unique fragments and sorting scaffolds by molecular mass");
+		for (Contig contig: genome.contigs()){
+			for( Cluster cluster: contig.clusters()){
+				cluster.library().sortByMass();
+				LibraryFragmenter lf = new LibraryFragmenter(cluster.library());
+				lf.fragment();
+			}
+		}
+	}
+	
+
+	/**
+	 * Ensure all dependencies are present before running PRISM.
+	 * 
+	 * @throws DependencyException
+	 * @throws InterruptedException
+	 * @throws IOException
+	 * @throws ProdigalSearchException
+	 * @throws BadSmilesToFingerprinterException
+	 */
+	public void checkDependencies() throws DependencyException, IOException,
+			InterruptedException, ProdigalSearchException,
+			BadSmilesToFingerprinterException {
+		session.listener().addStage("Checking dependencies",
+				"Checking for installed dependencies...");
+
+		PrismDependencyCheck dc = new PrismDependencyCheck(config, session);
+		dc.run();
 	}
 
 	/**
@@ -86,21 +130,16 @@ public class Prism implements Runnable, WebApplication {
 	public void findOrfs() throws IOException, InterruptedException, Exception {
 		session.listener().addStage("Identifying genes",
 				"Finding open reading frames...");
-		
+
 		File file = new File(config.input);
-		System.out.println("config file initialized"); //TODO: remove after debugging
-		if (file.length() > 50 * 1024 * 1024) // 50 MB check 
+		if (file.length() > 50 * 1024 * 1024) // 50 MB check
 			throw new BadSequenceException("Could not run PRISM: "
 					+ "your file exceeds the maximum file size of 50 MB!");
-		
+
 		genome = new Genome(file);
-		System.out.println("genome variable initialized"); //TODO: remove after debugging
 		OrfSearch os = new OrfSearch(genome, session);
-		System.out.println("initialzed orf search"); //TODO: remove after debugging
 		os.run();
-		System.out.println("started orf search"); //TODO: remove after debugging
-		System.out.println("Finished finding orfs.");
-		if (genome == null || genome.contigs().size() == 0)
+		if (genome.contigs().size() == 0)
 			throw new NoSequenceException("Could not detect any sequence "
 					+ "information in user-submitted file!");
 	}
@@ -131,8 +170,27 @@ public class Prism implements Runnable, WebApplication {
 		ClusterFinder cf = new ClusterFinder();
 		for (Contig contig : genome.contigs())
 			cf.cluster(contig, config, session);
-
+		
 		System.out.println("[Prism] Detected " + genome.clusters().size() + " clusters");
+	}
+
+	/**
+	 * Predict putative cleavage sites for ribosomally synthesized and
+	 * post-translationally modified peptides.
+	 * 
+	 * @throws InterruptedException
+	 * @throws FimoSearchException
+	 */
+	public void cleaveRibosomalPrecursors() throws FimoSearchException,
+			InterruptedException {
+		session.listener().addStage("Cleaving ribosomal precursors",
+				"Predicting RiPP precursor peptide cleavage sites...");
+		
+		for (Contig contig : genome.contigs()) {
+			for (Cluster cluster : contig.clusters()) { 
+				RibosomalPrecursorCleaver.cleave(cluster, session);
+			}
+		}
 	}
 
 	/**
@@ -145,7 +203,8 @@ public class Prism implements Runnable, WebApplication {
 				"Generating predicted scaffolds...");
 			
 		for (Contig contig : genome.contigs()) {
-			for (Cluster cluster : contig.clusters()) { 
+			for (Cluster cluster : contig.clusters()) {
+				
 				try {
 					LibraryGenerator lg = new LibraryGenerator(cluster, session);
 					lg.generate();	
@@ -166,7 +225,10 @@ public class Prism implements Runnable, WebApplication {
 		session.listener().addStage("Writing files", "Generating output...");
 		PrismFileWriter.writeAllFiles(genome, session);
 	}
-
+	
+	public void writeJson() throws Exception {
+		PrismFileWriter.writeAllJson(genome, session);
+	}
 	/**
 	 * Assess chemical similarity and genetic homology of identified clusters to known small molecules.
 	 * @throws IOException

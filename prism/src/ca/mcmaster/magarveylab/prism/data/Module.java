@@ -1,22 +1,26 @@
 package ca.mcmaster.magarveylab.prism.data;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 import ca.mcmaster.magarveylab.enums.ModuleTypes;
 import ca.mcmaster.magarveylab.enums.domains.DomainType;
+import ca.mcmaster.magarveylab.enums.domains.GenericDomains;
 import ca.mcmaster.magarveylab.enums.domains.RibosomalDomains;
 import ca.mcmaster.magarveylab.enums.domains.ThiotemplatedDomains;
-import ca.mcmaster.magarveylab.enums.substrates.AdenylationSubstrates;
 import ca.mcmaster.magarveylab.prism.cluster.analysis.DomainAnalyzer;
+import ca.mcmaster.magarveylab.prism.enums.hmms.AdenylationHmms;
 
 /**
  * A generic biosynthetic module.
  * @author skinnider
  *
  */
-public class Module {
+public class Module implements Serializable {
 
+	private static final long serialVersionUID = 2558544879050389829L;
+	
 	private boolean active = true;
 	private boolean canExtend = true;
 	private ModuleTypes type;
@@ -150,7 +154,7 @@ public class Module {
 			for (Domain domain : domains)
 				if (domain.type() == ThiotemplatedDomains.ACYL_ADENYLATING 
 						|| (domain.type() == ThiotemplatedDomains.ADENYLATION 
-						&& domain.topSubstrate().type() == AdenylationSubstrates.PROLINE_3)
+						&& domain.topSubstrate().type() == AdenylationHmms.PROLINE_3)
 						&& (scaffold == null || domain.score() > scaffold.score())) 
 					scaffold = domain;
 		} else if (isAdenylationModule()) {
@@ -170,7 +174,7 @@ public class Module {
 					scaffold = domain;
 		} else if (type == ModuleTypes.RIBOSOMAL) {
 			for (Domain domain : domains)
-				if (domain.type() == RibosomalDomains.AMINO_ACID)
+				if (domain.type() == GenericDomains.AMINO_ACID)
 					scaffold = domain;
 		}
 		return scaffold;

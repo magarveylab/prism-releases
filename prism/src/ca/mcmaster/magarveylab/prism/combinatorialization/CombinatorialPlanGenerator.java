@@ -11,7 +11,6 @@ import ca.mcmaster.magarveylab.prism.cluster.analysis.CyclizationAnalyzer;
 import ca.mcmaster.magarveylab.prism.data.Cluster;
 import ca.mcmaster.magarveylab.prism.data.CombinatorialData;
 import ca.mcmaster.magarveylab.prism.data.Cyclization;
-import ca.mcmaster.magarveylab.prism.data.Domain;
 import ca.mcmaster.magarveylab.prism.data.Module; 
 import ca.mcmaster.magarveylab.prism.data.reactions.ReactionPlan;
 import ca.mcmaster.magarveylab.prism.data.structure.CombinatorialPlan;
@@ -112,22 +111,32 @@ public class CombinatorialPlanGenerator {
 					if (numPlans > 1_000)
 						break;
 					
-					List<ReactionPlan> reactionPlan = reactionPlans.size() == 0 ? null : reactionPlans.get(a);
-					List<Sugar> sugarCombination = sugars.size() == 0 ? null : sugars.get(b);
+					List<ReactionPlan> reactionPlan = reactionPlans.size() == 0 ? new ArrayList<ReactionPlan>()
+							: reactionPlans.get(a);
+					List<Sugar> sugarCombination = sugars.size() == 0 ? new ArrayList<Sugar>()
+							: sugars.get(b);
+
+					if (reactionPlan.size() > 0) {
+						// copy reaction plans
+						List<ReactionPlan> reactionCopy = new ArrayList<ReactionPlan>();
+						for (ReactionPlan reaction : reactionPlan)
+							reactionCopy.add(new ReactionPlan(reaction));
+						reactionPlan = reactionCopy;
+					}
 					
-					// set sugars 
-					if (sugars.size() > 0) {
+					// set sugars
+					if (sugars.size() > 0 && reactionPlan != null) {
 						int x = 0;
-						for (ReactionPlan reaction : reactionPlan) 
+						for (ReactionPlan reaction : reactionPlan) { 
 							if (reaction.type() == TailoringDomains.GLYCOSYLTRANSFERASE
 									|| reaction.type() == TailoringDomains.C_GLYCOSYLTRANSFERASE) {
 								Sugar sugar = sugarCombination.get(x);
-								Domain domain = reaction.domain();
-								domain.setSugar(sugar);
+								reaction.setSmiles(sugar.smiles());
 								x++;
 							}
+						}
 					}
-
+					
 					Cyclization cyclization = cyclizations.size() == 0 ? null : cyclizations.get(c);
 					CombinatorialPlan scheme = new CombinatorialPlan(reactionPlan, cyclization, permutation);
 					plans.add(scheme);

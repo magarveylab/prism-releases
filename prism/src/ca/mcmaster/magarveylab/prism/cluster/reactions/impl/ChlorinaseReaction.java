@@ -6,11 +6,11 @@ import org.openscience.cdk.config.Elements;
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
+
 import ca.mcmaster.magarveylab.enums.ModuleTypes;
 import ca.mcmaster.magarveylab.enums.domains.DomainType;
 import ca.mcmaster.magarveylab.enums.domains.TailoringDomains;
-import ca.mcmaster.magarveylab.enums.substrates.AdenylationSubstrates;
-import ca.mcmaster.magarveylab.enums.substrates.SubstrateType;
+import ca.mcmaster.magarveylab.enums.interfaces.SubstrateType;
 import ca.mcmaster.magarveylab.prism.cluster.reactions.Reaction;
 import ca.mcmaster.magarveylab.prism.cluster.reactions.GenericReaction;
 import ca.mcmaster.magarveylab.prism.cluster.reactions.UtilityReactions;
@@ -22,6 +22,7 @@ import ca.mcmaster.magarveylab.prism.data.Substrate;
 import ca.mcmaster.magarveylab.prism.data.reactions.ReactionPlan;
 import ca.mcmaster.magarveylab.prism.data.structure.Residue;
 import ca.mcmaster.magarveylab.prism.data.structure.Scaffold;
+import ca.mcmaster.magarveylab.prism.enums.hmms.AdenylationHmms;
 import ca.mcmaster.magarveylab.prism.util.exception.NoResidueException;
 import ca.mcmaster.magarveylab.prism.util.exception.ScaffoldGenerationException;
 import ca.mcmaster.magarveylab.prism.util.exception.TailoringSubstrateException;
@@ -50,32 +51,32 @@ public class ChlorinaseReaction extends GenericReaction implements Reaction {
 			Domain adenylation = module.scaffold();
 			Substrate s = adenylation.topSubstrate();
 			SubstrateType type = s.type();
-			if (type == AdenylationSubstrates.THREONINE_1
-					|| type == AdenylationSubstrates.THREONINE_2)
+			if (type == AdenylationHmms.THREONINE_1
+					|| type == AdenylationHmms.THREONINE_2)
 				atom = Atoms.getMethylCarbon(structure);
-			if (type == AdenylationSubstrates.HISTIDINE_1
-					|| type == AdenylationSubstrates.HISTIDINE_2)
+			if (type == AdenylationHmms.HISTIDINE_1
+					|| type == AdenylationHmms.HISTIDINE_2)
 				atom = Atoms.getHistidineChlorinationAtom(structure);
-			if (type == AdenylationSubstrates.LEUCINE_1
-					|| type == AdenylationSubstrates.LEUCINE_2
-					|| type == AdenylationSubstrates.LEUCINE_3
-					|| type == AdenylationSubstrates.VALINE_1
-					|| type == AdenylationSubstrates.VALINE_3
-					|| type == AdenylationSubstrates.VALINE_3)
+			if (type == AdenylationHmms.LEUCINE_1
+					|| type == AdenylationHmms.LEUCINE_2
+					|| type == AdenylationHmms.LEUCINE_3
+					|| type == AdenylationHmms.VALINE_1
+					|| type == AdenylationHmms.VALINE_3
+					|| type == AdenylationHmms.VALINE_3)
 				atom = Atoms.getMethylCarbon(structure);
-			if (type == AdenylationSubstrates.TYROSINE_1 
-					|| type == AdenylationSubstrates.TYROSINE_2 
-					|| type == AdenylationSubstrates._4_HYDROXY_PHENYLGLYCINE 
-					|| type == AdenylationSubstrates.BETA_HYDROXYTYROSINE)
+			if (type == AdenylationHmms.TYROSINE_1 
+					|| type == AdenylationHmms.TYROSINE_2 
+					|| type == AdenylationHmms._4_HYDROXY_PHENYLGLYCINE 
+					|| type == AdenylationHmms.BETA_HYDROXYTYROSINE)
 				atom = Atoms.getMetaCarbon(structure);
-			if (type == AdenylationSubstrates._3_5_DIHYDROXYPHENYLGLYCINE)
+			if (type == AdenylationHmms._3_5_DIHYDROXYPHENYLGLYCINE)
 				atom = Atoms.getAromaticCarbon(structure);
-			if (type == AdenylationSubstrates.TRYPTOPHAN)
+			if (type == AdenylationHmms.TRYPTOPHAN)
 				atom = Atoms.getTryptophanChlorinationAtom(structure);
-			if (type == AdenylationSubstrates.PROLINE_1
-					|| type == AdenylationSubstrates.PROLINE_2
-					|| type == AdenylationSubstrates.PROLINE_3
-					|| type == AdenylationSubstrates.METHYL_PROLINE)
+			if (type == AdenylationHmms.PROLINE_1
+					|| type == AdenylationHmms.PROLINE_2
+					|| type == AdenylationHmms.PROLINE_3
+					|| type == AdenylationHmms.METHYL_PROLINE)
 				atom = Atoms.getProlineChlorinationAtom(structure);
 		} else if (module.type() == ModuleTypes.C_STARTER
 				|| module.type() == ModuleTypes.ACYL_ADENYLATE) {

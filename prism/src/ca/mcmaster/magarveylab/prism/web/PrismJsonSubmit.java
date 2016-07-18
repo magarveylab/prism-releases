@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletRequestContext;
 
 import ca.mcmaster.magarveylab.prism.Prism;
 import ca.mcmaster.magarveylab.prism.database.JsonInput;
@@ -57,7 +58,7 @@ public class PrismJsonSubmit extends WebApplicationSubmit {
 
 	public String parseJsonFile(HttpServletRequest request, ServletFileUpload uploadHandler, Session session) 
 			throws Exception {
-		List<FileItem> items = uploadHandler.parseRequest(request);
+		List<FileItem> items = uploadHandler.parseRequest(new ServletRequestContext(request));
 		Iterator<FileItem> itr = items.iterator();
 		
 		String jsonFilepath = null; 

@@ -36,7 +36,7 @@ public class SugarAssemblyGraph {
 				}
 			}
 			
-			psb.append("<span class='sugarName'>" + sugar.toString() + "</span>");
+			psb.append("<span class='sugarName'>" + sugar.name() + "</span>");
 			psb.append("</span>");
 		}
 		

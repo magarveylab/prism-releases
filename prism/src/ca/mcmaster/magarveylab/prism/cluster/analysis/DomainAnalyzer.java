@@ -5,11 +5,11 @@ import java.util.List;
 
 import ca.mcmaster.magarveylab.enums.CStarterSubstrates;
 import ca.mcmaster.magarveylab.enums.DomainFamilies;
-import ca.mcmaster.magarveylab.enums.SubstrateDomainSearches;
 import ca.mcmaster.magarveylab.enums.domains.DomainType;
 import ca.mcmaster.magarveylab.enums.domains.ThiotemplatedDomains;
 import ca.mcmaster.magarveylab.prism.blast.BlastSearchResult;
 import ca.mcmaster.magarveylab.prism.data.Domain;
+import ca.mcmaster.magarveylab.prism.enums.hmms.SubstrateDomainSearches;
 
 /**
  * Analyzes domains for combinatorial library generation.

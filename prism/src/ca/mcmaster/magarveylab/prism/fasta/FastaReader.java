@@ -53,16 +53,22 @@ public class FastaReader {
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 			while ((line = br.readLine()) != null) {
 				if (line.startsWith(">")) {
-					if (name.length() > 0 && sequence.length() > minSize) {
-						Contig item = new Contig(name.toString(),
-								sequence.toString());
-						item.setIndex(counter);
-						contigs.add(item);
-						name.delete(0, name.length());
-						sequence.delete(0, sequence.length());
-						counter++;
+					if (name.length() > 0) { // can't be first 
+						if (sequence.length() > minSize) {
+							Contig item = new Contig(name.toString(),
+									sequence.toString());
+							item.setIndex(counter);
+							contigs.add(item);
+							name.delete(0, name.length());
+							sequence.delete(0, sequence.length());
+							counter++;
+						} else {
+							name.delete(0, name.length());
+							sequence.delete(0, sequence.length());
+						}
 					}
 					String header = line.split(">")[1].trim();
+			//		header = header.replace(" ", "_");
 					name.append(header);
 				} else {
 					sequence.append(line.trim());

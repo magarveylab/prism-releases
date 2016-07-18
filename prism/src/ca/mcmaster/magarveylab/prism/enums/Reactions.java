@@ -43,6 +43,8 @@ import ca.mcmaster.magarveylab.prism.cluster.reactions.typeII.TetracyclineFourth
 import ca.mcmaster.magarveylab.prism.cluster.reactions.typeII.ThirdRingCyclaseReaction;
 import ca.mcmaster.magarveylab.prism.cluster.reactions.typeII.TypeIIKetoreductaseReaction;
 import ca.mcmaster.magarveylab.prism.util.exception.ClassInstantiationException;
+import ca.mcmaster.magarveylab.prism.cluster.reactions.ribosomal.*;
+import ca.mcmaster.magarveylab.prism.cluster.annotation.ribosomal.*;
 
 public enum Reactions {
 	
@@ -116,6 +118,69 @@ public enum Reactions {
 	C6_CMT(CMethyltransferaseReaction.class, new Annotator[] { new C5C6Annotator() }),
 	C8_CMT(CMethyltransferaseReaction.class, new Annotator[] { new C7C8Annotator() }),
 	C10_CMT(CMethyltransferaseReaction.class, new Annotator[] { new C9C10Annotator() }),
+	
+	//ribosomal reactions
+	AGEF1(AgeF1Reaction.class, new Annotator[] { new MacrocyclizationAnnotator() } ),
+	AGRB(AgrBReaction.class, new Annotator[] { new AgrBAnnotator() } ),
+	AMINOVINYLCYSTEINE(AminovinylcysteineReaction.class, new Annotator[] { new AminovinylcysteineAnnotator() } ),
+	AZOLE(AzoleReaction.class, new Annotator[] { new AzoleAnnotator(), new YmB1Annotator() } ),
+	AZOLINE(AzolineReaction.class, new Annotator[] { new AzoleAnnotator(), new YmB1Annotator() } ),
+	BETAHYDROXYLASE(BetaHydroxylaseReaction.class, new Annotator[] { new AspartateAnnotator(), new PhenylalanineAnnotator(), new HistidineAnnotator(), new ValineAnnotator() } ),
+	BETAMETHYLTRANSFERASE(BetaMethyltransferaseReaction.class, new Annotator[] { new PhenylalanineAnnotator(), new BotRMT2Annotator(), new ProlineAnnotator() } ),
+	BOTOMT(BotOMTReaction.class, new Annotator[] { new AspartateAnnotator() } ),
+	BOTP(BotPReaction.class, new Annotator[] { new BotPAnnotator() } ),
+	CINORF7(Cinorf7Reaction.class, new Annotator[] { new Cinorf7Annotator() } ),
+	CLTM(CltMReaction.class, new Annotator[] { new CltMAnnotator() } ),
+	COMQ(ComQReaction.class, new Annotator[] { new TryptophanAnnotator() } ),
+	DIHYDROXYLASE(DihydroxylaseReaction.class, new Annotator[] { new IsoleucineAnnotator() } ),
+	DISULFIDE(DisulfideReaction.class, new Annotator[] { new LassoPeptideDisulfideAnnotator(), new SactipeptideDisulfideAnnotator()} ),
+	ELXO(ElxOReaction.class, new Annotator[] { new NTerminusAnnotator() } ),
+	GAMMAHYDROXYLASE(GammaHydroxylaseReaction.class, new Annotator[] { new GlutamateAnnotator()} ),
+	GARO(GarOReaction.class, new Annotator[] { new LanthionineAnnotator() } ),
+	HYDROXYMETHYLPROLINE(HydroxymethylprolineReaction.class, new Annotator[] { new IsoleucineAnnotator() } ),
+	LANB(LanBReaction.class, new Annotator[] { new LanBAnnotator(), new ThreonineDehydrataseAnnotator(), new SerineDehydrataseAnnotator() } ),
+	LANC(LanCReaction.class, new Annotator[] { new LanthionineAnnotator() } ),
+	LANJ(LanJReaction.class, new Annotator[] { new LanthionineAnnotator() } ),
+	LANK(LanKCReaction.class, new Annotator[] { new LabioninAnnotator() } ),
+	LANM(LanMReaction.class, new Annotator[] { new LanMAnnotator() } ),
+	LASSOPEPTIDE(LassoPeptideReaction.class, new Annotator[] { new LassoPeptideAnnotator() } ),
+	MACROCYCLIZATION(MacrocyclizationReaction.class, new Annotator[] { new MacrocyclizationAnnotator() } ),
+	MACROCYCLOHYDRATION(MacrocyclodehydrationReaction.class, new Annotator[] { new BotCAnnotator() } ),
+	MDNB(MdnBReaction.class, new Annotator[] { new MdnBAnnotator() } ),
+	MDNC(MdnCReaction.class, new Annotator[] { new MdnCAnnotator() } ),
+	MIBH(MibHReaction.class, new Annotator[] { new TryptophanAnnotator() } ),
+	MIBO(MibOReaction.class, new Annotator[] { new ProlineAnnotator() } ),
+	NACETYLATION(NAcetylationReaction.class, new Annotator[] { new NTerminusAnnotator() } ),
+	NNDIMETHYLTRANSFERASE(NNDimethyltransferaseReaction.class, new Annotator[] { new NTerminusAnnotator() } ),
+	NOCQ(NocQReaction.class, new Annotator[] { new SerineAnnotator() } ),
+	NOSA(NosAReaction.class, new Annotator[] { new CTerminusAnnotator() } ),
+	NOSI(NosIReaction.class, new Annotator[] { new NosIAnnotator(), new TsrIAnnotator() } ),
+	PATGOX(PatGOxReaction.class, new Annotator[] { new PatGOxAnnotator() } ),
+	POYBC(BetaMethyltransferaseReaction.class, new Annotator[] { new PoyBCAnnotator() }),
+	POYE(PoyEReaction.class, new Annotator[] { new PoyEAnnotator() }),
+	POYF(PoyFReaction.class, new Annotator[] { new PoyFAnnotator() }),
+	POYI(BetaHydroxylaseReaction.class, new Annotator[] { new PoyIAnnotator() }),
+	PRENYLATION(PrenylationReaction.class, new Annotator[] { new PatFAnnotator() } ),
+	PYRIDINEHYDROXYLATION(PyridineHydroxylationReaction.class, new Annotator[] { new PyridineAnnotator() } ),
+	PYRIDINE(PyridineReaction.class, new Annotator[] { new PyridineAnnotator() } ),
+	SACTIPEPTIDE(SactipeptideReaction.class, new Annotator[] { new SactipeptideAnnotator() } ), 
+	STRB(StrBReaction.class, new Annotator[] { new StrBAnnotator() } ),
+	SUNA(DisulfideReaction.class, new Annotator[] { new SunAAnnotator() } ),
+	SUNS(SunSReaction.class, new Annotator[] { new SunSAnnotator() } ),
+	TCLO(TclOReaction.class, new Annotator[] { new ThreonineAnnotator() } ),
+	TFXB(TfxBReaction.class, new Annotator[] { new TfxBAnnotator() } ),
+	THIOAMIDE(ThioamideReaction.class, new Annotator[] { new TvaHAnnotator() } ),
+	TPAJ(TpaJReaction.class, new Annotator[] { new CTerminusAnnotator() }),
+	TPDI(TpdIReaction.class, new Annotator[] { new CysteineAnnotator() } ),
+	TPDJ12(TpdJ12Reaction.class, new Annotator[] { new TpdJ12Annotator() } ),
+	TPDM(TpdMReaction.class, new Annotator[] { new CysteineAnnotator() } ),
+	TPDT(TpdTReaction.class, new Annotator[] { new AsparagineAnnotator() } ),
+	TSRB(TsrBReaction.class, new Annotator[] { new CTerminusAnnotator() } ),
+	TSRC(TsrCReaction.class, new Annotator[] { new CTerminusAnnotator() } ),
+	TSRI(TsrIReaction.class, new Annotator[] { new TsrIAnnotator() } ),
+	TVAFAMINOVINYLCYSTEINE(TvaFAminovinylcysteineReaction.class, new Annotator[] { new AminovinylcysteineAnnotator() } ),
+	TVAG(TvaGReaction.class, new Annotator[] { new HistidineAnnotator() } ),
+	TVAD(TvaDReaction.class, new Annotator[] { new TvaDAnnotator() } ),
 	;
 	
 	private Class<? extends GenericReaction> reactionClass;

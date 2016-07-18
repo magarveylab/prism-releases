@@ -1,16 +1,21 @@
 package ca.mcmaster.magarveylab.prism.tanimoto.data;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 import ca.mcmaster.magarveylab.prism.database.data.SmallMolecule;
 
 /**
- * A Tanimoto coefficient comparing a cluster scaffold to a known natural product.
+ * A Tanimoto coefficient comparing a cluster scaffold to a known natural
+ * product.
+ * 
  * @author skinnider
  *
  */
-public class TanimotoScore {
+public class TanimotoScore implements Serializable {
+	
+	private static final long serialVersionUID = -7455099435535277149L;
 	
 	private SmallMolecule query;
 	private SmallMolecule target;

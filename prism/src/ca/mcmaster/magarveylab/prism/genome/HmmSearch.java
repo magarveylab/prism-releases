@@ -59,7 +59,7 @@ public class HmmSearch {
 	protected void execute() throws IOException, InterruptedException {
 		String[] cmd = { hmmExecutable, hmmModel, proteinFastaDatabase };
 		PrismProcessBuilder ppb = new PrismProcessBuilder(cmd);
-		BufferedReader br = ppb.run();	
+		BufferedReader br = ppb.run();
 		reader = new HmmSearchReader(br);
 	}
 	

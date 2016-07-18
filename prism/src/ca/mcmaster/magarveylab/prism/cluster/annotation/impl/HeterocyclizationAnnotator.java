@@ -8,13 +8,13 @@ import org.openscience.cdk.exception.InvalidSmilesException;
 
 import ca.mcmaster.magarveylab.enums.domains.DomainType;
 import ca.mcmaster.magarveylab.enums.domains.ThiotemplatedDomains;
-import ca.mcmaster.magarveylab.enums.substrates.AdenylationSubstrates;
 import ca.mcmaster.magarveylab.prism.cluster.analysis.DomainAnalyzer;
 import ca.mcmaster.magarveylab.prism.cluster.annotation.Annotator;
 import ca.mcmaster.magarveylab.prism.data.Cluster;
 import ca.mcmaster.magarveylab.prism.data.Domain;
 import ca.mcmaster.magarveylab.prism.data.Module;
 import ca.mcmaster.magarveylab.prism.data.reactions.SubstrateSet;
+import ca.mcmaster.magarveylab.prism.enums.hmms.AdenylationHmms;
 
 public class HeterocyclizationAnnotator implements Annotator {
 
@@ -35,10 +35,10 @@ public class HeterocyclizationAnnotator implements Annotator {
 			for (Module module : permutation)
 				if (module.contains(domain))
 					if (module.scaffold() != null 
-							&& module.scaffold().topSubstrate().type() != AdenylationSubstrates.THREONINE_1
-							&& module.scaffold().topSubstrate().type() != AdenylationSubstrates.THREONINE_2
-							&& module.scaffold().topSubstrate().type() != AdenylationSubstrates.CYSTEINE_1
-							&& module.scaffold().topSubstrate().type() != AdenylationSubstrates.CYSTEINE_2)
+							&& module.scaffold().topSubstrate().type() != AdenylationHmms.THREONINE_1
+							&& module.scaffold().topSubstrate().type() != AdenylationHmms.THREONINE_2
+							&& module.scaffold().topSubstrate().type() != AdenylationHmms.CYSTEINE_1
+							&& module.scaffold().topSubstrate().type() != AdenylationHmms.CYSTEINE_2)
 						return substrates;
 		}
 

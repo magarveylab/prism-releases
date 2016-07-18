@@ -8,13 +8,12 @@ import java.util.List;
 import ca.mcmaster.magarveylab.enums.ClusterFamilies;
 import ca.mcmaster.magarveylab.enums.Frames;
 import ca.mcmaster.magarveylab.enums.ModuleTypes;
-import ca.mcmaster.magarveylab.enums.SubstratePrerequisites;
 import ca.mcmaster.magarveylab.enums.clusters.ClusterType;
 import ca.mcmaster.magarveylab.enums.domains.DomainType;
 import ca.mcmaster.magarveylab.enums.domains.TailoringDomains;
 import ca.mcmaster.magarveylab.enums.domains.ThiotemplatedDomains;
-import ca.mcmaster.magarveylab.enums.substrates.AdenylationSubstrates;
-import ca.mcmaster.magarveylab.enums.substrates.SubstrateType;
+import ca.mcmaster.magarveylab.enums.interfaces.SubstrateType;
+import ca.mcmaster.magarveylab.prism.cluster.analysis.type.RibosomalClusterTypeAnalyzer;
 import ca.mcmaster.magarveylab.prism.cluster.analysis.type.ThiotemplatedClusterTypeAnalyzer;
 import ca.mcmaster.magarveylab.prism.cluster.analysis.type.TypeIIPolyketideClusterTypeAnalyzer;
 import ca.mcmaster.magarveylab.prism.data.Cluster;
@@ -22,6 +21,8 @@ import ca.mcmaster.magarveylab.prism.data.Domain;
 import ca.mcmaster.magarveylab.prism.data.Module;
 import ca.mcmaster.magarveylab.prism.data.Orf;
 import ca.mcmaster.magarveylab.prism.data.Substrate;
+import ca.mcmaster.magarveylab.prism.enums.hmms.AdenylationHmms;
+import ca.mcmaster.magarveylab.prism.enums.hmms.SubstratePrerequisites;
 import ca.mcmaster.magarveylab.prism.homology.data.HomologousCluster;
 import ca.mcmaster.magarveylab.prism.tanimoto.data.TanimotoScore;
 import ca.mcmaster.magarveylab.prism.util.Sorter;
@@ -128,14 +129,19 @@ public class ClusterAnalyzer {
 	}
 	
 	/**
-	 * Analyze cluster to determine whether modules can be extended within the growing natural product scaffold.
-	 * Fatty acids, for instance, can only start biosynthesis. 
-	 * @param cluster	cluster to analyze 
+	 * Analyze cluster to determine whether modules can be extended within the
+	 * growing natural product scaffold. Fatty acids, for instance, can only
+	 * start biosynthesis.
+	 * 
+	 * @param cluster
+	 *            cluster to analyze
 	 */
 	public static void setExtendability(Cluster cluster) {
 		for (Module module : cluster.modules()) {
 			Domain scaffold = module.scaffold();
-			if (scaffold == null || scaffold.substrates().size() == 0)
+			if (scaffold == null || scaffold.topSubstrate() == null
+					|| scaffold.topSubstrate().type() == null
+					|| scaffold.topSubstrate().type().smiles() == null) 
 				continue;
 			Substrate top = scaffold.topSubstrate();
 			String smiles = top.smiles();
@@ -145,8 +151,11 @@ public class ClusterAnalyzer {
 	}
 
 	/**
-	 * Remove prolyl-AMP ligases if the cluster does not contain a proline dehydrogenase domain. 
-	 * @param cluster	cluster to analyze 
+	 * Remove prolyl-AMP ligases if the cluster does not contain a proline
+	 * dehydrogenase domain.
+	 * 
+	 * @param cluster
+	 *            cluster to analyze
 	 */
 	public static void checkPyrroleModules(Cluster cluster) {
 		if (!cluster.contains(TailoringDomains.PROLINE_DEHYDROGENASE)) {
@@ -156,7 +165,8 @@ public class ClusterAnalyzer {
 					Module next = itr.next();
 					if (next.type() == ModuleTypes.ACYL_ADENYLATE 
 							&& next.scaffold() != null 
-							&& next.scaffold().topSubstrate().type() == AdenylationSubstrates.PROLINE_3)
+							&& next.scaffold().topSubstrate() != null
+							&& next.scaffold().topSubstrate().type() == AdenylationHmms.PROLINE_3)
 						itr.remove();
 				}
 			}
@@ -251,9 +261,9 @@ public class ClusterAnalyzer {
 			for (Module module : orf.modules()) 
 				if (module.scaffold() != null && module.scaffold().type() == ThiotemplatedDomains.ADENYLATION
 						&& (module.scaffold().topSubstrate().type() 
-								== AdenylationSubstrates.GLYCOPEPTIDE_STARTER_UNIT_BIOSYNTHESIS
+								== AdenylationHmms.GLYCOPEPTIDE_STARTER_UNIT_BIOSYNTHESIS
 						|| module.scaffold().topSubstrate().type() 
-								== AdenylationSubstrates.QUINOMYCIN_STARTER_UNIT_BIOSYNTHESIS)) {
+								== AdenylationHmms.QUINOMYCIN_STARTER_UNIT_BIOSYNTHESIS)) {
 					module.inactivate();
 					System.out.println("[ClusterAnalyzer] Inactivated putative docking domain " 
 							+ module.scaffold().topSubstrate().type() + " in " + orf.name());
@@ -332,7 +342,7 @@ public class ClusterAnalyzer {
 		List<Module> transATInsertion = cluster.modules(ModuleTypes.TRANS_AT_INSERTION);
 		return (transAT.size() > 0 && transATInsertion.size() > 0);
 	}
-
+	
 	/**
 	 * Assign a biosynthetic family (or list of biosynthetic families) and a
 	 * family-specific subtype (or list of subtypes) to a natural product
@@ -346,7 +356,10 @@ public class ClusterAnalyzer {
 		List<ClusterType> nrps = ThiotemplatedClusterTypeAnalyzer.getNonribosomalPeptideTypes(cluster);
 		List<ClusterType> pks = ThiotemplatedClusterTypeAnalyzer.getPolyketideTypes(cluster);
 		List<ClusterType> otherThiotemplated = ThiotemplatedClusterTypeAnalyzer.getOtherTypes(cluster);
+		List<ClusterType> ribosomal = RibosomalClusterTypeAnalyzer.getTypes(cluster);
 		
+		if (ribosomal.size() > 0) 
+			cluster.addFamily(ClusterFamilies.RIBOSOMAL);
 		if (nrps.size() > 0) 
 			cluster.addFamily(ClusterFamilies.NONRIBOSOMAL_PEPTIDE);
 		if (pks.size() > 0) 
@@ -355,11 +368,14 @@ public class ClusterAnalyzer {
 			cluster.addFamily(ClusterFamilies.TYPE_II_POLYKETIDE);
 		if (otherThiotemplated.size() > 0) 
 			cluster.addFamily(ClusterFamilies.NULL);
+		if (ribosomal.size() > 0) 
+			cluster.addFamily(ClusterFamilies.RIBOSOMAL);
 		
 		cluster.addTypes(typeII);
 		cluster.addTypes(nrps);
 		cluster.addTypes(pks);
 		cluster.addTypes(otherThiotemplated);
+		cluster.addTypes(ribosomal);
 	}
 
 }

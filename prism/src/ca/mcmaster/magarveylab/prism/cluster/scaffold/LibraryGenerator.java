@@ -13,6 +13,7 @@ import ca.mcmaster.magarveylab.prism.combinatorialization.CombinatorialPlanGener
 import ca.mcmaster.magarveylab.prism.data.Cluster;
 import ca.mcmaster.magarveylab.prism.data.Library;
 import ca.mcmaster.magarveylab.prism.data.Module;
+import ca.mcmaster.magarveylab.prism.data.reactions.ReactionPlan;
 import ca.mcmaster.magarveylab.prism.data.structure.CombinatorialPlan;
 import ca.mcmaster.magarveylab.prism.data.structure.Scaffold;
 import ca.mcmaster.magarveylab.prism.util.PrismFileWriter;
@@ -21,6 +22,8 @@ import ca.mcmaster.magarveylab.prism.util.exception.NoResidueException;
 import ca.mcmaster.magarveylab.prism.web.PrismConfig;
 import ca.mcmaster.magarveylab.wasp.session.Session;
 import ca.mcmaster.magarveylab.prism.util.SmilesIO;
+import ca.mcmaster.magarveylab.prism.util.exception.FimoSearchException;
+import ca.mcmaster.magarveylab.prism.util.exception.RibosomalScaffoldGenerationException;
 
 /**
  * Generates combinatorial scaffold libraries.
@@ -52,20 +55,28 @@ public class LibraryGenerator {
 
 	/**
 	 * Generate a combinatorial libary of cluster products.
-	 * @return			the combinatorial library
-	 * @throws NoResidueException 
-	 * @throws IOException 
-	 * @throws ClassInstantiationException 
-	 * @throws CDKException 
-	 * @throws ClassNotFoundException 
+	 * 
+	 * @return the combinatorial library
+	 * @throws NoResidueException
+	 * @throws IOException
+	 * @throws ClassInstantiationException
+	 * @throws CDKException
+	 * @throws ClassNotFoundException
+	 * @throws FimoSearchException
+	 * @throws RibosomalScaffoldGenerationException
+	 * @throws InterruptedException
 	 */
-	public void generate() throws IOException, NoResidueException, ClassInstantiationException, CDKException {
-		session.listener().updateLastDetail("Generating predicted scaffolds for cluster " + cluster.index() + "...");
+	public void generate() throws IOException, NoResidueException,
+			ClassInstantiationException, CDKException, FimoSearchException,
+			RibosomalScaffoldGenerationException, InterruptedException {
+		session.listener().updateLastDetail(
+				"Generating predicted scaffolds for cluster " + cluster.index()
+						+ "...");
 
 		if (config.scaffoldLimit <= 0)
 			return;
-		
-		List<List<Module>> permutations = ClusterPermuter.getModulePermutations(cluster);		
+
+		List<List<Module>> permutations = ClusterPermuter.getModulePermutations(cluster, session);		
 		List<CombinatorialPlan> plans = CombinatorialPlanGenerator.generateAllPlans(cluster, permutations);
 		combinatorializeScaffold(plans, config);
 
@@ -74,10 +85,20 @@ public class LibraryGenerator {
 	}
 
 	/**
-	 * Generate a combinatorial library of chemical structures for each generated permutation of biosynthetic modules.	
-	 * @param modulePermutations		list of module permutations
+	 * Generate a combinatorial library of chemical structures for each
+	 * generated permutation of biosynthetic modules.
+	 * 
+	 * @param modulePermutations
+	 *            list of module permutations
 	 */
-	private void combinatorializeScaffold(List<CombinatorialPlan> plans, PrismConfig config) {
+	private void combinatorializeScaffold(List<CombinatorialPlan> plans,
+			PrismConfig config) {
+		if (plans.size() == 0) {
+			System.out.println("[LibraryGenerator] Could not generate "
+					+ "scaffold with 0 combinatorial plans");
+			return;
+		}
+		
 		boolean[] generated = new boolean[plans.size()];
 		Arrays.fill(generated, false);
 
@@ -85,7 +106,7 @@ public class LibraryGenerator {
 		while (library.size() < config.scaffoldLimit) {
 			int i = random.nextInt(plans.size());
 			if (!areRemainingPlans(generated)) {
-				System.out.println("[Library] Exhausted all combinatorial plans, exiting scaffold generation loop");
+				System.out.println("[LibraryGenerator] Exhausted all combinatorial plans, exiting scaffold generation loop");
 				break;
 			}
 			if (generated[i])
@@ -93,11 +114,29 @@ public class LibraryGenerator {
 			
 			session.listener().updateLastDetail("Generating scaffold " + (library.size()+1) + " of a maximum " 
 					+ config.scaffoldLimit + " for cluster " + cluster.index() + "...");
-			System.out.println("[LibraryGenerator] Executing combinatorial plan " + i);
 			
+			System.out.println("[LibraryGenerator] Executing combinatorial plan " + i);
 			try {
 				CombinatorialPlan scheme = plans.get(i);
-				Scaffold scaffold = StructureGenerator.generateScaffold(cluster, scheme);
+				
+				// print reaction plan for debugging
+				for (ReactionPlan plan : scheme.reactions()) {
+					StringBuffer sb = new StringBuffer();
+					sb.append(plan.type().abbreviation() + " ");
+					for (Module module : plan.modules().getAllModules())
+						if (module != null) {
+							sb.append(module.scaffold().topSubstrate().type()
+									.abbreviation()
+									+ scheme.permutation().indexOf(module)
+									+ " ");
+						} else {
+							sb.append("- ");
+						}
+					System.out.println(sb.toString());
+				}
+
+				Scaffold scaffold = StructureGenerator.generateScaffold(
+						cluster, scheme);
 				String smiles = SmilesIO.smiles(scaffold.molecule());
 				System.out.println("[LibraryGenerator] Generated scaffold with SMILES " + smiles);
 
@@ -123,18 +162,18 @@ public class LibraryGenerator {
 	}
 
 	/**
-	 * Write the combinatorial scaffold library as a library file and an iSNAP
+	 * Write the combinatorial scaffold library as a library file and a GNP
 	 * file.
 	 * 
 	 * @throws IOException
 	 */
 	public static void write(Library library, Cluster cluster, Session session) throws IOException {
 		String libraryPath = session.dir() + "cluster_" + cluster.index() + "_library.txt";
-		String isnapPath = session.dir() + "cluster_" + cluster.index() + "_isnap.txt";
+		String gnpPath = session.dir() + "cluster_" + cluster.index() + "_GNP.txt";
 		PrismFileWriter.writeLibraryFile(library, libraryPath);
-		PrismFileWriter.writeiSNAPFile(cluster, isnapPath);
+		PrismFileWriter.writeGNPFile(cluster, gnpPath);
 		cluster.addFile("library", libraryPath);
-		cluster.addFile("isnap", isnapPath);
+		cluster.addFile("gnp", gnpPath);
 	}
 	
 	/**

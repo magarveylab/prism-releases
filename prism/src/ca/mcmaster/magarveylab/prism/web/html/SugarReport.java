@@ -72,8 +72,8 @@ public class SugarReport {
 		psb.appendLine("<td>");
 		if (combination.size () > 0) {
 			for (int i = 0; i < combination.size() - 1; i++)
-				psb.appendLine(combination.get(i).toString() + ", ");
-			psb.appendLine(combination.get(combination.size() - 1).toString());
+				psb.appendLine(combination.get(i).name() + ", ");
+			psb.appendLine(combination.get(combination.size() - 1).name());
 		} 
 		psb.appendLine("</td>");
 		psb.appendLine("<td>");

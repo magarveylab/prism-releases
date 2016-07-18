@@ -8,6 +8,8 @@ package ca.mcmaster.magarveylab.prism.orfs;
  */
 public enum GenePredictionModes {
 	
-	ALL_ORFS
+	ALL_ORFS,
+	PRODIGAL,
+	GENEMARK
 	
 }

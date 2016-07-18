@@ -1,20 +1,24 @@
 package ca.mcmaster.magarveylab.prism.data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import ca.mcmaster.magarveylab.enums.DomainFamilies;
 import ca.mcmaster.magarveylab.enums.domains.DomainType;
 import ca.mcmaster.magarveylab.prism.blast.BlastSearchResult;
-import ca.mcmaster.magarveylab.prism.data.sugar.Sugar;
 import ca.mcmaster.magarveylab.prism.genome.data.HmmSearchResultAnnotation;
+import ca.mcmaster.magarveylab.prism.motif.Motif;
+import ca.mcmaster.magarveylab.prism.motif.MotifList;
 
 /**
  * A single domain within an orf. 
  * @author skinnider
  *
  */
-public class Domain {
+public class Domain implements Serializable {
+	
+	private static final long serialVersionUID = -4854494547847250230L;
 	
 	private final int start;
 	private final int end;
@@ -28,8 +32,8 @@ public class Domain {
 	private List<BlastSearchResult> blastResults = new ArrayList<BlastSearchResult>();
 	private List<Substrate> substrates = new ArrayList<Substrate>();
 
-	private Sugar sugar; // if GTr
 	private BlastSearchResult reference; // for cluster dereplication 
+	private MotifList motifs = new MotifList(); // if ribosomal
 	
 	/**
 	 * Instantiate a new domain from a HmmSearchResultAnnotation. 
@@ -71,14 +75,6 @@ public class Domain {
 		this.score = score;
 		this.name = name;
 	}
-		
-	/**
-	 * Set the sequence of this domain, given the start, end, and sequence of the parent open reading frame.
-	 * @param sequence	the sequence of the parent orf
-	 */
-	public void setSequenceFromOrf(final String sequence) {
-		this.sequence = sequence.substring(start, end - 1);
-	}
 	
 	/**
 	 * Print the relevant section of a domain's amino acid sequence, formatted
@@ -89,6 +85,14 @@ public class Domain {
 	 */
 	public String printForFASTA() {
 		return ">" + name + "\n" + sequence + "\n";
+	}
+	
+	/**
+	 * Set the sequence of this domain.
+	 * @param sequence the sequence of this domain
+	 */
+	public void setSequence(String sequence) {
+		this.sequence = sequence;
 	}
 	
 	/**
@@ -181,8 +185,10 @@ public class Domain {
 
 	/**
 	 * Check whether another domain overlaps with this one.
-	 * @param d2	the second domain
-	 * @return		true if their start-end ranges overlap
+	 * 
+	 * @param d2
+	 *            the second domain
+	 * @return true if their start-end ranges overlap
 	 */
 	public boolean overlaps(final Domain d2) {
 		final int x1 = start;
@@ -223,23 +229,7 @@ public class Domain {
 	public Substrate topSubstrate() {
 		return (substrates.size() > 0) ? substrates.get(0) : null;
 	}
-
-	/**
-	 * If this is a glycosyltransferase domain, get its sugar substrate.
-	 * @return	domain sugar substrate 
-	 */
-	public Sugar sugar() {
-		return sugar;
-	}
 	
-	/**
-	 * If this is a glycosyltransferase domain, set its sugar substrate.
-	 * @param sugar		domain sugar substrate 
-	 */
-	public void setSugar(Sugar sugar) {
-		this.sugar = sugar;
-	}
-
 	/**
 	 * Get the BLAST score of this domain to a reference domain of the same
 	 * type, used to sort domains for cluster dereplication.
@@ -267,6 +257,25 @@ public class Domain {
 	 */
 	public void setReferenceDomain(BlastSearchResult reference) {
 		this.reference = reference;
+	}
+
+	/**
+	 * Associate a motif with this domain.
+	 * 
+	 * @param motif
+	 *            motif to add
+	 */
+	public void addMotif(Motif motif) {
+		motifs.addMotif(motif);
+	}
+
+	/**
+	 * Get all motifs associated with this domain.
+	 * 
+	 * @return domain motifs
+	 */
+	public MotifList motifs() {
+		return motifs;
 	}
 
 }

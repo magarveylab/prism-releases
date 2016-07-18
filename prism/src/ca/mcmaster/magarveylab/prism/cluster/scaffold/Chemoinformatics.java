@@ -140,10 +140,9 @@ public class Chemoinformatics {
 		 */	
 		public static IAtom getSulfur(IAtomContainer molecule) {
 			IAtom sulfur = null;
-			for (IAtom atom : molecule.atoms()) {
-				if (atom.getSymbol().equals("S"))
+			for (IAtom atom : molecule.atoms()) 
+				if (atom.getSymbol().equals("S")) 
 					sulfur = atom;
-			}
 			return sulfur;
 		}
 
@@ -317,6 +316,25 @@ public class Chemoinformatics {
 		}
 		
 		/**
+		 * Get the (last) atom connected to a query atom.
+		 * <p>
+		 * This method is used by UtilityReactions#functionalize to get the atom
+		 * connected to an iodine atom.
+		 * 
+		 * @param atom
+		 *            query atom
+		 * @param molecule
+		 *            molecule to search
+		 * @return (last) connected atom
+		 */
+		public static IAtom getConnectedAtom(IAtom atom, IAtomContainer molecule) {
+			IAtom connectedAtom = null;
+			for (IAtom a : molecule.getConnectedAtomsList(atom))
+				connectedAtom = a;
+			return connectedAtom;
+		}
+
+		/**
 		 * Get the hydroxyl group connected to a (reduced) ketone.
 		 * @param ketone	ketone carbon
 		 * @param molecule	molecule to search
@@ -379,6 +397,10 @@ public class Chemoinformatics {
 		 */
 		public static IAtom getConnectedOxygen(IAtom atom, IAtomContainer molecule) {
 			IBond bond = Bonds.getConnectedBond(molecule, atom, "O");
+			if (bond == null) {
+				System.out.println("Error: no connected oxygen");
+				return null;
+			}
 			return bond.getConnectedAtom(atom);
 		}
 
@@ -396,9 +418,12 @@ public class Chemoinformatics {
 				List<IBond> bonds = molecule.getConnectedBondsList(atom);
 				for (IBond bond : bonds) {
 					IAtom connectedAtom = bond.getConnectedAtom(atom);
-					if (connectedAtom.getSymbol().equals("O") && bond.getOrder() == IBond.Order.DOUBLE) 
+					if (connectedAtom.getSymbol().equals("O")
+							&& bond.getOrder() == IBond.Order.DOUBLE)
 						hasCarbonyl = true;
-					if (connectedAtom.getSymbol().equals("O") && bond.getOrder() == IBond.Order.SINGLE 
+					if (connectedAtom.getSymbol().equals("O")
+							&& bond.getOrder() == IBond.Order.SINGLE
+							&& connectedAtom.getImplicitHydrogenCount() != null
 							&& connectedAtom.getImplicitHydrogenCount() == 1)
 						hasAlcohol = true;
 				}

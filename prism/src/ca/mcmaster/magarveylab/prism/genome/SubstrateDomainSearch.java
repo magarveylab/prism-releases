@@ -6,13 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ca.mcmaster.magarveylab.enums.domains.DomainType;
-import ca.mcmaster.magarveylab.enums.substrates.SubstrateType;
+import ca.mcmaster.magarveylab.enums.interfaces.SubstrateType;
 import ca.mcmaster.magarveylab.prism.Prism;
 import ca.mcmaster.magarveylab.prism.data.Domain;
 import ca.mcmaster.magarveylab.prism.data.Contig;
 import ca.mcmaster.magarveylab.prism.data.Genome;
 import ca.mcmaster.magarveylab.prism.data.Orf;
 import ca.mcmaster.magarveylab.prism.data.Substrate;
+import ca.mcmaster.magarveylab.prism.enums.hmms.SubstrateHmm;
 import ca.mcmaster.magarveylab.prism.fasta.FastaWriter;
 import ca.mcmaster.magarveylab.prism.genome.data.HmmSearchResult;
 import ca.mcmaster.magarveylab.prism.genome.data.HmmSearchResultAnnotation;
@@ -27,11 +28,11 @@ public class SubstrateDomainSearch {
 	protected PrismConfig config;
 	protected String model;
 	protected DomainType type;
-	protected SubstrateType[] substrates;
+	protected SubstrateHmm[] substrates;
 	protected String family;
 	protected String typeString;
 	
-	public SubstrateDomainSearch(DomainType type, SubstrateType[] substrates, Genome genome, Session session) {
+	public SubstrateDomainSearch(DomainType type, SubstrateHmm[] substrates, Genome genome, Session session) {
 		this.genome = genome;
 		this.session = session;
 		Prism prism = (Prism) session.webapp();
@@ -94,7 +95,7 @@ public class SubstrateDomainSearch {
 	 */
 	private void findSubstrates() throws IOException, InterruptedException {
 		// Run ensemble of substrate HMMs on domain FASTA file
-		for (SubstrateType substrate : substrates) {
+		for (SubstrateHmm substrate : substrates) {
 			if (substrate.fullName().toString().length() > 0)
 				session.listener().updateLastDetail("Finding " + type.fullName().toLowerCase()
 						+ " domains with substrate " + substrate.fullName() + "...");
@@ -135,8 +136,11 @@ public class SubstrateDomainSearch {
 		for (HmmSearchResultAnnotation annotation : result.annotations()) {
 			Domain d = new Domain(annotation, type); 
 			if (d.score() > type.cutoff()) {
-				d.setSequenceFromOrf(orf.sequence());
-				orf.add(d);				
+				String orfSequence = orf.sequence();
+				String domainSequence = orfSequence.substring(
+						d.start() - 1, d.end() - 1);
+				d.setSequence(domainSequence);
+				orf.domains().add(d);				
 			}
 		}
 	}

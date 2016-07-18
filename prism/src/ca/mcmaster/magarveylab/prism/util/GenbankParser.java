@@ -4,7 +4,6 @@ import ca.mcmaster.magarveylab.prism.data.Genome;
 import ca.mcmaster.magarveylab.prism.data.Organism;
 import ca.mcmaster.magarveylab.prism.data.Contig;
 import ca.mcmaster.magarveylab.prism.data.RnaSequence;
-import ca.mcmaster.magarveylab.wasp.session.Session;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -34,11 +33,11 @@ public class GenbankParser {
 	 * @param session The session of the prism run.
 	 * @return genome A genome object with the additional informated added.
 	 */
-	public static Genome readGenbankFile(Genome genome, String file, Session session) throws IOException, InterruptedException, Exception {	
+	public static Genome readGenbankFile(Genome genome, String file, String root, String output) throws IOException, InterruptedException, Exception {	
 		final Logger logger = Logger.getLogger(GenbankParser.class.getName());
 		logger.log(Level.INFO, "Parsing Genbank file"); 
 
-		Process processSeq = runBioPerl(file, "read_genbank_seq.pl", session);
+		Process processSeq = runBioPerl(file, "read_genbank_seq.pl", root, output);
 		InputStream isSeq = processSeq.getInputStream();
 		BufferedReader brSeq = new BufferedReader(new InputStreamReader(isSeq));
 
@@ -58,7 +57,7 @@ public class GenbankParser {
 			sequence = sequence.replaceAll("[^ACTGN]", "N");
 			DNASequence seq = new DNASequence(sequence);
 
-			Process process = runBioPerl(file, "read_genbank.pl", session);
+			Process process = runBioPerl(file, "read_genbank.pl", root, output);
 			InputStream is = new BufferedInputStream(process.getInputStream());
 			BufferedReader in = new BufferedReader(new InputStreamReader(is));
 	
@@ -136,16 +135,16 @@ public class GenbankParser {
 	 * @param session The session of the prism run.
 	 * @return process The process that was executed.
 	 */
-	private static Process runBioPerl(String file, String script, Session session) throws IOException, InterruptedException {
+	private static Process runBioPerl(String file, String script, String root, String output) throws IOException, InterruptedException {
 		
 		List<String> commandStringBuilder = new ArrayList<String>();
 		commandStringBuilder.add("perl");
-		commandStringBuilder.add(session.root() + script);
+		commandStringBuilder.add(root + script);
 		commandStringBuilder.add(file);
 		System.out.println(commandStringBuilder.toString());
 
 		ProcessBuilder pb = new ProcessBuilder(commandStringBuilder);
-		pb.redirectError(new File(session.dir() + "errors.txt"));
+		pb.redirectError(new File(output + "errors.txt"));
 		Process process = pb.start();
 	//	process.waitFor();
 		

@@ -20,8 +20,8 @@ import ca.mcmaster.magarveylab.prism.data.Cluster;
 import ca.mcmaster.magarveylab.prism.data.Cyclization;
 import ca.mcmaster.magarveylab.prism.data.Module;
 import ca.mcmaster.magarveylab.prism.data.reactions.ReactionPlan;
-import ca.mcmaster.magarveylab.prism.data.structure.CombinatorialPlan;
 import ca.mcmaster.magarveylab.prism.data.structure.Residue;
+import ca.mcmaster.magarveylab.prism.data.structure.CombinatorialPlan;
 import ca.mcmaster.magarveylab.prism.data.structure.Scaffold;
 import ca.mcmaster.magarveylab.prism.util.Sorter;
 import ca.mcmaster.magarveylab.prism.util.exception.NoResidueException;
@@ -210,14 +210,17 @@ public class StructureGenerator {
 				try {
 					reaction.execute();
 				} catch (ScaffoldGenerationException e) {
+					System.out.println("In ScaffoldGenerationException");
 					e.printStackTrace();
 					continue;
 				} catch (TailoringSubstrateException e) {
+					System.out.println("In TailoringSubstrateException");
 					e.printStackTrace();
 					continue;
 				}
 				scaffold.incrementReactionCount();
 			}
+
 		}
 		return scaffold;
 	}	

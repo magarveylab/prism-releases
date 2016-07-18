@@ -1,13 +1,17 @@
 package ca.mcmaster.magarveylab.prism.homology.data;
 
+import java.io.Serializable;
+
 /**
  * Data package representing a potentially homologous gene cluster.
  * 
  * @author skinnider
  *
  */
-public class HomologousCluster {
+public class HomologousCluster implements Serializable {
 
+	private static final long serialVersionUID = -5883853058733330260L;
+	
 	private String name;
 	private double identityScore = 0.0d;
 	private double domainScore = 0.0d;

@@ -20,6 +20,7 @@ import ca.mcmaster.magarveylab.prism.data.Module;
 public class TypeIIPolyketideAnalyzer {
 
 	/**
+<<<<<<< HEAD
 	 * Get the number of times a starter unit is extended by the type II
 	 * polyketide synthase ketosynthase heterodimer. Only the highest-scoring
 	 * chain length factor domain will be considered.
@@ -27,6 +28,12 @@ public class TypeIIPolyketideAnalyzer {
 	 * @param cluster
 	 *            type II PKS cluster
 	 * @return number of extension cycles, in ketide units
+=======
+	 * Get the number of times a starter unit is extended by the type II polyketide synthase
+	 * ketosynthase heterodimer.
+	 * @param cluster	type II PKS cluster 
+	 * @return			chain length, in ketide units 
+>>>>>>> refs/remotes/origin/develop-visitor
 	 */
 	public static int getChainLength(Cluster cluster) {
 		int length = -1;

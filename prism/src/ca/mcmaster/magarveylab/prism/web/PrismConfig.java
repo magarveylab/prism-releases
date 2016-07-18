@@ -1,6 +1,8 @@
 package ca.mcmaster.magarveylab.prism.web;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import ca.mcmaster.magarveylab.prism.orfs.GenePredictionModes;
 
@@ -20,7 +22,20 @@ public class PrismConfig {
 
 	/**
 	 * Determines whether or not to search a genome with hidden Markov models
-	 * for 270 resistance genes.
+	 * for thiotemplated (i.e. nonribosomal peptide and polyketide) biosynthetic
+	 * genes.
+	 */
+	public boolean thiotemplated = false;
+
+	/**
+	 * Determines whether or not to search a genome with hidden Markov models
+	 * for deoxysugar biosynthesis genes.
+	 */
+	public boolean sugar = false;
+
+	/**
+	 * Determines whether or not to search a genome with hidden Markov models
+	 * for resistance genes.
 	 */
 	public boolean resistance = false;
 
@@ -35,19 +50,7 @@ public class PrismConfig {
 	 * for ribosomal genes.
 	 */
 	public boolean ribosomal = false;
-
-	/**
-	 * Determines whether or not so search a genome with hidden Markov models
-	 * for aminoglycoside genes.
-	 */
-	public boolean aminoglycoside = false;
-
-	/**
-	 * Determines whether or not so search a genome with hidden Markov models
-	 * for nucleoside genes.
-	 */
-	public boolean nucleoside = false;
-
+	
 	/**
 	 * Absolute path of the sequence file on which this PRISM search will be
 	 * run.
@@ -97,10 +100,18 @@ public class PrismConfig {
 	public boolean parseorganism = false;
 
 	/**
-	 * Optionally output JSON files to a specific folder;
+	 * Optionally output JSON files to a specific folder.
+	 * 
 	 */
 	public String output = null;
 
+	
+	/**
+	 * Optionally formats output for grid-decoupled prism
+	 */
+	public String grid = null;
+	
+	
 	/**
 	 * If set to false, graphical output files and FASTA files will not be
 	 * generated.
@@ -114,27 +125,46 @@ public class PrismConfig {
 	public boolean find16s = false;
 
 	/**
-	 * The current version of PRISM. 
+	 * The current version of PRISM.
 	 */
-	public String version = "1.2.5-SNAPSHOT";
-	
+	public String version = "2.1.2";
+
 	/**
-	 * Date and time at which this configuration was instantiated. 
+	 * Date and time at which this configuration was instantiated.
 	 */
 	public Date date = new Date();
-	
+
 	/**
 	 * Determines whether or not open reading frame sequences are saved in the
 	 * JSON output from a PRISM run. By default, they are not, due to space
 	 * constraints. However, when PRISM is run from the web, this is
-	 * automatically enabled.
+	 * automatically enabled. This flag saves all adjacent open reading frames,
+	 * not just the cluster orfs containing biosynthetic domains: i.e., it does:
+	 * 
+	 * <pre>
+	 * contig.getAllOrfs(cluster, config.window)
+	 * </pre>
 	 */
 	public boolean saveSequences = false;
-	
+
 	/**
-	 * Sets the method PRISM uses to identify putative open reading frames
+	 * Sets the method(s) PRISM uses to identify putative open reading frames
 	 * within a user-submitted sequence.
 	 */
-	public GenePredictionModes genePredictionMode = GenePredictionModes.ALL_ORFS;
+	public List<GenePredictionModes> genePredictionModes = new ArrayList<GenePredictionModes>();
+
+	
+	/**
+	 * Creates a terpene biosynthetic domain scanner
+	 */
+	public boolean terpene = false;
+	
+	
+	/**
+	 * Controls NIS domain searching
+	 */
+
+	public boolean nis_synthase = false;
+	
 	
 }

@@ -35,8 +35,10 @@ import ca.mcmaster.magarveylab.prism.data.sugar.Sugar;
 import ca.mcmaster.magarveylab.prism.database.JsonOutput;
 import ca.mcmaster.magarveylab.prism.fasta.FastaWriter;
 import ca.mcmaster.magarveylab.prism.web.PrismConfig;
+import ca.mcmaster.magarveylab.prism.web.html.graph.CircularContigGraph;
 import ca.mcmaster.magarveylab.prism.web.html.graph.CircularGenomeGraph;
 import ca.mcmaster.magarveylab.wasp.session.Session;
+import ca.mcmaster.magarveylab.prism.orfs.GenePredictionModes;
 import ca.mcmaster.magarveylab.prism.util.SmilesIO;
 
 /**
@@ -79,7 +81,7 @@ public class PrismFileWriter {
 					writeSugarFile(cluster, session);
 					
 					//write json file
-					writeClusterJson(cluster, session);
+					//writeClusterJson(cluster, session);
 				}
 			}
 		}
@@ -88,6 +90,17 @@ public class PrismFileWriter {
 		writeConfigFile(session);
 
 		// write JSON file 
+		//writeJsonFile(session);
+	}
+	
+	public static void writeAllJson(Genome genome, Session session) throws IOException{
+		for (Contig contig : genome.contigs()) {
+			for (Cluster cluster : contig.clusters()) {
+				//write json file
+				writeClusterJson(cluster, session, contig.index());
+			}
+		}
+		// write JSON file
 		writeJsonFile(session);
 	}
 	
@@ -114,13 +127,20 @@ public class PrismFileWriter {
 	/**
 	 * Write a single json object for a single cluster.
 	 *
-	 * @param cluster	cluster in question
-	 * @param session	current session 
-	 * @throws IOException 
+	 * @param cluster
+	 *            cluster in question
+	 * @param session
+	 *            current session
+	 * @param contigIndex
+	 *            Contig that the cluster is within
+	 * @throws IOException
 	 */
-	public static void writeClusterJson(Cluster cluster, Session session) throws IOException {
-		String clusterJsonPath = session.dir() + "cluster_" + cluster.index() + ".json";
-		Map<String, Object> data = JsonUtils.generateClusterJson((Prism) session.webapp(), cluster);
+	public static void writeClusterJson(Cluster cluster, Session session,
+			Integer contigIndex) throws IOException {
+		String clusterJsonPath = session.dir() + "cluster_" + cluster.index()
+				+ ".json";
+		Map<String, Object> data = JsonUtils.generateClusterJsonFile(
+				(Prism) session.webapp(), cluster, contigIndex);
 		JsonUtils.writeToFile(data, clusterJsonPath);
 		cluster.addFile("clusterJson", clusterJsonPath);
 	}
@@ -137,13 +157,22 @@ public class PrismFileWriter {
 	public static void writeGenomeGraphs(Genome genome, Session session) {
 		// circular genome graph 
 		try {
+			for (Contig contig : genome.contigs()) {
+				for (Cluster cluster : contig.clusters()) {
+					CircularContigGraph contigGraph = new CircularContigGraph(
+							contig, cluster, 400);
+					contigGraph.write(session.dir() + "cluster_contigs_"
+							+ cluster.index() + ".svg");
+					cluster.setContigGraph(contigGraph);
+				}
+			}
+			
 			if (genome.contigs().size() == 1) {
 				Contig contig = genome.contigs().get(0);
 				if (contig.sequence() == null
 						|| contig.sequence().isEmpty()
 						|| contig.sequence().equals(""))
 					return; // for JSON
-
 				CircularGenomeGraph genomeGraph = new CircularGenomeGraph(genome, 400);
 				genomeGraph.write(session.dir() + "genome.svg");
 				genome.setGraph(genomeGraph); 
@@ -155,6 +184,7 @@ public class PrismFileWriter {
 					cluster.setGraph(clusterGraph);
 				}
 			}
+			
 		} catch (Exception e) {
 			System.out.println("Error: could not write circular genome graphs");
 		}
@@ -174,7 +204,16 @@ public class PrismFileWriter {
 	 */
 	public static void writeBiosyntheticClusterOrfs(Cluster cluster, Contig contig, Session session) throws IOException {
 		String scaffoldOrfsPath = session.dir() + "cluster_" + cluster.index() + ".fasta";
-		FastaWriter.printClusterToFasta(cluster, scaffoldOrfsPath);
+		File fastaFile = new File(scaffoldOrfsPath);
+		if (!fastaFile.exists())
+			fastaFile.createNewFile();
+
+		List<Orf> orfs = new ArrayList<Orf>();
+		for (Orf orf : cluster.orfs())
+			if (orf.domains().size() > 0)
+				orfs.add(orf);
+		
+		FastaWriter.printOrfsToFasta(orfs, scaffoldOrfsPath);		
 		cluster.addFile("scaffoldOrfs", scaffoldOrfsPath);
 	}
 	
@@ -187,12 +226,20 @@ public class PrismFileWriter {
 	 * @throws IOException 
 	 */
 	public static void writeAllClusterOrfs(Cluster cluster, Contig contig, Session session) throws IOException {
+		Prism prism = (Prism) session.webapp();
+		PrismConfig config = prism.config();
+		int window = config.window;
+
+		List<Orf> orfs = null;
 		if (contig.sequence() == null
 				|| contig.sequence().isEmpty()
-				|| contig.sequence().equals(""))
-			return; // for JSON
+				|| contig.sequence().equals("")) {
+			// for JSON: just write all orfs
+			orfs = cluster.orfs();
+		} else {
+			orfs = contig.getAllOrfs(cluster, window);
+		}
 
-		List<Orf> orfs = contig.getAllOrfs(cluster);
 		String clusterOrfsPath = session.dir() + "cluster_" + cluster.index() + "_full.fasta";
 		FastaWriter.printOrfsToFasta(orfs, clusterOrfsPath);
 		cluster.addFile("clusterOrfs", clusterOrfsPath);
@@ -312,7 +359,7 @@ public class PrismFileWriter {
 	 * @param path		location of the file
 	 * @throws IOException
 	 */
-	public static void writeiSNAPFile(Cluster cluster, String path) throws IOException {
+	public static void writeGNPFile(Cluster cluster, String path) throws IOException {
 		// check file exists
 		File file = new File(path);
 		if (!file.exists())
@@ -364,13 +411,22 @@ public class PrismFileWriter {
 		
 		bw.append("\n");
 		bw.append("Global settings" + "\n");
+		
+		// get orf prediction
+		StringBuffer sb = new StringBuffer();
+		for (GenePredictionModes mode : config.genePredictionModes)
+			sb.append(mode.toString() + " ");
+		bw.append("Open reading frame prediction: " + sb.toString() + "\n");
+		
 		bw.append("Cluster window: " + config.window + "\n");
 		bw.append("Generated structure limit: " + config.scaffoldLimit + "\n");
 		bw.append("Result display size: " + config.display + "\n");
+		bw.append("Thiotemplated gene detection: " + config.thiotemplated + "\n");
+		bw.append("Deoxysugar gene detection: " + config.sugar + "\n");
+		bw.append("RiPP gene detection: " + config.ribosomal + "\n");
 		bw.append("Resistance gene detection: " + config.resistance + "\n");
 		bw.append("Regulatory gene detection: " + config.regulation + "\n");
-		bw.append("RiPP gene detection: " + config.ribosomal + "\n");
-
+		
 		bw.append("\n");
 		bw.append("Similarity search" + "\n");
 		bw.append("Detecting knowns: ");

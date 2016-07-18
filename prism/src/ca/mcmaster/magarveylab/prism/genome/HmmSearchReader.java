@@ -19,8 +19,10 @@ public class HmmSearchReader {
 	private BufferedReader br;
 
 	/**
-	 * Initialize a new hmmsearch output reader. 
-	 * @param session	the current Session
+	 * Initialize a new hmmsearch output reader.
+	 * 
+	 * @param session
+	 *            the current Session
 	 */
 	public HmmSearchReader(BufferedReader br) {
 		this.br = br;

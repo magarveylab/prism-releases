@@ -2,15 +2,12 @@ package ca.mcmaster.magarveylab.prism.genome;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import ca.mcmaster.magarveylab.enums.DomainFamilies;
-import ca.mcmaster.magarveylab.enums.SubstrateDomainSearches;
-import ca.mcmaster.magarveylab.enums.domains.AminoglycosideDomains;
-import ca.mcmaster.magarveylab.enums.domains.BetaLactamDomains;
 import ca.mcmaster.magarveylab.enums.domains.DeoxySugarDomains;
 import ca.mcmaster.magarveylab.enums.domains.DomainType;
-import ca.mcmaster.magarveylab.enums.domains.NucleosideDomains;
 import ca.mcmaster.magarveylab.enums.domains.PrerequisiteDomains;
 import ca.mcmaster.magarveylab.enums.domains.RegulatorDomains;
 import ca.mcmaster.magarveylab.enums.domains.ResistanceDomains;
@@ -18,7 +15,6 @@ import ca.mcmaster.magarveylab.enums.domains.RibosomalDomains;
 import ca.mcmaster.magarveylab.enums.domains.TailoringDomains;
 import ca.mcmaster.magarveylab.enums.domains.ThiotemplatedDomains;
 import ca.mcmaster.magarveylab.enums.domains.TypeIIPolyketideDomains;
-import ca.mcmaster.magarveylab.enums.substrates.SubstrateType;
 import ca.mcmaster.magarveylab.prism.Prism;
 import ca.mcmaster.magarveylab.prism.blast.DomainBlastpSearch;
 import ca.mcmaster.magarveylab.prism.data.Contig;
@@ -26,6 +22,8 @@ import ca.mcmaster.magarveylab.prism.data.Domain;
 import ca.mcmaster.magarveylab.prism.data.Genome;
 import ca.mcmaster.magarveylab.prism.data.Orf;
 import ca.mcmaster.magarveylab.prism.data.RnaSequence;
+import ca.mcmaster.magarveylab.prism.enums.hmms.SubstrateDomainSearches;
+import ca.mcmaster.magarveylab.prism.enums.hmms.SubstrateHmm;
 import ca.mcmaster.magarveylab.prism.fasta.FastaWriter;
 import ca.mcmaster.magarveylab.prism.util.RibosomalSequence;
 import ca.mcmaster.magarveylab.prism.util.Sorter;
@@ -46,15 +44,16 @@ public class GenomeSearch {
 	 * recognition element), or domains for which the boundary is unclear (e.g.,
 	 * fungal NR-PKS SAT domains).
 	 */
-	public final static DomainType[] canOverlap = new DomainType[] { 
-		RibosomalDomains.RRE,
-		ThiotemplatedDomains.REDUCTASE,
-	};
+	public final static DomainType[] canOverlap = new DomainType[] {
+			RibosomalDomains.RRE, ThiotemplatedDomains.REDUCTASE, };
 
 	/**
 	 * Instantiate a new genome analysis search.
-	 * @param genome	the genome to analyze
-	 * @param session	the current session
+	 * 
+	 * @param genome
+	 *            the genome to analyze
+	 * @param session
+	 *            the current session
 	 */
 	public GenomeSearch(Genome genome, Session session) {
 		this.genome = genome;
@@ -73,32 +72,33 @@ public class GenomeSearch {
 	public void run() throws InterruptedException, SugarGeneException, IOException, Exception {
 		findRibosomalSequence();
 		
-		findSubstrateDomains();
-		findPrerequisiteDomains();
-		findOtherThiotemplatedDomains();
-		findTypeIIPolyketideDomains();
+		if (config.thiotemplated) {
+			findSubstrateDomains();
+			findPrerequisiteDomains();
+			findOtherThiotemplatedDomains();
+			findTypeIIPolyketideDomains();
+			executeBlastpAnalysis();
+		}
+		
 		findTailoringDomains();
-		executeBlastpAnalysis();
 		findSugarGenes();
-		findBetaLactamGenes();
-		findAminoglycosideGenes();
 		findResistanceDomains();
 		findRibosomalDomains();
 		findRegulatorDomains();
-		findNucleosideGenes();
 
 		removeOverlap();
 	}
-	
+
 	/**
-	 * Executed only if the find16s field in the config object is set to true. 
-	 * Implements barrnap to search for 16s sequences in sequences where no 16s sequences are manually annotated.
-	 * @throws IOException, InterruptedException, Exception
+	 * Executed only if the find16s field in the config object is set to true.
+	 * Implements barrnap to search for 16s sequences in sequences where no 16s
+	 * sequences are manually annotated.
+	 * 
+	 * @throws IOException,
+	 *             InterruptedException, Exception
 	 */
 	public void findRibosomalSequence() throws IOException, InterruptedException, Exception {
-		Prism prism = (Prism) session.webapp();
-		PrismConfig config = prism.config();
-		
+		Prism prism = (Prism) session.webapp();		
 		try {
 			if (config.find16s) {
 				RibosomalSequence rs = new RibosomalSequence(prism.genome().contigs(), config.input);
@@ -120,7 +120,7 @@ public class GenomeSearch {
 	private void findSubstrateDomains() {
 		for (SubstrateDomainSearches searchType : SubstrateDomainSearches.values()) {
 			DomainType domain = searchType.type();
-			SubstrateType[] substrates = searchType.substrates();
+			SubstrateHmm[] substrates = searchType.substrates();
 
 			SubstrateDomainSearch search = new SubstrateDomainSearch(domain, substrates, genome, session);
 			search.run();
@@ -278,50 +278,12 @@ public class GenomeSearch {
 	 * @throws SugarGeneException
 	 */
 	private void findSugarGenes() {
-		session.listener().addStage("Analyzing sugar genes", 
-				"Finding sugar biosynthesis genes...");
-		for (DeoxySugarDomains gene : DeoxySugarDomains.values()) {
-			DomainSearch sgs = new DomainSearch(gene, genome, session);
-			sgs.run();
-		}
-	}
-	
-	/**
-	 * Find beta-lactam subfamily biosynthesis genes within this genome.
-	 */
-	private void findBetaLactamGenes() {
-		session.listener().addStage("Analyzing beta-lactam genes", 
-				"Finding beta-lactam and monobactam biosynthesis genes...");
-		for (BetaLactamDomains d : BetaLactamDomains.values()) {
-			DomainSearch s = new DomainSearch(d, genome, session);
-			s.run();
-		}
-	}
-	
-	/**
-	 * Find aminoglycoside subfamily biosynthesis genes within this genome.
-	 */
-	private void findAminoglycosideGenes() {
-		if (config.aminoglycoside) {
-			session.listener().addStage("Analyzing aminoglycoside genes", 
-					"Finding aminoglycoside biosynthesis genes...");
-			for (AminoglycosideDomains d : AminoglycosideDomains.values()) {
-				DomainSearch s = new DomainSearch(d, genome, session);
-				s.run();
-			}
-		}
-	}
-	
-	/**
-	 * Find nucleoside subfamily biosynthesis genes within this genome.
-	 */
-	private void findNucleosideGenes() {
-		if (config.nucleoside) {
-			session.listener().addStage("Analyzing nucleoside genes", 
-					"Finding nucleoside biosynthesis genes...");
-			for (NucleosideDomains d : NucleosideDomains.values()) {
-				DomainSearch s = new DomainSearch(d, genome, session);
-				s.run();
+		if (config.sugar) {
+			session.listener().addStage("Analyzing sugar genes", 
+					"Finding sugar biosynthesis genes...");
+			for (DeoxySugarDomains gene : DeoxySugarDomains.values()) {
+				DomainSearch sgs = new DomainSearch(gene, genome, session);
+				sgs.run();
 			}
 		}
 	}
@@ -333,22 +295,26 @@ public class GenomeSearch {
 		for (Contig contig : genome.contigs()) {
 			for (Orf orf : contig.orfs()) {
 				List<Domain> domains = orf.domains();
-				for (int i = 0; i < domains.size(); i++)
-					for (int j = 0; j < domains.size(); j++) {
-						Domain d1 = domains.get(i);
-						Domain d2 = domains.get(j);
-						if (d1.overlaps(d2) && d1 != d2
+				Iterator<Domain> itr1 = domains.iterator();
+				loop1: while (itr1.hasNext()) {
+					Domain d1 = itr1.next();
+					Iterator<Domain> itr2 = domains.iterator();
+					while (itr2.hasNext()) {
+						Domain d2 = itr2.next();
+						if (d1.overlaps(d2)
+								&& d1 != d2
 								&& Arrays.asList(canOverlap).indexOf(d1.type()) == -1
 								&& d1.family() != DomainFamilies.REGULATOR
 								&& Arrays.asList(canOverlap).indexOf(d2.type()) == -1
 								&& d2.family() != DomainFamilies.REGULATOR)
 							if (d2.score() > d1.score()) {
-								domains.remove(d1);
-								if (i > 0)
-									i--;
+								itr1.remove();
 								System.out.println("Removed " + d1.name());
+								continue loop1;
 							}
+
 					}
+				}
 			}
 		}
 	}

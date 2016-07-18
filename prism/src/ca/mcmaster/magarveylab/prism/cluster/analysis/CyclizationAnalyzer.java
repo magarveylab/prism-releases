@@ -9,11 +9,11 @@ import org.openscience.cdk.exception.CDKException;
 import ca.mcmaster.magarveylab.enums.CyclizationPatterns;
 import ca.mcmaster.magarveylab.enums.domains.TailoringDomains;
 import ca.mcmaster.magarveylab.enums.domains.ThiotemplatedDomains;
-import ca.mcmaster.magarveylab.enums.substrates.AdenylationSubstrates;
 import ca.mcmaster.magarveylab.prism.data.Cluster;
 import ca.mcmaster.magarveylab.prism.data.CombinatorialData;
 import ca.mcmaster.magarveylab.prism.data.Cyclization;
 import ca.mcmaster.magarveylab.prism.data.Module;
+import ca.mcmaster.magarveylab.prism.enums.hmms.AdenylationHmms;
 
 /**
  * Performs analysis of natural product macrocyclization patterns.
@@ -107,10 +107,10 @@ public class CyclizationAnalyzer {
 		
 		modules.addAll(ModuleAnalyzer.cyclizationHydroxyls(permutation));
 		// get beta-hydroxylated AAs
-		modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates.BETA_HYDROXY_PHENYLALANINE));
-		modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates.BETA_HYDROXY_ASPARAGINE));
-		modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates.BETA_HYDROXY_ASPARTATE));
-		modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationSubstrates.BETA_HYDROXY_LEUCINE));
+		modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms.BETA_HYDROXY_PHENYLALANINE));
+		modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms.BETA_HYDROXY_ASPARAGINE));
+		modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms.BETA_HYDROXY_ASPARTATE));
+		modules.addAll(ModuleAnalyzer.modules(permutation, AdenylationHmms.BETA_HYDROXY_LEUCINE));
 
 		for (Module module : modules) {
 			Cyclization c = new Cyclization(module, CyclizationPatterns.LACTONE);

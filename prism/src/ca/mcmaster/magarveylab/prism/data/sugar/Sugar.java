@@ -1,14 +1,18 @@
 package ca.mcmaster.magarveylab.prism.data.sugar;
 
-import ca.mcmaster.magarveylab.enums.Structure;
+import java.io.Serializable;
+
 import ca.mcmaster.magarveylab.enums.SugarFamilies;
+import ca.mcmaster.magarveylab.enums.interfaces.Structure;
 
 /**
  * A generic sugar associated with natural product biosynthesis. 
  * @author skinnider
  *
  */
-public abstract class Sugar {
+public abstract class Sugar implements Serializable {
+	
+	private static final long serialVersionUID = -1800418584985457039L;
 	
 	protected SugarFamilies family;
 	

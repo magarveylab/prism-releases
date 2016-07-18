@@ -10,7 +10,6 @@ import ca.mcmaster.magarveylab.prism.cluster.reactions.Reaction;
 import ca.mcmaster.magarveylab.prism.cluster.reactions.UtilityReactions;
 import ca.mcmaster.magarveylab.prism.cluster.scaffold.Chemoinformatics.Atoms;
 import ca.mcmaster.magarveylab.prism.data.Cluster;
-import ca.mcmaster.magarveylab.prism.data.Domain;
 import ca.mcmaster.magarveylab.prism.data.Module;
 import ca.mcmaster.magarveylab.prism.data.reactions.ReactionPlan;
 import ca.mcmaster.magarveylab.prism.data.structure.Residue;
@@ -31,8 +30,8 @@ public class CGlycosyltransferaseReaction  extends GenericReaction implements Re
 		IAtomContainer molecule = scaffold.molecule();
 		Module module = plan.get(0);
 		
-		Domain domain = plan.domain();
-		if (domain.sugar() == null)
+		String smiles = plan.getSmiles();
+		if (smiles == null)
 			throw new TailoringSubstrateException("Error: could not execute C-glycosyltransferase without sugar!");
 		
 		Residue residue = scaffold.residue(module);
@@ -46,7 +45,7 @@ public class CGlycosyltransferaseReaction  extends GenericReaction implements Re
 
 		IAtomContainer sugar = null;
 		try {
-			sugar = SmilesIO.molecule(domain.sugar().smiles());
+			sugar = SmilesIO.molecule(smiles);
 		} catch (Exception e) {
 			throw new ScaffoldGenerationException("Error: could not build sugar SMILES");
 		}

@@ -19,6 +19,7 @@ import ca.mcmaster.magarveylab.prism.data.structure.Scaffold;
 import ca.mcmaster.magarveylab.prism.util.exception.NoResidueException;
 import ca.mcmaster.magarveylab.prism.util.exception.ScaffoldGenerationException;
 import ca.mcmaster.magarveylab.prism.util.exception.TailoringSubstrateException;
+import ca.mcmaster.magarveylab.wasp.util.SmilesIO;
 
 /**
  * Execute the heterocyclization of a serine, threonine, or cysteine residue to
@@ -27,14 +28,17 @@ import ca.mcmaster.magarveylab.prism.util.exception.TailoringSubstrateException;
  * @author skinnider
  *
  */
-public class HeterocyclizationReaction extends GenericReaction implements Reaction {
+public class HeterocyclizationReaction extends GenericReaction implements
+		Reaction {
 
-	public HeterocyclizationReaction(ReactionPlan plan, Scaffold scaffold, Cluster cluster) {
+	public HeterocyclizationReaction(ReactionPlan plan, Scaffold scaffold,
+			Cluster cluster) {
 		super(plan, scaffold, cluster);
 		this.domains = new DomainType[] { ThiotemplatedDomains.CONDENSATION };
 	}
-	
-	public void execute() throws NoResidueException, TailoringSubstrateException, ScaffoldGenerationException {
+
+	public void execute() throws NoResidueException,
+			TailoringSubstrateException, ScaffoldGenerationException {
 		IAtomContainer molecule = scaffold.molecule();
 		
 		Module last = plan.get(0);
@@ -42,11 +46,18 @@ public class HeterocyclizationReaction extends GenericReaction implements Reacti
 		Residue residue = scaffold.residue(module);
 		Residue lastResidue = scaffold.residue(last);
 		if (residue == null || lastResidue == null)
-			throw new ScaffoldGenerationException("Error: could not heterocyclize on null residue!");
-		
+			throw new ScaffoldGenerationException(
+					"Error: could not heterocyclize on null residue!");
+
 		IAtom ketone = residue.ketone();
+		if (ketone == null)
+			throw new ScaffoldGenerationException("Could not find ketone for ser/thr/cys residue");
 		IAtom lastKetone = lastResidue.ketone();
+		if (lastKetone == null)
+			throw new ScaffoldGenerationException("Could not find ketone for ser/thr/cys-adjacent residue");
 		IAtom alphaCarbon = residue.alphaCarbon();
+		if (alphaCarbon == null)
+			throw new ScaffoldGenerationException("Could not find alpha carbon for ser/thr/cys residue");
 		IAtom betaCarbon = null;
 		IAtom terminalAtom = null;
 		
@@ -84,6 +95,8 @@ public class HeterocyclizationReaction extends GenericReaction implements Reacti
 		// create double bond between ketone carbon and nitrogen
 		IBond nitrogenBond = Bonds.getConnectedNitrogenBond(molecule, lastKetone);
 		nitrogenBond.setOrder(IBond.Order.DOUBLE);
+		
+		System.out.println("After azoline reaction: " + SmilesIO.smiles(molecule));
 	}
 
 }

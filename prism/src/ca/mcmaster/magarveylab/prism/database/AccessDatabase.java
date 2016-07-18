@@ -14,6 +14,16 @@ import ca.mcmaster.magarveylab.prism.tanimoto.FingerprintUtil;
 import ca.mcmaster.magarveylab.prism.util.Strings;
 import ca.mcmaster.magarveylab.prism.util.exception.DatabaseConnectException;
 
+//TODO
+/*
+this needs to be replaced with a GET request to 
+http://magarveylab-ws.mcmaster.ca/v1/model/small_molecule/property/name,smiles,finger_fcfp6,finger_ecfp6?limit=100000
+
+the limit should first be set with http://magarveylab-ws.mcmaster.ca/v1/model/small_molecule/count'
+with the appropriate authorization header set 
+this will
+*/
+
 public class AccessDatabase {
 		
 	/**

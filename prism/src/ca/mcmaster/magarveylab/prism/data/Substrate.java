@@ -1,6 +1,8 @@
 package ca.mcmaster.magarveylab.prism.data;
 
-import ca.mcmaster.magarveylab.enums.substrates.SubstrateType;
+import java.io.Serializable;
+
+import ca.mcmaster.magarveylab.enums.interfaces.SubstrateType;
 import ca.mcmaster.magarveylab.prism.genome.data.HmmSearchResultAnnotation;
 
 
@@ -9,8 +11,9 @@ import ca.mcmaster.magarveylab.prism.genome.data.HmmSearchResultAnnotation;
  * @author skinnider
  *
  */
-public class Substrate {
-	
+public class Substrate implements Serializable {
+
+	private static final long serialVersionUID = -1885139445427238296L;
 	protected int start;
 	protected int end;
 	protected double score;

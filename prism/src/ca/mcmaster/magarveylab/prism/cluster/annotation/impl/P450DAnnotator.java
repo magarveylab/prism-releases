@@ -6,13 +6,13 @@ import java.util.List;
 import ca.mcmaster.magarveylab.enums.ModuleTypes;
 import ca.mcmaster.magarveylab.enums.domains.DomainType;
 import ca.mcmaster.magarveylab.enums.domains.TailoringDomains;
-import ca.mcmaster.magarveylab.enums.substrates.AdenylationSubstrates;
 import ca.mcmaster.magarveylab.prism.cluster.annotation.Annotator;
 import ca.mcmaster.magarveylab.prism.data.Cluster;
 import ca.mcmaster.magarveylab.prism.data.Domain;
 import ca.mcmaster.magarveylab.prism.data.Module;
 import ca.mcmaster.magarveylab.prism.data.Substrate;
 import ca.mcmaster.magarveylab.prism.data.reactions.SubstrateSet;
+import ca.mcmaster.magarveylab.prism.enums.hmms.AdenylationHmms;
  
 public class P450DAnnotator implements Annotator {
 
@@ -43,13 +43,13 @@ public class P450DAnnotator implements Annotator {
 		if (firstScaffold == null || secondScaffold == null)
 			return substrates;
 		Substrate firstSubstrate = firstScaffold.topSubstrate();
-		if (firstSubstrate == null || !(firstSubstrate.type() == AdenylationSubstrates.TYROSINE_1 
-				|| firstSubstrate.type() == AdenylationSubstrates.TYROSINE_2 
-				|| firstSubstrate.type() == AdenylationSubstrates.BETA_HYDROXYTYROSINE
-				|| firstSubstrate.type() == AdenylationSubstrates._4_HYDROXY_PHENYLGLYCINE))
+		if (firstSubstrate == null || !(firstSubstrate.type() == AdenylationHmms.TYROSINE_1 
+				|| firstSubstrate.type() == AdenylationHmms.TYROSINE_2 
+				|| firstSubstrate.type() == AdenylationHmms.BETA_HYDROXYTYROSINE
+				|| firstSubstrate.type() == AdenylationHmms._4_HYDROXY_PHENYLGLYCINE))
 			return substrates;
 		Substrate secondSubstrate = secondScaffold.topSubstrate();
-		if (secondSubstrate == null || secondSubstrate.type() != AdenylationSubstrates._3_5_DIHYDROXYPHENYLGLYCINE)
+		if (secondSubstrate == null || secondSubstrate.type() != AdenylationHmms._3_5_DIHYDROXYPHENYLGLYCINE)
 			return substrates;
 
 		SubstrateSet substrate = new SubstrateSet(first, second);

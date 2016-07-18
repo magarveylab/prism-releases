@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletRequestContext;
 
+import ca.mcmaster.magarveylab.prism.orfs.GenePredictionModes;
 import ca.mcmaster.magarveylab.prism.web.html.PrismReport;
 import ca.mcmaster.magarveylab.wasp.session.FileUploadListener;
 import ca.mcmaster.magarveylab.wasp.session.Session;
@@ -37,7 +39,7 @@ public class PrismSubmitParser {
 		Date date = new Date();
 		config.date = date;
 		
-		List<FileItem> items = uploadHandler.parseRequest(request);
+		List<FileItem> items = uploadHandler.parseRequest(new ServletRequestContext(request));
 		Iterator<FileItem> itr = items.iterator();
 		// iterate over form items
 		while (itr.hasNext()) {
@@ -45,6 +47,17 @@ public class PrismSubmitParser {
 			if (item.isFormField()) {
 				// handle form items
 				switch (item.getFieldName()) {
+					case "allOrfs":
+						System.out.println("[PrismSubmitParser] Finding all potential coding sequences");
+						config.genePredictionModes.add(GenePredictionModes.ALL_ORFS);
+						break;
+					case "prodigal": 
+						System.out.println("[PrismSubmitParser] Using Prodigal to predict orfs");
+						config.genePredictionModes.add(GenePredictionModes.PRODIGAL);
+						break;
+					case "genemark":
+						config.genePredictionModes.add(GenePredictionModes.GENEMARK);
+						break;
 					case "maxSubstrates":
 						int maxSubstrates = Integer.parseInt(item.getString());
 						if (maxSubstrates > 0)
@@ -61,17 +74,17 @@ public class PrismSubmitParser {
 					case "score":
 						config.score = true;
 						break;
+					case "thiotemplated":
+						config.thiotemplated = true;
+						break;
+					case "sugar":
+						config.sugar = true;
+						break;
 					case "resistance":
 						config.resistance = true;
 						break;
 					case "regulation":
 						config.regulation = true;
-						break;
-					case "aminoglycoside":
-						config.aminoglycoside = true;
-						break;
-					case "nucleoside":
-						config.nucleoside = true;
 						break;
 					case "ribosomal":
 						config.ribosomal = true;

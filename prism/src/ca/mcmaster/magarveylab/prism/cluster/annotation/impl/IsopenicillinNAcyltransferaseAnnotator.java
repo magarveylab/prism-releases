@@ -7,7 +7,6 @@ import org.openscience.cdk.exception.InvalidSmilesException;
 
 import ca.mcmaster.magarveylab.enums.domains.BetaLactamDomains;
 import ca.mcmaster.magarveylab.enums.domains.DomainType;
-import ca.mcmaster.magarveylab.enums.substrates.AdenylationSubstrates;
 import ca.mcmaster.magarveylab.prism.cluster.analysis.ModuleAnalyzer;
 import ca.mcmaster.magarveylab.prism.cluster.annotation.Annotator;
 import ca.mcmaster.magarveylab.prism.cluster.annotation.AnnotatorUtil;
@@ -15,6 +14,7 @@ import ca.mcmaster.magarveylab.prism.data.Cluster;
 import ca.mcmaster.magarveylab.prism.data.Domain;
 import ca.mcmaster.magarveylab.prism.data.Module;
 import ca.mcmaster.magarveylab.prism.data.reactions.SubstrateSet;
+import ca.mcmaster.magarveylab.prism.enums.hmms.AdenylationHmms;
 
 /**
  * Find sites at which the isopenicillin N acyltransferase can react (i.e.,
@@ -31,7 +31,7 @@ public class IsopenicillinNAcyltransferaseAnnotator implements Annotator {
 
 	public List<SubstrateSet> findSubstrates(Domain domain, List<Module> permutation, Cluster cluster) 
 			throws InvalidSmilesException, IOException {
-		List<Module> modules = ModuleAnalyzer.modules(permutation, AdenylationSubstrates._2_AMINO_ADIPIC_ACID);
+		List<Module> modules = ModuleAnalyzer.modules(permutation, AdenylationHmms._2_AMINO_ADIPIC_ACID);
 		List<SubstrateSet> substrates = AnnotatorUtil.convertModulesToSubstrateSets(modules);
 		return substrates;
 	}

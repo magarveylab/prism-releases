@@ -4,12 +4,16 @@ import ca.mcmaster.magarveylab.enums.HexoseSugars;
 import ca.mcmaster.magarveylab.enums.SugarFamilies;
 
 /**
- * A hexose sugar, or microbial primary metabolite, associated with a natural product. 
+ * A hexose sugar, or microbial primary metabolite, associated with a natural
+ * product.
+ * 
  * @author skinnider
  *
  */
 public class HexoseSugar extends Sugar {
 
+	private static final long serialVersionUID = 7685888632881647197L;
+	
 	private HexoseSugars type;
 	
 	public HexoseSugar(HexoseSugars type) {

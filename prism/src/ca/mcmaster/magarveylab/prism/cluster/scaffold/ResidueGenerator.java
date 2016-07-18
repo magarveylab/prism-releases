@@ -12,8 +12,8 @@ import org.openscience.cdk.interfaces.IAtomContainer;
 import ca.mcmaster.magarveylab.enums.CStarterSubstrates;
 import ca.mcmaster.magarveylab.enums.ModuleTypes;
 import ca.mcmaster.magarveylab.enums.domains.ThiotemplatedDomains;
-import ca.mcmaster.magarveylab.enums.substrates.AcyltransferaseSubstrates;
-import ca.mcmaster.magarveylab.enums.substrates.SubstrateType;
+import ca.mcmaster.magarveylab.enums.interfaces.SubstrateType;
+import ca.mcmaster.magarveylab.enums.substrates.ProteinogenicAminoAcids;
 import ca.mcmaster.magarveylab.enums.substrates.TypeIIPolyketideStarters;
 import ca.mcmaster.magarveylab.prism.cluster.analysis.DomainAnalyzer;
 import ca.mcmaster.magarveylab.prism.cluster.analysis.TypeIIPolyketideAnalyzer;
@@ -23,10 +23,12 @@ import ca.mcmaster.magarveylab.prism.cluster.scaffold.Chemoinformatics.Substrate
 import ca.mcmaster.magarveylab.prism.data.Domain;
 import ca.mcmaster.magarveylab.prism.data.Module;
 import ca.mcmaster.magarveylab.prism.data.structure.Residue;
+import ca.mcmaster.magarveylab.prism.enums.hmms.AcyltransferaseHmms;
 import ca.mcmaster.magarveylab.prism.util.SmilesIO;
 import ca.mcmaster.magarveylab.prism.util.exception.BondFormationException;
 import ca.mcmaster.magarveylab.prism.util.exception.NoResidueException;
 import ca.mcmaster.magarveylab.prism.util.exception.ScaffoldGenerationException;
+
 
 /**
  * Generate scaffold residues.
@@ -60,6 +62,8 @@ public class ResidueGenerator {
 			residue = typeIIPolyketideResidue(module);
 		} else if (module.type() == ModuleTypes.TYPE_II_PKS_STARTER) {
 			residue = typeIIPolyketideStarterResidue(module);
+		} else if (module.type() == ModuleTypes.RIBOSOMAL) { 
+			residue = ribosomalResidue(module);
 		}
 		return residue;
 	}
@@ -72,6 +76,37 @@ public class ResidueGenerator {
 					+ module.type() + " module with no scaffold!");
 		SubstrateType type = domain.topSubstrate().type();
 		String smiles = type.smiles();
+		IAtomContainer molecule = SmilesIO.molecule(smiles);
+		
+		// get ketone and alpha carbon
+		IAtom nitrogen = Substrates.getExtenderAtom(molecule);
+		IAtom ketone = Substrates.getStarterAtom(molecule);
+		IAtom alphaCarbon = Substrates.getAlphaCarbonFromKetone(ketone, molecule);
+		
+		// remove halogens
+		UtilityReactions.removeIodine(molecule);
+		UtilityReactions.removeFluorine(molecule);
+
+		// create residue
+		Residue residue = new Residue(module);
+		residue.setNitrogen(nitrogen);
+		residue.setKetone(ketone);
+		residue.setAlphaCarbon(alphaCarbon);
+		residue.setStructure(molecule);
+		
+		return residue;
+	}
+	
+	private static Residue ribosomalResidue(Module module) throws IOException,
+			NoResidueException, CDKException {
+		String aa = module.first().name().substring(0, 1).toLowerCase();
+		String smiles = null;
+		for (ProteinogenicAminoAcids a : ProteinogenicAminoAcids.values()) {
+			if (a.abbreviation().toLowerCase().equals(aa)) {
+				smiles = a.smiles();
+			}
+		}
+				
 		IAtomContainer molecule = SmilesIO.molecule(smiles);
 		
 		// get ketone and alpha carbon
@@ -195,7 +230,7 @@ public class ResidueGenerator {
 	
 	private static Residue typeIIPolyketideResidue(Module module) throws IOException, CDKException {
 		// get default acetate molecule		
-		SubstrateType type = AcyltransferaseSubstrates.MALONYL_COA_1;
+		SubstrateType type = AcyltransferaseHmms.MALONYL_COA_1;
 		String smiles = type.smiles();
 		IAtomContainer molecule = SmilesIO.molecule(smiles);
 				
