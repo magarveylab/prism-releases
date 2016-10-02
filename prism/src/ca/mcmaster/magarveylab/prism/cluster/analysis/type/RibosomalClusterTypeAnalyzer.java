@@ -169,8 +169,7 @@ public class RibosomalClusterTypeAnalyzer {
 	 * @return true if cyanobactin-type cluster
 	 */
 	public static boolean isCyanobactinCluster(Cluster cluster) {
-		return ( /* cluster.contains(RibosomalDomains.PatE)
-				&& */ cluster.contains(RibosomalDomains.PatA) 
+		return (cluster.contains(RibosomalDomains.PatA) 
 				&& (cluster.contains(RibosomalDomains.PatG) 
 				|| cluster.contains(RibosomalDomains.PatG_ox)));
 	}

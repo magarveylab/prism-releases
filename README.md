@@ -4,7 +4,7 @@ PRISM (PRediction Informatics for Secondary Metabolomes) is a software package f
 
 ## Usage
 
-PRISM is a Java 8 package, which can be deployed to a Tomcat 7 web server as a web application, or run from the command line. 
+PRISM is a Java package, which can be deployed to a Tomcat 7 web server as a web application, or run from the command line. 
 
 A GUI is available at http://magarveylab.ca/prism. 
 

@@ -7,7 +7,6 @@ import java.util.List;
 import ca.mcmaster.magarveylab.enums.ModuleTypes;
 import ca.mcmaster.magarveylab.enums.domains.DomainType;
 import ca.mcmaster.magarveylab.enums.domains.GenericDomains;
-import ca.mcmaster.magarveylab.enums.domains.RibosomalDomains;
 import ca.mcmaster.magarveylab.enums.domains.ThiotemplatedDomains;
 import ca.mcmaster.magarveylab.prism.cluster.analysis.DomainAnalyzer;
 import ca.mcmaster.magarveylab.prism.enums.hmms.AdenylationHmms;

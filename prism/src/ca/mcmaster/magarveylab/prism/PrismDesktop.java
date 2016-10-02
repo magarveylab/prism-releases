@@ -187,7 +187,6 @@ public class PrismDesktop {
 		Option resistance = new Option("res", "resistance", false, "Enable resistance domain search");
 		Option regulator = new Option("reg", "regulator", false, "Enable regulator domain search");
 		Option ribosomal = new Option("rib", "ribosomal", false, "Enable RiPP domain search");
-		Option primaryBiosynthesisGenes = new Option("pbs", "primary_biosynthesis", false, "Enable primary metabolite domain search");
 		Option find16s = new Option("16s", "16s", false, "Detect 16S sequences");
 		Option web = new Option("web", "web_output", false, "Turn on HTML output and graphical output generation");
 		Option saveSequences = new Option("ss", "savesequence", false, 
@@ -197,14 +196,6 @@ public class PrismDesktop {
 		Option help = new Option("h", "help", false, "Print this message");
 		Option version = new Option("v", "version", false, "Print the current version and exit");
 		
-		
-		Option terpene = new Option("terp", "terpene", false, "Find all terpene encoding genes and clusters");
-		Option nis_synthase = new Option("nis", "siderophore", false, "Find all NRPS-independent siderophore");
-		
-		
-		
-		options.addOption(terpene);
-		options.addOption(nis_synthase);
 		options.addOption(file);
 		options.addOption(window);
 		options.addOption(structureLimit);
@@ -218,7 +209,6 @@ public class PrismDesktop {
 		options.addOption(sugar);
 		options.addOption(resistance);
 		options.addOption(regulator);
-		options.addOption(primaryBiosynthesisGenes);
 		options.addOption(ribosomal);
 		options.addOption(find16s);
 		options.addOption(setOutput);
@@ -346,18 +336,6 @@ public class PrismDesktop {
 			config.grid = line.getOptionValue("grid");
 			System.out.println("[Prism] outputting results for grid at: " + config.grid);
 		}
-			
-		
-		if (line.hasOption("terp")){
-			config.terpene = true;
-			System.out.println("[Prism] Finding all terpene genes");
-		}
-		if(line.hasOption("nis")){
-			config.nis_synthase = true;
-			System.out.println("[Prism] Finding all nis genes");
-		}
-		
-		
 		
 		//TODO:  Finish off the options for prismlite and the species parsing
 		if (line.hasOption("sp")){

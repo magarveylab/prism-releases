@@ -16,8 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 
 import ca.mcmaster.magarveylab.prism.Prism;
 import ca.mcmaster.magarveylab.prism.database.JsonInput;
@@ -94,11 +95,11 @@ public class LoadJson extends WebApplicationSubmit {
 	
 	public void executeHttpRequest(String id, Session session) 
 			throws ClientProtocolException, IOException {
-        DefaultHttpClient httpclient = new DefaultHttpClient();
+		HttpClient client = HttpClientBuilder.create().build();
         HttpGet httpget = new HttpGet(host + "/model/prism_result/id/" + id + "/document/raw_data");
         httpget.addHeader("Authorization", authToken);
         httpget.addHeader("accept", "application/json");
-        HttpResponse response = httpclient.execute(httpget);
+        HttpResponse response = client.execute(httpget);
         response.setHeader("Content-Type", "application/json");
         HttpEntity entity = response.getEntity();
         entity.writeTo(new FileOutputStream(new File(session.dir() + id + ".json")));        

@@ -448,7 +448,8 @@ public class JsonUtils {
 		return clusterData;
 	}
 
-	public static Map<String, Object> generateClusterJsonFile(Prism prism, Cluster cluster, Integer contigIndex) {
+	public static Map<String, Object> generateClusterJsonFile(Prism prism,
+			Cluster cluster, Integer contigIndex) {
 		Map<String, Object> prismResult = new HashMap<String, Object>();
 		Map<String, Object> prismRun = new HashMap<String, Object>();
 

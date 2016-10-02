@@ -38,9 +38,14 @@
 	<classpathentry kind="lib" path="prism/lib/commons-math3-3.4.1.jar"/>
 	<classpathentry kind="lib" path="prism/lib/jackson-databind-2.5.0.jar"/>
 	<classpathentry kind="lib" path="prism/lib/combinatoricslib-2.0.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Tomcat v7.0.12 Server at localhost (2)"/>
 	<classpathentry kind="lib" path="prism/lib/wasp.jar"/>
-	<classpathentry kind="lib" path="prism/lib/cdk-1.5.10.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/enums"/>
+	<classpathentry kind="lib" path="prism/lib/cdk-1.4.19.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/tomcat 7.0.67"/>
+	<classpathentry kind="lib" path="prism/lib/commons-codec-1.9.jar"/>
+	<classpathentry kind="lib" path="prism/lib/commons-csv-1.1.jar"/>
+	<classpathentry kind="lib" path="prism/lib/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="prism/lib/httpclient-4.5.jar"/>
+	<classpathentry kind="lib" path="prism/lib/httpcore-4.4.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

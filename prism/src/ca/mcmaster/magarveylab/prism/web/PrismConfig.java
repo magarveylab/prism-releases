@@ -127,7 +127,7 @@ public class PrismConfig {
 	/**
 	 * The current version of PRISM.
 	 */
-	public String version = "2.1.2";
+	public String version = "2.1.5";
 
 	/**
 	 * Date and time at which this configuration was instantiated.

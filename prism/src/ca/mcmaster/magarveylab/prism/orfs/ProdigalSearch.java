@@ -82,7 +82,7 @@ public class ProdigalSearch {
 			throw new ProdigalSearchException("Error: "
 					+ "Prodigal couldn't find any orfs in input sequence!");
 		logger.log(Level.INFO, "Found " + count
-				+ " orfs with Prodigal within contig "
+				+ " orfs with Prodigal within "
 				+ genome.contigs().size() + " contigs");
 	}
 

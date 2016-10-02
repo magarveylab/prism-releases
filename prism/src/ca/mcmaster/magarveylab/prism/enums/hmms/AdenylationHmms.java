@@ -94,7 +94,7 @@ public enum AdenylationHmms implements SubstrateHmm {
 	// fungal  
 	FUNGAL_4_HYDROXYPHENYLPYRUVATE("fungal_4-Hydroxyphenylpyruvicacid.hmm", FungalAminoAcids.HYDROXYPHENYLPYRUVATE),
 	FUNGAL_ALANINE("fungal_alanine.hmm", ProteinogenicAminoAcids.ALANINE),
-	FUNGAL_AMINOBUTYRIC_ACID("fungal_Abu.hmm", FungalAminoAcids.AMINOBUTYRIC_ACID),
+	// FUNGAL_AMINOBUTYRIC_ACID("fungal_Abu.hmm", FungalAminoAcids.AMINOBUTYRIC_ACID), 
 	FUNGAL_AMINOISOBUTYRIC_ACID("fungal_Aib.hmm", FungalAminoAcids.AMINOISOBUTYRIC_ACID),
 	FUNGAL_ANTHRANILIC_ACID("fungal_Anthrinilic_acid.hmm", FungalAminoAcids.ANTHRANILATE),
 	FUNGAL_BETA_ALANINE("fungal_Beta-alanine.hmm", NonproteinogenicAminoAcids.BETA_ALANINE),

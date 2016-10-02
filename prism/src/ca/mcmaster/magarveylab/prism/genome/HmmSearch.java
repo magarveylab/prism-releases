@@ -1,6 +1,7 @@
 package ca.mcmaster.magarveylab.prism.genome;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 
 import ca.mcmaster.magarveylab.prism.util.PrismProcessBuilder;
@@ -41,12 +42,17 @@ public class HmmSearch {
 		initialize();
 		execute();
 	}
-	
+
 	/**
-	 * Set the locations of the hmmsearch executable and hmmsearch output. Set search reader. 
-	 * @throws IOException 
+	 * Set the locations of the hmmsearch executable and hmmsearch output. Set
+	 * search reader.
+	 * 
+	 * @throws IOException
 	 */
 	protected void initialize() throws IOException {
+		if (!new File(hmmModel).exists())
+			throw new IOException(
+					"Hidden Markov model file " + hmmModel + " does not exist");
 		hmmExecutable = session.subDir("hmm") + "hmmsearch.sh";
 		Runtime.getRuntime().exec("chmod +x " + hmmExecutable);
 	}

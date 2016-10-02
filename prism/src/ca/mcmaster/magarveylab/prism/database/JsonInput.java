@@ -99,7 +99,6 @@ public class JsonInput {
 		Organism organism = parseOrganism(json);
 		genome.setOrganism(organism);
 
-		List<Cluster> contigClusters = genome.contigs().get(0).clusters();
 		if (json.get("clusters") != null) {
 			getAllContigCluster(genome, json, config);
 			/*
@@ -107,6 +106,7 @@ public class JsonInput {
 			 * contigClusters.addAll(clusters);
 			 */
 		} else {
+			// List<Cluster> contigClusters = genome.contigs().get(0).clusters();
 		}
 		
 		for (Cluster cluster : genome.clusters())
@@ -246,6 +246,7 @@ public class JsonInput {
 	 *            map read in from the saved JSON file
 	 * @return the genome object
 	 */
+	@SuppressWarnings("unchecked")
 	public static Genome parseGenome(Map<String,Object> json, String filepath) {
 		Genome genome = null;
 		String filename = (String) json.get("filename");
@@ -296,6 +297,7 @@ public class JsonInput {
 		return clusters;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void getAllContigCluster(Genome genome, Map<String, Object> clusterJson, PrismConfig config) throws ParseException{
 		if(clusterJson.get("clusters") != null) {
 			List<Map<String,Object>> maps = (List<Map<String, Object>>) clusterJson.get("clusters");
