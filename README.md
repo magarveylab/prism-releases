@@ -11,8 +11,11 @@ A GUI is available at http://magarveylab.ca/prism.
 A sample command line run might look like: 
 
 ```
-$ java -jar prism.jar -a -p -f genome.fa -tt -sug -res -rib -w 10000
+$ java -jar prism.jar -a -p -f genome.fa -tt -sug -res -rib -w 10000 -r <WebContentDirectory>
 ```
+
+In this repository, the WebContent directory is located at `prism/WebContent`
+
 
 This runs PRISM with open reading frames predicted both by Prodigal and by identifying all possible coding sequences (Prodigal orfs are prioritized) on the file genome.fa, enabling searches for thiotemplated (nonribosomal peptide and polyketide), deoxysugar, resistance, and ribosomal natural product biosynthetic enzymes, with a cluster window of 10,000 bp. 
 
@@ -33,3 +36,6 @@ Please cite:
 > Skinnider MA, Dejong CA, Rees PN, Johnston CW, Li H, Webster ALH, Wyatt MA, Magarvey NA (2015). Genomes to natural products PRediction Informatics for Secondary Metabolomes (PRISM). _Nucleic Acids Research_, **16**, 9645-62. doi: [10.1093/nar/gkv1012](http://dx.doi.org/10.1093/nar/gkv1012)
 
 > Skinnider MA, Johnston CW, Edgar RE, Dejong CA, Merwin NJ, Rees PN, Magarvey NA (2016). Genomic charting of ribosomally synthesized natural product chemical space facilitates targeted mining. _Proc Natl Acad Sci USA_, **113**, E6343-E6351. doi: [10.1073/pnas.1609014113](http://dx.doi.org/10.1073/pnas.1609014113)
+
+
+
