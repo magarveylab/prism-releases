@@ -8,6 +8,8 @@ PRISM is a Java package, which can be deployed to a Tomcat 7 web server as a web
 
 A GUI is available at http://magarveylab.ca/prism. 
 
+A pre-built `prism.jar` is available in the [releases page](https://github.com/magarveylab/prism-releases/releases). 
+
 A sample command line run might look like: 
 
 ```
