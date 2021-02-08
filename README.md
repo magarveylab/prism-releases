@@ -2,6 +2,8 @@
 
 PRISM (PRediction Informatics for Secondary Metabolomes) is a software package for natural product genome mining. PRISM identifies biosynthetic gene clusters and generates libraries of hypothetical structures based on the identified genetic information. 
 
+#### UPDATE: This repository is no longer maintained - for academic uses visit https://prism.adapsyn.com/
+
 ## Usage
 
 PRISM is a Java package, which can be deployed to a Tomcat 7 web server as a web application, or run from the command line. 
